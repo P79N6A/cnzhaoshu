@@ -1,0 +1,9 @@
+import {remainingTime} from "@/libs/tools"
+
+const filters = {
+    remainingTime(Up_time) {
+        return remainingTime(Up_time)
+    }
+}
+
+export default filters

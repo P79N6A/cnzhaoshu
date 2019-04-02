@@ -1,0 +1,54 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Mrwang
+ * Date: 2018/9/27
+ * Time: 14:47
+ * USED: 创建当前用户 所在公司得 所有项目信息
+ */
+
+include  "../com/db.php";
+$user=json_decode($_COOKIE['user2'],true);
+$user=$user['userid'];
+//var_dump($user);die;
+$db=new db();
+//$user=125398;
+$contract_info_sql="select company_name from contract_info where userid='".$user."' ";
+//var_dump($contract_info_sql);die;
+
+$contract_info=$db->query($contract_info_sql);
+//var_dump($contract_info);die;
+$count_contract_info=count($contract_info);
+//var_dump($company_info);die;
+for($e=0;$e<$count_contract_info;$e++){
+    $company_project_sql="select * from order_project where partya_company_name='".$contract_info[$e]['company_name']."'and status=2";
+//    var_dump($company_project_sql);die;
+    $company_project[]=$db->query($company_project_sql);
+    if(empty($company_project[$e])){
+        unset($company_project[$e]);
+    }
+}
+//var_dump($company_project);die;
+$company_info=[];
+foreach($company_project as $k=>$v){
+    foreach ($v as $key=>$val){
+        $company_info[]=$val;
+    }
+}
+//var_dump($company_project_sql);die;
+//var_dump($company_info);die;
+$company_count=count($company_info);
+//var_dump($company_count);die;
+for($i=0;$i<$company_count;$i++){
+    $tree_info_sql="select * from new_tree_order where project='".$company_info[$i]['project_id']."'";
+    $company_info[$i]['tree_info']=$db->query($tree_info_sql);
+    $contacts_sql="select contacts from contract_info where company_name='".$company_info[$i]['partya_company_name']."'";
+    $company_info[$i]['contacts']=$db->query($contacts_sql)[0];
+//    $adoption_sql="select count(tender_tree_id) as tender_ado_num ,tender_tree_id from tender_order where tender_status=2 and adoption_status=0 group by tender_tree_id";
+//    $company_project[$i]['tree_info']['tender_ado_num']=$db->query($adoption_sql)[0];
+
+}
+
+unset($db);
+echo json_encode($company_info);
+

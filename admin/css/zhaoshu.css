@@ -1,0 +1,55 @@
+.icon-reorder{
+    line-height: 20px;
+}
+.headimg-nav{
+    width: 29px;
+    height: 29px;
+}
+.user-heading{
+    min-height: 200px;
+}
+#userphone,#usertag{
+    width: 100%;
+}
+#userphone{
+    margin-bottom: 2px;
+}
+#introduction{
+    height: 215px;
+    overflow: auto; 
+}
+.note-editable{
+    min-height: 160px;
+}
+input[type="file"] {
+    align-items: baseline;
+    color: inherit;
+    text-align: start;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-appearance: initial;
+    background-color: initial;
+    border: initial;
+    -webkit-rtl-ordering: logical;
+    -webkit-user-select: text;
+    cursor: auto;
+
+}
+.upload_drag_hover{border-color:#069; box-shadow:inset 2px 2px 4px rgba(0, 0, 0, .5); color:#333;}
+.option {
+    -moz-user-select: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.42857;
+    margin-bottom: 0;
+    padding: 3px 8px 3px 0px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+    background-color: #ffffff;
+    border-color: #ffffff;
+    color: #999999;
+}

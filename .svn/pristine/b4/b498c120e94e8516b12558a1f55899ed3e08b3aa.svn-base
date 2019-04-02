@@ -1,0 +1,39 @@
+<?php
+/* 
+删除养护日志，同时删除照片
+*/ 
+
+// require 'checkhost.php';
+require 'db.php';
+
+$id = $_POST['id'];
+$userid = $_POST['userid'];
+
+$db = new db();
+
+$sql = 'select photo from maps_record where map_order_id=? and userid=?';
+$record = $db->prepare_query($sql, array($id,$userid));
+
+$sql = 'delete from maps_record where map_order_id=? and userid=?';
+$result = $db->prepare_exec($sql, array($id,$userid));
+
+unset($db);
+
+for ($i=0; $i < count($record); $i++) { 
+	foreach (explode(';', $record[$i]['photo']) as $key => $photo) {
+		if ($photo) {
+			if (substr($photo, -1)=='v') {
+				// 视频
+				unlink($_SERVER['DOCUMENT_ROOT'].'/videos/'.$photo.'.jpg');
+				unlink($_SERVER['DOCUMENT_ROOT'].'/videos/'.$photo.'.mp4');
+			} else {
+				// 图片
+				unlink($_SERVER['DOCUMENT_ROOT'].'/photos/m/'.$photo.'.jpg');
+				unlink($_SERVER['DOCUMENT_ROOT'].'/photos/o/'.$photo.'.jpg');
+			}
+		}
+	}
+}
+
+return $result;
+

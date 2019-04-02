@@ -1,0 +1,15 @@
+<?php
+require 'checkhost.php';
+require 'db2.php';
+
+$id = $_GET['id'];
+
+if($id){
+	$db = new db();
+	$sql = 'select a.id,b.tree_name,b.tree_attribute,b.qrcode,a.active,a.type,a.photo,a.gps,a.name,a.phone,a.time from maps_record a left join maps_order b on a.map_order_id = b.id where a.map_order_id = ? order by a.time desc';
+
+	$result = $db->prepare_query($sql,array($id));
+	unset($db);
+	echo json_encode($result);
+}
+

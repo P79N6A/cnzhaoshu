@@ -1,0 +1,38 @@
+<?php 
+	require 'checkhost.php';
+	require('db2.php');
+
+	$orderid = $_GET['orderid'];
+	if ($orderid) {
+		$sql = 'update tree_order_index set state = 2 where id=?';
+		$db = new db();
+		$result = $db->prepare_exec( $sql, array( $orderid ) );
+		unset($db);
+		echo $result;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ ?>

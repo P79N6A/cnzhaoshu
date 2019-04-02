@@ -1,0 +1,283 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>苗木信息查询-类型分段数据</title>
+		<link href="/admin/css/bootstrap.min.css" rel="stylesheet">
+		<link href="/admin/css/bootstrap-reset.css" rel="stylesheet">
+		<link href="/admin/css/style.css" rel="stylesheet">
+		<style type="text/css">
+			.center{
+				text-align: center;
+			    font-weight: 300;
+    			font-size: 14px;
+    			padding-top: 7px;
+			    margin-top: 0;
+			    margin-bottom: 0;
+			}
+		</style>
+	</head>
+  	<body>
+		<section class="wrapper">
+		<div class="row">
+			<aside class="profile-info col-lg-12">
+				<section class="panel">
+					<div class="panel-body">
+						<div class="border-head">
+	                        <h3>详细数据</h3>
+	                    </div>
+						<div class=" form">
+							<form class="cmxform form-horizontal" id="commentForm">
+								<div class="form-group ">
+									<label for="shopname" class="control-label col-lg-2">区域选择</label>
+									<div class="col-lg-10" id="apparea">
+										<div class="col-lg-10">
+											<label class="checkbox-inline">
+												<input type="checkbox" value="pingyuan"> 平原地区
+											</label>
+											<label class="checkbox-inline">
+												<input type="checkbox" value="qianshan"> 浅山地区
+											</label>
+											<label class="checkbox-inline">
+												<input type="checkbox" value="lengliang"> 冷凉地区
+											</label>
+											<label class="checkbox-inline">
+												<input type="checkbox" value="tongyong"> 通用地区
+											</label>
+										</div>
+									</div>
+                                </div>
+								<div class="form-group ">
+									<label for="shopname" class="control-label col-lg-2">苗木分类</label>
+									<div class="col-lg-10">
+										<select class="form-control m-bot15" id="type">
+											<option value="0">不限</option>
+											<option value="落叶乔木">落叶乔木</option>
+											<option value="常绿乔木">常绿乔木</option>
+											<option value="落叶灌木">落叶灌木</option>
+											<option value="常绿灌木">常绿灌木</option>
+											<option value="宿根草本">宿根草本</option>
+											<option value="草本">草本</option>
+											<option value="常绿草本">常绿草本</option>
+											<option value="竹类">竹类</option>
+											<option value="果树">果树</option>
+											<option value="灌木">灌木</option>
+											<option value="落叶小乔木">落叶小乔木</option>
+											<option value="藤本">藤本</option>
+											<option value="宿根水生草本">宿根水生草本</option>
+											<option value="滨水宿根草本">滨水宿根草本</option>
+											<option value="浮水草本">浮水草本</option>
+											<option value="室内">室内</option>
+											<option value="木质藤本">木质藤本</option>
+											<option value="多年生沉水草本">多年生沉水草本</option>
+											<option value="二年生草本">二年生草本</option>
+											<option value="多年生水生草本">多年生水生草本</option>
+											<option value="草质藤本">草质藤本</option>
+											<option value="常绿小乔木">常绿小乔木</option>
+											<option value="暂无">暂无</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="shopphone" class="control-label col-lg-2">树种名称</label>
+									<div class="col-lg-10">
+										<input class="form-control" placeholder="例如：国槐" id="name">
+									</div>
+								</div>
+								<div class="form-group ignore">
+									<label for="shopmail" class="control-label col-lg-2">胸径(公分)</label>
+									<div class="col-lg-3">
+										<input class="form-control ignore" id="trunk_diameter1">
+									</div>
+									<div class="col-lg-1 center">同时</div>
+									<div class="col-lg-3">
+										<input class="form-control ignore" id="trunk_diameter2">
+									</div>
+								</div>
+								<div class="form-group ignore">
+									<label for="shopmail" class="control-label col-lg-2">地径(公分)</label>
+									<div class="col-lg-3">
+										<input class="form-control ignore" id="ground_diameter1">
+									</div>
+									<div class="col-lg-1 center">同时</div>
+									<div class="col-lg-3">
+										<input class="form-control ignore" id="ground_diameter2">
+									</div>
+								</div>
+								<div class="form-group ignore">
+									<label for="shopmail" class="control-label col-lg-2">冠幅(米)</label>
+									<div class="col-lg-3">
+										<input class="form-control ignore" id="crown1">
+									</div>
+									<div class="col-lg-1 center">同时</div>
+									<div class="col-lg-3">
+										<input class="form-control ignore" id="crown2">
+									</div>
+								</div>
+								<div class="form-group ignore">
+									<label for="shopmail" class="control-label col-lg-2">株高(米)</label>
+									<div class="col-lg-3">
+										<input class="form-control ignore" id="plant_height1">
+									</div>
+									<div class="col-lg-1 center">同时</div>
+									<div class="col-lg-3">
+										<input class="form-control ignore" id="plant_height2">
+									</div>
+								</div>
+								<div class="form-group ignore">
+									<label for="shopmail" class="control-label col-lg-2">分支点(米)</label>
+									<div class="col-lg-3">
+										<input class="form-control ignore" id="branch_point_height1">
+									</div>
+									<div class="col-lg-1 center">同时</div>
+									<div class="col-lg-3">
+										<input class="form-control ignore" id="branch_point_height2">
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-lg-offset-2 col-lg-10">
+										例：等于3--“ =3 ” ； 大于3--“ >3 ” ； 小于3--“ <3 ” ； 大于等于3--“ >=3 ” ； 小于等于3--“ <=3 ” ；
+
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-lg-offset-2 col-lg-10">
+										<button class="btn btn-primary" type="button" id="submit">获取数据</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</section>
+			</aside>
+		</div>
+		<div class="row">
+			<aside class="profile-info col-lg-12">
+				<section class="panel">
+					<div class="panel-body">
+						<div class="border-head">
+	                        <h3>区数据分布</h3>
+	                    </div>
+						<div class=" form">
+							<form class="cmxform form-horizontal" id="commentForm">
+								<div class="form-group">
+									<label for="shopphone" class="control-label col-lg-2">地区</label>
+									<div class="col-lg-10">
+										<input class="form-control" placeholder="例如：大兴" id="addressname">
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-lg-offset-2 col-lg-10">
+										例：大兴；房山；顺义；通州；昌平；延庆；海淀；朝阳；丰台；怀柔；密云；平谷；门头沟；
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-lg-offset-2 col-lg-10">
+										<button class="btn btn-primary" type="button" id="submit1">获取数据</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</section>
+			</aside>
+		</div>
+		<div class="row">
+			<aside class="profile-info col-lg-12">
+				<section class="panel">
+					<div class="panel-body">
+						<div class="border-head">
+	                        <h3>类型数据分布</h3>
+	                    </div>
+						<div class=" form">
+							<form class="cmxform form-horizontal" id="commentForm">
+								<div class="form-group">
+									<label for="shopphone" class="control-label col-lg-2">选择类型</label>
+									<div class="col-lg-2">
+										<select class="form-control m-bot15" id="typename">
+											<option value="落叶乔木">落叶乔木</option>
+											<option value="常绿乔木">常绿乔木</option>
+											<option value="落叶灌木">落叶灌木</option>
+											<option value="常绿灌木">常绿灌木</option>
+											<option value="宿根草本">宿根草本</option>
+										</select>
+									</div>
+									<div class="col-lg-1">
+										<input class="form-control" placeholder="0-5" id="option1">
+									</div>
+									<div class="col-lg-1">
+										<input class="form-control" placeholder="5-8" id="option2">
+									</div>
+									<div class="col-lg-1">
+										<input class="form-control" placeholder="8-10" id="option3">
+									</div>
+									<div class="col-lg-1">
+										<input class="form-control" placeholder="10-13" id="option4">
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-lg-offset-2 col-lg-10">
+										0-5  表示 : 条件 大于等于0 同时 小于等于5 
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-lg-offset-2 col-lg-10">
+										<button class="btn btn-primary" type="button" id="submit2">获取数据</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</section>
+			</aside>
+		</div>
+		</section>
+    <script src="/js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript">
+        $('#submit').click(function() {
+        	var array = [];
+        	$('#apparea input:checked').each(function() {
+        		array[array.length] = $(this).val();
+        	});
+        	var data = {
+        		"apparea":array,
+        		"type":$('#type').val(),
+        		"name":$('#name').val(),
+        		"trunk_diameter1":$('#trunk_diameter1').val(),
+        		"trunk_diameter2":$('#trunk_diameter2').val(),
+        		"ground_diameter1":$('#ground_diameter1').val(),
+        		"ground_diameter2":$('#ground_diameter2').val(),
+        		"plant_height1":$('#plant_height1').val(),
+        		"plant_height2":$('#plant_height2').val(),
+        		"crown1":$('#crown1').val(),
+        		"crown2":$('#crown2').val(),
+        		"branch_point_height1":$('#branch_point_height1').val(),
+        		"branch_point_height2":$('#branch_point_height2').val()
+        	}
+        	window.location.href = "./com/getdatainfos.php?data="+JSON.stringify(data);
+        });
+
+        $('#submit1').click(function() {
+        	var name = $('#addressname').val();
+        	if(!name) return;
+        	window.location.href = "./com/getaddressdata.php?name="+name;
+        });
+
+        $('#submit2').click(function() {
+        	var array = [];
+        	var name = $('#typename').val();
+        	if ($('#option1').val()) array.push($('#option1').val());
+        	if ($('#option2').val()) array.push($('#option2').val());
+        	if ($('#option3').val()) array.push($('#option3').val());
+        	if ($('#option4').val()) array.push($('#option4').val());
+        	if (name && (array.length >= 1)) {
+        		window.location.href = "./com/tongji.php?type="+name+"&searcharray="+JSON.stringify(array);
+        	}
+        });
+    </script>
+
+  </body>
+</html>
+

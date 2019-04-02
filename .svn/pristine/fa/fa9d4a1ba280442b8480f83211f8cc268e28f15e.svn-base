@@ -1,0 +1,122 @@
+<?php
+// 审核会员
+require 'checkhost.php';
+require 'db2.php';
+ini_set("display_errors", "On");
+$userid = $_GET['userid'];
+$phone = $_GET['phone'];
+$state = $_GET['state'];
+$isrenzheng = $_GET['isrenzheng'];
+$role = $_GET['role'];
+$member_paid_time=date("Y-m-d H:i:s",time());
+$member_expire_time=date("Y-m-d H:i:s",time()+86400*365);
+$first_authentication_time =time();
+
+$db = new db();
+
+if (isset($role)) {
+    if (isset($userid)) {
+        // 删除
+        $sql = 'update user set role=?, member_level= ? where userid=?';
+        $db->prepare_exec($sql, array($role, 2, $userid));
+    } else {
+        // 添加
+        $sql = 'update user set role=? ,member_level= ? where phone=?';
+        $db->prepare_exec($sql, array($role, 2, $phone));
+    }
+
+    $isrenzheng = $role == '101' ? '1' : '0';
+}
+
+
+if (isset($isrenzheng)) {
+    if (isset($userid)) {
+        if ($isrenzheng == 0) {
+            $sql = 'update user set isrenzheng=? ,member_level=? ,first_authentication_time =(case when first_authentication_time is null then ? else first_authentication_time end),member_paid_time = ?,member_expire_time =? 
+where userid=?';
+
+            $db->prepare_exec($sql, array($isrenzheng,0,$first_authentication_time,$member_paid_time,$member_expire_time,$userid));
+
+            // 更新临时树state
+            $treestate = $isrenzheng == '1' ? (isset($role) && $role == '101' ? 3 : 2) : 0;
+            $sql = 'update treetemp set state=? where userid=?';
+            $db->prepare_exec($sql, array($treestate, $userid));
+
+            // 更新正式树state
+            $treestate = $isrenzheng == '1' ? (isset($role) && $role == '101' ? 3 : 2) : 1;
+            $sql = 'update tree set state=? where userid=?';
+            $db->prepare_exec($sql, array($treestate, $userid));
+        } else {
+            $sql = 'update user set isrenzheng=? ,member_level=?  ,first_authentication_time =(case when first_authentication_time is null then ? else first_authentication_time end),
+
+member_paid_time = ?,member_expire_time =? where userid=?';
+            $db->prepare_exec($sql, array($isrenzheng, 1,$first_authentication_time,$member_paid_time,$member_expire_time, $userid));
+            // 更新临时树state
+            $treestate = $isrenzheng == '1' ? (isset($role) && $role == '101' ? 3 : 2) : 0;
+            $sql = 'update treetemp set state=? where userid=?';
+            $db->prepare_exec($sql, array($treestate, $userid));
+
+            // 更新正式树state
+            $treestate = $isrenzheng == '1' ? (isset($role) && $role == '101' ? 3 : 2) : 1;
+            $sql = 'update tree set state=? where userid=?';
+            $db->prepare_exec($sql, array($treestate, $userid));
+        }
+    } else {
+        if($isrenzheng == 0){
+            $sql = 'update user set isrenzheng=? ,member_level=?,first_authentication_time =(case when first_authentication_time is null then ? else first_authentication_time end),member_paid_time = ?,member_expire_time =? where phone=?';
+
+            $db->prepare_exec($sql, array($isrenzheng,0,$first_authentication_time,$member_paid_time,$member_expire_time,$phone));
+
+            // 更新临时树state
+            $treestate = $isrenzheng == '1' ? (isset($role) && $role == '101' ? 3 : 2) : 0;
+            $sql = 'update treetemp set state=? where wechatid in (select wechatid from user where phone=?)';
+            $db->prepare_exec($sql, array($treestate, $phone));
+
+            // 更新正式树state
+            $treestate = $isrenzheng == '1' ? (isset($role) && $role == '101' ? 3 : 2) : 1;
+            $sql = 'update tree set state=? where userid in (select userid from user where phone=?)';
+            $db->prepare_exec($sql, array($treestate, $phone));
+        }else{
+
+            $sql = 'update user set isrenzheng=? , member_level=? ,first_authentication_time =(case when first_authentication_time is null then ? else first_authentication_time end),member_paid_time = ?,member_expire_time =? where phone=?';
+
+//            var_dump($sql);die;
+            $db->prepare_exec($sql, array($isrenzheng,2,$first_authentication_time,$member_paid_time,$member_expire_time,$phone));
+
+            // 更新临时树state
+            $treestate = $isrenzheng == '1' ? (isset($role) && $role == '101' ? 3 : 2) : 0;
+            $sql = 'update treetemp set state=? where wechatid in (select wechatid from user where phone=?)';
+            $db->prepare_exec($sql, array($treestate, $phone));
+
+            // 更新正式树state
+            $treestate = $isrenzheng == '1' ? (isset($role) && $role == '101' ? 3 : 2) : 1;
+            $sql = 'update tree set state=? where userid in (select userid from user where phone=?)';
+            $db->prepare_exec($sql, array($treestate, $phone));
+        }
+
+    }
+} else {
+    $grouporder = $state * 1 >= 1000 ? 'grouporder=0,' : '';
+
+    if (isset($userid)) {
+        $sql = 'update user set ' . $grouporder . 'state=? where userid=?';
+        $sql_array = array($state, $userid);
+    } else {
+        $sql = 'update user set ' . $grouporder . 'state=? where phone=?';
+        $sql_array = array($state, $phone);
+    }
+
+    $db->prepare_exec($sql, $sql_array);
+}
+
+
+// 新添加，返回用户信息
+if ($isrenzheng == '1' || $userstate != '0') {
+    $sql = 'select userid,name,phone,isrenzheng,province,city from user where phone=?';
+    $result = $db->prepare_query($sql, array($phone));
+    echo $result ? json_encode($result) : '';
+}
+
+unset($db);
+
+?>

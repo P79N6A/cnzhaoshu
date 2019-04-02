@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>苗木信息采集</title>
+  </head>
+<body>
+	<div id="uploadForm" style="float: left;position: relative;width:100px;height:30px;">
+        <div id="upload" style="width:100px;height:30px;background:#428bca;color:#fff;border-radius: 4px;line-height: 30px;text-align: center;position: absolute;">上传</div>
+        <input id="file" type="file" multiple="multiple" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" style="position: absolute;top: 0;left: 0;width: 100px;height: 30px;opacity: 0;">
+    </div> 
+	<script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
+    <!--[if lt IE 9]><script type="text/javascript" src="js/json2.js"></script><![endif]-->
+    <script type="text/javascript" src="http://cnzhaoshu.com/open/login.js"></script>
+
+    <script type="text/javascript">
+
+        function getcookie(name){//获取指定名称的cookie的值
+            var arrStr = document.cookie.split("; ");
+            for(var i = 0;i < arrStr.length;i ++){
+                var temp = arrStr[i].split("=");
+                if(temp[0] == name) return unescape(temp[1]);
+            } 
+        }
+        user = getcookie('user2');
+        user = JSON.parse(user);
+        
+        $('#file').change(function(){
+            var formData = new FormData();
+            formData.append('file', $('#file')[0].files[0]);
+            formData.append('userid', user.userid);
+            $.ajax({
+                    url: '/com/tree_statistics.php',
+                    type: 'POST',
+                    cache: false,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success:function(err){
+                        if(err){
+                            alert('上传成功！');
+                            // window.location.href="/";
+                        }else{
+                            alert('上传错误！');
+                        }
+                    }
+            }); 
+        })
+
+        
+    </script>
+</body>

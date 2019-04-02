@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html><html><head>
+<title>投标</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+<meta name="format-detection" content="telephone=no"/>
+</head>
+<body>
+    <div id="id"></div>
+<script>
+    function urlRequest(name) {
+        var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);  
+        return match && decodeURIComponent(match[1].replace(/\+/g, ' ')); 
+    }
+
+    var id = urlRequest("id");
+
+    document.getElementById('id').innerHTML = id;
+    
+</script>
+
+</body></html>

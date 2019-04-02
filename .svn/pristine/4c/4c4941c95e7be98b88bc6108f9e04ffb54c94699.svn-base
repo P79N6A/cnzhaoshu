@@ -1,0 +1,20 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Mrwang
+ * Date: 2018/8/29
+ * Time: 15:15
+ */
+include "../com/db.php";
+//需要修改的地方
+$user=json_decode($_COOKIE['user2'],true);
+$user=$user['userid'];
+$userid=isset($user)?$user:"";
+$db=new db();
+$sql="select name  from tree where userid='".$userid."'";
+$res=$db->query($sql);
+$content=[
+    'status'=>0,
+    'data'=>$res
+];
+echo json_encode($content);

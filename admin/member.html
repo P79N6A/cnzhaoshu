@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>function getcookie(d){for(var b=document.cookie.split("; "),a=0;a<b.length;a++){var c=b[a].split("=");if(c[0]==d)return unescape(c[1])}}getcookie("user2")||location.replace("login.html");</script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人员-养护管理平台</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-reset.css" rel="stylesheet">
+    <link href="../iconfont/iconfont.css" rel="stylesheet">
+    <link href="./../jstree/style.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/style-responsive.css" rel="stylesheet">
+    <link href="css/yangshu.css" rel="stylesheet">
+    <style type="text/css">
+        .drag{
+            z-index:999999;
+            position:fixed;
+            width:100px;
+            height:25px;
+            background:#aaa;
+            cursor:move;
+            display: none;
+            text-align: center;
+            font-size: 13px;
+            line-height: 25px;
+            border-radius: 4px;
+        } 
+        .topshow{
+            position:fixed;
+        }
+        .resets{
+            margin-top: 20px;
+            margin-left:40%;
+        }
+        .uploaduserinfo{
+            margin-left:12%;
+            margin-top: 20px;
+        }
+        .title{
+            text-align: center;
+            line-height: 20px;
+            margin-bottom: 20px;
+        }
+        .uploadcontent{
+            width:60%;
+            height:400px;
+            border:1px solid #ccc;
+            border-radius: 4px;
+            margin-left:20%;
+            resize:none;
+            padding: 1%;
+        }
+        .hint{
+            text-align: center;
+            color: #ccc;
+        }
+        .allproject{
+            max-height:200px;
+            overflow-y:auto;
+        }
+    </style>
+</head>
+<body>
+<div class="drag"></div>
+    <header id="header" class="header white-bg"></header>
+    <aside><div id="sidebar" class="nav-collapse"></div></aside>
+    <section id="main-content">
+        <section class="wrapper">
+            <div class="row">
+                <aside class="col-lg-3 topshow">
+                    <section class="panel" style="width:90%">
+                        <div class="panel-body">
+                            <div class="input-append">
+                                <input placeholder="搜索部门" class="form-control" id="demo_q" type="text">
+                            </div>
+                            <!-- 树 -->
+                            <div id="tree" class=""></div>
+                        </div>
+                        <p class="hint">鼠标右键，增加、修改、删除部门</p>
+                    </section>
+                </aside>
+                <aside class="col-lg-offset-3 col-lg-9">
+                    <section class="panel findshow">
+                        <header class="panel-heading">
+                            <div class="input-append" style="border-radius: 4px;border:1px solid #ddd;float:left;margin-bottom:5px;width:40%">
+                                <input placeholder="搜索人名、项目、部门、角色、电话" class="form-control" style="border-radius: 4px;border:1px solid #fff;width:80%;float:left;" id="searching_user" type="text">
+                                <button type="button" class="btn sr-btn  btn-success searching_user" style="border-radius: 4px;border:1px solid #ddd;width:20%;float:left;height:34px;"><i class="iconfont icon-search"></i></button>
+                            </div>
+                            <button type="button" class="btn sr-btn btn-success newstuff" style="margin-left:0.5%">新员工名单</button>
+                            <button type="button" class="btn sr-btn btn-success inputnewstuff" style="display:none" data-toggle="modal" href="#myModal1">添加新员工</button>
+                            <button type="button" class="btn sr-btn btn-success output" style="float:right">导出名单电子表格</button>
+                            <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" style="background:#fff;width:100%;height:100%">
+                                    <div class="title">新员工名单</div>
+                                    <p class="hint">复制excel表的姓名和电话, 或直接录入姓名 电话(以空格隔开)，每行一人</p>
+                                    <textarea class="uploadcontent" placeholder=""></textarea>
+                                    <button type="button" class="btn btn-success resets" data-dismiss="modal" aria-hidden="true">取消</button>
+                                    <button type="button" class="btn btn-success uploaduserinfo" data-dismiss="modal">确定</button>
+                                </div>
+                            </div>
+                        </header>
+                        <div class="col-lg-12">
+                            <table class="table table-striped table-advance table-hover" show="1">
+                                <thead>
+                                    <tr>
+                                        <th class="col-xs-1">序号</th>
+                                        <th class="col-xs-1">姓名</th>
+                                        <th class="col-xs-3">项目</th>
+                                        <th class="col-xs-2">部门</th>
+                                        <th class="col-xs-2">角色(职位)</th>
+                                        <th class="col-xs-2">电话</th>
+                                        <th class="col-xs-1">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="user">
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </aside>
+            </div>    
+        </section>
+    </section>
+    <!--main content end-->
+
+
+    <!-- 人员加载模板 -->
+    <script id="dot_user" type="text/x-dot-template">
+        {{ for(var i in it) { }}
+                <tr dateid="{{=it[i].userid}}">
+                    <td class="order">{{=it[i].order}}</td>
+                    <td class="move">{{=it[i].name}}</td>
+                    <td>
+                        <div class="input-group-btn selectprojectnames">
+                            <button type="button" class="btn btn-white col-xs-12 dropdown-toggle showprojects" style="border-radius:5px" data-toggle="dropdown"><span id="projectname" class="col-xs-9">{{=it[i].project?it[i].project:'暂无项目'}}</span><span class="caret"></span></button>
+                            {{? it[i].projectnames}}
+                                <ul class="dropdown-menu pull-right col-xs-12 allproject">
+                                    {{~it[i].projectnames:value:index}}
+                                    <li><a projectsid="{{=value.id}}">{{=value.name}}</a></li>
+                                    {{~}}
+                                </ul>
+                            {{?}}
+                            
+                        </div>
+                    </td>
+                    <td class="move">{{=it[i].department?it[i].department:''}}</td>
+                    <td>
+                        <div class="input-group-btn selectrolename">
+                            <button type="button" class="btn btn-white col-xs-12 dropdown-toggle showrole" style="border-radius:5px" data-toggle="dropdown"><span id="rolename" class="col-xs-9">{{=it[i].rolename?it[i].rolename:'暂无职位'}}</span><span class="caret"></span></button>
+                            <ul class="dropdown-menu pull-right col-xs-12">
+                                <li><a roleid="2">区域经理</a></li>
+                                <li><a roleid="11">现场负责人</a></li>
+                                <li><a roleid="12">养护员工</a></li>
+                                <li><a roleid="13">兼职认养</a></li>
+                                <li><a roleid="3">甲方物业</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td class="phone">{{=it[i].phone}}</td>
+                    <td class="deleteuser"><button class="btn btn-danger btn-xs iconfont icon-shanchu delete"></button></td>
+                </tr>
+        {{ } }}
+    </script>
+
+    <script src="/js/jquery-1.12.4.min.js"></script>
+    <script src="js/login.js?t=20170313"></script>
+    <script src="/js/doT.min.js"></script>
+    <script src="./../jstree/jstree.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.scrollTo.min.js"></script>
+    <script src="js/jquery.nicescroll.js" type="text/javascript"></script>
+    <script src="js/common-scripts.js"></script>
+
+
+    
+    <script type="text/javascript">
+        var homedata = [];
+        var nohomedata = [];
+        var allprojectname = [];
+        var alldate;
+        var _move=false;
+        var moveing = false; 
+        var move=false; 
+        var nmoveing = false;
+        var rolename_role = {2:'区域经理',3:'甲方物业',11:'现场负责人',12:'养护员工',13:'兼职认养'};
+        var dot_user = doT.template($("#dot_user").text());
+        var usermoveid;
+        var selecteddepartmentid;
+        var outputdata;
+        var selected_title;
+        var phone;
+        var updatephoneid;
+        var loadwritephone = false;
+        var departmentnames = [];
+        
+        // 加载人员信息和项目
+        $(function(){
+            var where={"flagid":user.flagid};
+            $.getJSON('/com/user.search.php',{where:JSON.stringify(where)},function(json){
+                if(json){
+                    alldate = json;
+                    for (var i = 0; i < json.length; i++) {
+                        if(json[i].departmentid){
+                            var jsonlenght = homedata.length;
+                            homedata[jsonlenght] = json[i];
+                        }else{
+                            var jsonlenght = nohomedata.length;
+                            nohomedata[jsonlenght] = json[i];
+                        }
+                    }
+                }else{
+                    alldate = [];
+                }
+            });
+            $.getJSON('/com/projectdepartment.search.php',{where:JSON.stringify(where)},function(name){
+                if(name) departmentnames = name;
+            });
+        });
+
+        // 点击新人员
+        $('.newstuff').click(function(){
+            for (var i = 0; i < nohomedata.length; i++) {
+                nohomedata[i].order = 1+i;
+            }
+            $("#user").html(dot_user(nohomedata));
+            $('.newstuff').attr('checked',true);
+            $('.inputnewstuff').show();
+        });
+
+        // 删除人员
+        $('#user').on('click','.deleteuser',function(){
+            if(confirm('你确定要删除吗?')){
+                var deleteid = $(this).closest('tr').attr('dateid');
+                var that =  $(this);
+                if(deleteid > 0){
+                    $.post('/com/user.delete.php',{userid:deleteid},function(result){
+                        if(result){
+                            that.closest('tr').remove();
+                            var order = 1;
+                            $('#user .order').each(function() {
+                                $(this).html(order);
+                                order++;
+                            });
+                            var mm = [];
+                            if($('.newstuff').attr('checked')){
+                                for (var i = 0; i < nohomedata.length; i++) {
+                                    if(nohomedata[i].userid != deleteid){
+                                        mm[mm.length] = nohomedata[i];
+                                    }
+                                }
+                                nohomedata = mm;
+                            }else{
+                                for (var i = 0; i < homedata.length; i++) {
+                                    if(homedata[i].userid != deleteid){
+                                        mm[mm.length] = homedata[i];
+                                    }
+                                }
+                                homedata = mm;
+
+                                loadDepartmentCount();
+                            }
+                        }else{
+                            alert('删除失败! ');
+                        }
+                    });
+                }
+            }
+        });
+
+        // 修改手机
+        $('#user').on('dblclick','.phone',function(){
+            if(!loadwritephone){
+                loadwritephone = true;
+                phone = $(this).html();
+                updatephoneid = $(this).closest('tr').attr('dateid');
+                $(this).html('');
+                $('<input>').addClass('inputphone form-control').attr('value',phone).appendTo(this);
+                $('.inputphone').focus();
+            }
+        }).on('blur','.inputphone',function(){
+            var newphone = $('.inputphone').val();
+            if(newphone && (phone != newphone)){
+                var where = {
+                    'phone':newphone
+                };
+                $.post('/com/user_phone.update.php',{userid:updatephoneid,where:JSON.stringify(where)},function(json){
+                    if(json){
+                        $('.inputphone').parents('td').html(newphone);
+                        if($('.newstuff').attr('checked')){
+                            for (var i = 0; i < nohomedata.length; i++) {
+                                if(nohomedata[i].userid == updatephoneid){
+                                    nohomedata[i].phone = newphone;
+                                }
+                            }
+                        }else{
+                            for (var i = 0; i < homedata.length; i++) {
+                                if(homedata[i].userid == updatephoneid){
+                                    homedata[i].phone = newphone;
+                                }
+                            }
+                        }
+                        $('.inputphone').parents('td').html(newphone);
+                        
+                        alert('联系电话修改成功!');
+                    }else{
+                        $('.inputphone').parents('td').html(phone);
+                        alert('联系电话修改失败!');
+                    }
+                    
+                });
+            }else{
+                $('.inputphone').parents('td').html(phone);
+            }
+            loadwritephone = false;
+        });
+
+        // 修改角色(职位)
+        $('#user').on('click','.selectrolename a',function(){
+            var that = $(this);
+            var roleid = that.attr('roleid');
+            roleid = parseInt(roleid);
+            var rolename = rolename_role[roleid];
+            var userid = that.parents('tr').attr('dateid');
+            var nowproject = '';
+            var nowprojectuserid = '';
+            if(roleid == 11){
+                for (var i = 0; i < alldate.length; i++) {
+                    if(alldate[i].userid == userid){
+                        nowproject = alldate[i].projectid;
+                    }
+                }
+                for (var i = 0; i < alldate.length; i++) {
+                    if((alldate[i].projectid == nowproject)&&(alldate[i].role == 11)){
+                        nowprojectuserid = alldate[i].userid;
+                    }
+                }
+            }
+            var where = {'rolename':rolename,'role':roleid};
+            $.post('/com/user_role.update.php',{'userid':userid,where:JSON.stringify(where)},function(json){
+                if(json){
+                    that.parents('.selectrolename').find('#rolename').html(rolename);
+                    if($('.newstuff').attr('checked')){
+                        for (var i = 0; i < nohomedata.length; i++) {
+                            if(nohomedata[i].userid == userid){
+                                nohomedata[i].rolename = rolename;
+                                nohomedata[i].role = roleid;
+                            }else if((nowprojectuserid)&&(nowprojectuserid == nohomedata[i].userid)){
+                                nohomedata[i].projectid = '';
+                                nohomedata[i].project = '';
+                            }
+                        }
+                    }else{
+                        for (var i = 0; i < homedata.length; i++) {
+                            if(homedata[i].userid == userid){
+                                homedata[i].rolename = rolename;
+                                homedata[i].role = roleid;
+                            }else if((nowprojectuserid)&&(nowprojectuserid == homedata[i].userid)){
+                                homedata[i].projectid = '';
+                                homedata[i].project = '';
+                            }
+                        }
+                    }
+                    loadDepartmentCount();
+                }
+            });
+        });
+
+        // 修改项目
+        $('#user').on('click','.selectprojectnames a',function(){
+            var that = $(this);
+            var projectid = that.attr('projectsid');
+            var userid = that.parents('tr').attr('dateid');
+            for (var i = 0; i < alldate.length; i++) {
+                if(alldate[i].userid == userid){
+                    var roles = alldate[i].role;
+                }
+            }
+            for (var i = 0; i < departmentnames.length; i++) {
+                if(departmentnames[i].id == projectid){
+                    var projectname = departmentnames[i].name;
+                }
+            }
+            var olduserid = '';
+            if(roles == 11){
+                for (var i = 0; i < alldate.length; i++) {
+                    if((alldate[i].projectid == projectid)&&(alldate[i].userid != userid)&&(alldate[i].role == 11)){
+                        olduserid = alldate[i].userid;
+                    }
+                }
+            }
+            var where = {'projectid':projectid,'project':projectname};
+            $.post('/com/user_project.update.php',{'userid':userid,where:JSON.stringify(where),olduserid:olduserid},function(json){
+                if(json){
+                    that.parents('.selectprojectnames').find('#projectname').html(projectname);
+                    if($('.newstuff').attr('checked')){
+                        for (var i = 0; i < nohomedata.length; i++) {
+                            if(nohomedata[i].userid == userid){
+                                nohomedata[i].projectid = projectid;
+                                nohomedata[i].project = projectname;
+                            }else if((olduserid)&&(nohomedata[i].userid == olduserid)){
+                                nohomedata[i].projectid = '';
+                                nohomedata[i].project = '';
+                            }
+                        }
+                    }else{
+                        for (var i = 0; i < homedata.length; i++) {
+                            if(homedata[i].userid == userid){
+                                homedata[i].projectid = projectid;
+                                homedata[i].project = projectname;
+                            }else if((olduserid)&&(homedata[i].userid == olduserid)){
+                                homedata[i].projectid = '';
+                                homedata[i].project = '';
+                            }
+                        }
+                    }
+                    loadDepartmentCount();
+                }
+            });
+        });
+
+        // 老员工改变部门
+        $('#user').on('click','.move',function(){
+        }).on('mousedown','.move',function(e){
+            _move=true; 
+            var username = $(this).closest('tr').children('td').eq(1).html(); 
+            usermoveid = $(this).closest('tr').attr('dateid'); 
+            $('.drag').html(username);
+            e.preventDefault();
+        }).on('mouseup','.move',function(e){
+            _move=false; 
+            $(".drag").hide(); 
+            e.preventDefault();
+        });
+
+        $(document).mousemove(function(e){  
+            if(_move){  
+                moveing = true;
+                e.preventDefault();
+                var height = $(document).scrollTop();
+                $(".drag").show(); 
+                var x=e.pageX + 10; 
+                var y=e.pageY - 12 - height;  
+                $(".drag").css({top:y,left:x});
+            }  
+        }).mouseup(function(){
+            if(_move&&moveing){
+                _move=false; 
+                moveing = false; 
+                $(".drag").hide();
+                var treeid = parseInt($('#tree .jstree-hovered').closest('li').attr('id'));
+
+                if((treeid != undefined)&&(treeid > 0)){
+                    $.getJSON('/com/user.department.update.php',{'userid':usermoveid,'departmentid':treeid},function(json){
+                        if(json){
+                            if($('.newstuff').attr('checked')){
+                                var newnohomedata = [];
+                                for (var i = 0; i < nohomedata.length; i++) {
+                                    if(nohomedata[i].userid != usermoveid){
+                                        newnohomedata[newnohomedata.length] = nohomedata[i];
+                                    }else{
+                                        homedata[homedata.length] = nohomedata[i];
+                                    }
+                                }
+                                nohomedata = newnohomedata;
+                                $('#user tr').each(function(){
+                                    var dateid = $(this).attr("dateid");
+                                    if(dateid == usermoveid){
+                                        $(this).remove();
+                                    }
+                                });
+                            }else{
+                                $('#user tr').each(function(){
+                                    var isthis = $(this);
+                                    var dateid = isthis.attr("dateid");
+                                    if(dateid == usermoveid){
+                                        $(this).children('td').eq(3).html(json);
+                                    }
+                                });
+                            }
+                            for (var i = 0; i < homedata.length; i++) {
+                                if(homedata[i].userid == usermoveid){
+                                    homedata[i].department = json;
+                                    homedata[i].departmentid = treeid;
+                                }
+                            }
+                            loadDepartmentCount();
+                        }else{
+                            alert('分配部门失败!');
+                        }
+                    });
+                }
+            }
+        }); 
+
+        // 搜索
+        $('#searching_user').bind('keydown', function (e) {
+            var key = e.which;
+            if (key == 13) {
+                e.preventDefault();
+                search_user();
+            }
+        });
+        $('#searching_user').on('keyup', function (e) {
+            var key = e.which;
+            if ((key == 127) || (key == 8)) {
+                search_user();
+            }
+        });
+        // 搜索
+        $('.searching_user').click(function(){
+            search_user();
+        });
+        function search_user(){
+            var selecteddata = [];
+            var userinput = $('#searching_user').val();
+            if(userinput){
+                for (var i = 0; i < alldate.length; i++) {
+                    var rolename = null;
+                    var department = null;
+                    var project = null;
+                    var phones = null;
+                    var name = alldate[i].name.replace(userinput,',');
+                    if(alldate[i].rolename) rolename = alldate[i].rolename.replace(userinput,',');
+                    if(alldate[i].department) department = alldate[i].department.replace(userinput,',');
+                    if(alldate[i].project) project = alldate[i].project.replace(userinput,',');
+                    if(alldate[i].phone) phones = alldate[i].phone.replace(userinput,',');
+                    if(name != alldate[i].name){
+                        selecteddata[selecteddata.length] = alldate[i];
+                    }else if(rolename != alldate[i].rolename){
+                        selecteddata[selecteddata.length] = alldate[i];
+                    }else if(department != alldate[i].department){
+                        selecteddata[selecteddata.length] = alldate[i];
+                    }else if(project != alldate[i].project){
+                        selecteddata[selecteddata.length] = alldate[i];
+                    }else if(phones != alldate[i].phone){
+                        selecteddata[selecteddata.length] = alldate[i];
+                    }
+                }
+                for (var i = 0; i < selecteddata.length; i++) {
+                    selecteddata[i].order = 1 + i;
+                }
+                $("#user").html(dot_user(selecteddata));
+            }else{
+                for (var i = 0; i < alldate.length; i++) {
+                    alldate[i].order = 1 + i;
+                }
+                $("#user").html(dot_user(alldate));
+            }
+        }
+
+        // 添加新员工
+        $('.uploaduserinfo').click(function(){
+            var text = $('.uploadcontent').val();
+            var worker = [];
+            var lines = text.split("\n");
+            var newuser = [];
+            for (var i = 0; i < lines.length; i++) {
+                if(lines[i]){
+                    lines[i] = $.trim(lines[i]);
+                    var cols = lines[i].split("\t");
+                    y = newuser.length;
+                    if(cols[0]&&cols[1]){
+                        newuser[y] = {};
+                        newuser[y].name = cols[0];
+                        newuser[y].phone = cols[1];
+                        newuser[y].flagid = user.flagid;
+                    }else{
+                        linesq = lines[i].replace(/\s+/g, ' ');  // 多个空格用一个空格替换的正确方法
+                        var cols = linesq.split(" ");
+                        newuser[y] = {};
+                        newuser[y].name = cols[0];
+                        newuser[y].phone = cols[1];
+                        newuser[y].flagid = user.flagid;
+                    }
+                }
+            }
+            var touser = [];
+            var double = '';
+            for (var i = 0; i < newuser.length; i++) {
+                var x = 0;
+                for (var m = 0; m < alldate.length; m++) {
+                    if(newuser[i].phone == alldate[m].phone){
+                        x = 1;
+                    }
+                }
+                if(x == 0){
+                    touser[touser.length] = newuser[i];
+                }else{
+                    double += (newuser[i].name + '、');
+                }
+            }
+            double = double.substring(0,double.length-1);
+            newuser = touser;
+            if(newuser.length){
+                $.getJSON('/com/user.insertbatch.php',{where:JSON.stringify(newuser)},function(json){
+                    for (var i = 0; i < newuser.length; i++) {
+                        newuser[i].userid = parseInt(json[i]);
+                        newuser[i].projectnames = allprojectname;
+                        nohomedata[nohomedata.length] = newuser[i];
+                    }
+                    loadDepartmentCount();
+                })
+            }
+            if(double) alert(double+'联系号码已存在!');
+        });
+
+        // 导出表格
+        $('.output').click(function(){
+            if($('.newstuff').attr('checked')){
+                var data = JSON.stringify(nohomedata);
+                selected_title = '新人员(未绑定部门)';
+            }else{
+                var data = JSON.stringify(outputdata);
+            }
+            window.location = '/com/department.output.php?date='+data+'&title='+selected_title;
+        });
+
+        // jstree
+        var jstree_path = './../jstree/jstree.php?flagid='+user.flagid+'&operation=';
+        var department_count, isLoadingDepartmentCount;
+        loadDepartmentCount();
+        $('#tree')
+            .jstree({
+                'core' : {
+                    'data' : {
+                        'url' : jstree_path + 'get_node',
+                        'data' : function (node) {
+                            setTimeout(setDepartmentCount,300);
+                            return { 'id' : node.id };
+                        }
+                    },
+                    'check_callback' : true,
+                    'themes' : {
+                        'responsive' : false
+                    }
+                },
+                'force_text' : true,
+                'plugins' : ['state','dnd','types','contextmenu','search','wholerow']
+            })
+            .on('delete_node.jstree', function (e, data) {
+                if(confirm("您确定将要删除吗?")){
+                    var mm = 0;
+                    for (var i = 0; i < department_count.length; i++) {
+                        if((department_count[i].id == data.node.id) && (department_count[i].count > 0)){
+                            mm++;
+                            data.instance.refresh();
+                            alert('请先移除该组织人员!');
+                        }
+                    }
+                    if(mm == 0){
+                        $.get(jstree_path + 'delete_node', { 'id' : data.node.id })
+                            .fail(function () {
+                                data.instance.refresh();
+                            })
+                            .done(function () {
+                                setDepartmentCount();
+                            });   
+                    }
+                } else {
+                    data.instance.refresh();
+                }
+            })
+            .on('create_node.jstree', function (e, data) {
+                $.get(jstree_path + 'create_node', { 'id' : data.node.parent, 'position' : data.position, 'text' : data.node.text })
+                    .done(function (d) {
+                        data.instance.set_id(data.node, d.id);
+                        loadDepartmentCount();
+                    })
+                    .fail(function () {
+                        data.instance.refresh();
+                    });
+            })
+            .on('rename_node.jstree', function (e, data) {
+                $.get('/com/department.update.php',{id:data.node.id,department:data.text},function(){
+                    for (var i = 0; i < homedata.length; i++) {
+                        if(homedata[i].departmentid == data.node.id){
+                            homedata[i].department = data.text;
+                        }
+                    }
+                    $('#user tr').each(function(){
+                        $(this).children('td').eq(3).html(data.text); 
+                    })
+                });
+                $.get(jstree_path + 'rename_node', { 'id' : data.node.id, 'text' : data.text })
+                    .fail(function () {
+                        data.instance.refresh();
+                    })
+                    .done(function () {
+                        setDepartmentCount();
+                    });
+            })
+            .on('move_node.jstree', function (e, data) {
+                $.get(jstree_path + 'move_node', { 'id' : data.node.id, 'parent' : data.parent, 'position' : data.position })
+                    .fail(function () {
+                        data.instance.refresh();
+                    })
+                    .done(function () {
+                        loadDepartmentCount();
+                    });
+            })
+            .on('copy_node.jstree', function (e, data) {
+                $.get(jstree_path + 'copy_node', { 'id' : data.original.id, 'parent' : data.parent, 'position' : data.position })
+                    .always(function () {
+                        data.instance.refresh();
+                    })
+                    .done(function () {
+                        loadDepartmentCount();
+                    });
+            })
+            .on('changed.jstree', function (e, data) {
+                selecteddepartmentid = parseInt(data.selected[0]);
+                $('.newstuff').attr('checked',false);
+                $('.inputnewstuff').hide();
+                if(data.node){
+                    selected_title = data.node.text;
+                }
+                loadDepartmentCount();
+        });
+        function loadDepartmentCount() {
+            if (isLoadingDepartmentCount) return;
+
+            isLoadingDepartmentCount = true;
+            $.getJSON('./../com/department.count.php', {flagid: user.flagid}, function (data) {
+                // 递归父节点
+                deparmentids = [];
+                for (var i = data.length - 1; i > 0; i--) {
+                    var department = data[i];
+                    for (var j = i-1; j > 0; j--) {
+                        var parent_department = data[j];
+                        if (parent_department.id==department.pid) {
+                            parent_department.count += department.count;
+                            break;
+                        }
+                    }
+                }
+                department_count = data;
+                setDepartmentCount();
+                var children = [];
+                if($('.newstuff').attr('checked')){
+                    outputdata = nohomedata;
+                    for (var i = 0; i < nohomedata.length; i++) {
+                        nohomedata[i].order = 1 + i;
+                    }
+                    $("#user").html(dot_user(nohomedata));
+                }else if(selecteddepartmentid){
+                    children[0] = selecteddepartmentid;
+                    finddepartmentid(selecteddepartmentid);
+                    function finddepartmentid(find){
+                        for (var i = 0; i < data.length; i++) {
+                            if(data[i].pid == find){
+                                children[children.length] = data[i].id;
+                                finddepartmentid(data[i].id);
+                            }else{  
+                                continue;
+                            }
+                        }
+                    }
+                    var departmentdata = [];
+                    for (var i = 0; i < homedata.length; i++) {
+                        for (var j = 0; j < children.length; j++) {
+                            if(homedata[i].departmentid == children[j]){
+                                departmentdata[departmentdata.length] = homedata[i];
+                            }
+                        }
+                    }
+                    var newdepartment = [];
+                    for (var i = 0; i < departmentnames.length; i++) {
+                        for (var j = 0; j < children.length; j++) {
+                            if(departmentnames[i].departmentid == children[j]){
+                                var x = newdepartment.length;
+                                newdepartment[x] = {};
+                                newdepartment[x].id = departmentnames[i].id;
+                                newdepartment[x].name = departmentnames[i].name;
+                            }
+                        }
+                    }
+                    if(newdepartment.length == 0) newdepartment = null;
+                    for (var i = 0; i < departmentdata.length; i++) {
+                        departmentdata[i].projectnames = newdepartment;
+                    }
+                    outputdata = departmentdata;
+                    for (var i = 0; i < departmentdata.length; i++) {
+                        departmentdata[i].order = 1 + i;
+                    }
+                    $("#user").html(dot_user(departmentdata));
+                }
+                isLoadingDepartmentCount = false;
+            });
+        }
+
+        function setDepartmentCount() {
+            if (!department_count) {
+                loadDepartmentCount();
+                return;
+            }
+
+            for (var i in department_count) {
+                if ($('#count'+department_count[i].id).html() != '('+department_count[i].count+')') {
+                    $('#count'+department_count[i].id).html('('+department_count[i].count+')');
+                }
+            }
+        }
+
+        // jstree搜索
+        $("#tree").jstree({
+            "plugins" : [ "search" ]
+        });
+        var to = false;
+        $('#demo_q').keyup(function () {
+            if(to) { clearTimeout(to); }
+            to = setTimeout(function () {
+                var v = $('#demo_q').val();
+                $('#tree').jstree(true).search(v);
+            }, 250);
+        });
+
+        $('#tree').click(function(){
+            setDepartmentCount();
+        })
+
+        // function loadalldate(){
+        //     if($('.newstuff').attr('checked')){
+        //         for (var i = 0; i < nohomedata.length; i++) {
+        //             nohomedata[i].order = 1 + i;
+        //         }
+        //         $("#user").html(dot_user(nohomedata));
+        //     }else{
+        //         for (var i = 0; i < homedata.length; i++) {
+        //             homedata[i].order = 1 + i;
+        //         }
+        //         $("#user").html(dot_user(homedata));
+        //     }
+        // }
+
+    </script>
+</body>
+</html>

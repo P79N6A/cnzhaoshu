@@ -1,0 +1,89 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript">
+
+		var tree_brand = new Array(
+"101,国  槐,Sophora japonica Linn.,豆科、槐属,6月",
+"102,五角枫,Acer mono Maxim.,槭树科、槭属,5月",
+"103,白  腊,Fraxinus chinensis Roxb.,木犀科、梣属,5月",
+"104,紫叶李,Prunus Cerasifera Ehrhar f. ;atropurpurea (Jacq.) Rehd.,蔷薇科、李属,4月",
+"105,法  桐,Platanus orientalis Linn.,悬铃木科、悬铃木属,4月",
+"106,樱  花,Cerasus yedoensis (Matsum.);Yu et Li,蔷薇科、樱属,3月",
+"107,西府海棠,Malus micromalus Makino,蔷薇科、苹果属,4月",
+"108,油  松,Pinus tabulaeformis Carr.,松科、松属,5月",
+"109,白皮松,Pinus bungeana Zucc. ;ex Endl.,松科、松属,4月",
+"110,北  栾,Koelreuteria paniculata ;Laxm.,无患子科、栾树属,6月",
+"111,银  杏,Ginkgo biloba,孑遗植物,4月",
+"112,金枝槐,Sophora japonica cv. ;Golden Stem,豆科、槐属,6月",
+"113,楸  树,Catalpa bungei C. A. Mey.,紫葳科、梓属,5月",
+"114,云  杉,Picea asperata Mast.,松科、云杉属,4月",
+"115,皂  角,Gleditsia sinensis Lam.,豆科、皂荚属,3月",
+"116,金叶榆,Ulmus pumila cv.jinye.,榆科、榆属,4月",
+"117,元宝枫,Acer truncatum Bunge,槭树科、槭树属,4月",
+"118,垂  柳,Salix babylonica,杨柳科、柳属,3月",
+"119,千头椿,Ailanthus altissima,苦木科、臭椿属,5月",
+"120,香花槐,Robinia pseudoacacia cv.;idaho,豆科、槐属,5月、7月",
+"121,旱  柳,Salix matsudana Koidz.,杨柳科、柳属,3月",
+"122,北美海棠,Malus micromalus cv. ;American,蔷薇科、苹果属,4月",
+"123,金银木,Lonicera maackii (Rupr.) ;Maxim.,忍冬科、忍冬属,5月",
+"124,丁  香,Syringa oblata Lindl.,木犀科、丁香属,5月",
+"125,蒙古栎,Quercus mongolica Fisch. ;ex Ledeb.,壳斗科、栎属,4月",
+"126,八棱海棠,Malus robusta Rehd.,蔷薇科、苹果属,4月",
+"127,玉  兰,Magnolia denudata Desr.,木兰科、木兰属,2月",
+"128,山  楂,Crataegus pinnatifida,蔷薇科、山楂属,5月",
+"129,黄  栌,Cotinus coggygria Scop.,漆树科、黄栌属,5月",
+"130,山  桃,Prunus davidiana Franch.,蔷薇科、桃属,3月",
+"131,山  杏,Armeniaca sibirica (L.) Lam.,蔷薇科、杏属,3月",
+"132,碧  桃,Amygdalus persica var. ;persica f. duplex,蔷薇科、李属,3月",
+"133,紫  薇,Lagerstroemia indica L.,千屈菜科、紫薇属,6月",
+"134,榆叶梅,Amygdalus triloba,蔷薇科、桃属,4月",
+"135,紫  荆,Cercis chinensis Bunge,豆科、紫荆属,3月",
+"136,雪  松,Cedrus deodara (Roxb.) ;G. Don,松科、雪松属,11月",
+"137,馒头柳,Salix matsudana var. matsudana ;f. umbraculifera Rehd.,杨柳科、柳属,4月,-80",
+"138,华山松,Pinus armandii Franch,松科、松属,4月",
+"139,丝绵木,Euonymus maackii Rupr.,卫矛科、卫矛属,5月",
+"140,苹果树,Malus pumila Mill.,蔷薇科、苹果属,5月",
+"141,杜  仲,Eucommia ulmoides,杜仲科、杜仲属,4月",
+"142,桧  柏,Sabina chinensis (L.) Ant.,柏科、圆柏属,4月",
+"143,珍珠梅,Sorbaria sorbifolia ;(L.) A. Br.,蔷薇科、珍珠梅属,7月",
+"144,合  欢,Albizia julibrissin Durazz.,豆科、合欢属,6月",
+"145,红  枫,Acer palmatum Thunb f.,槭树科、槭属,4月",
+"146,柿  树,Diospyros kaki Thunb.,柿科、柿属,5月",
+"147,贴梗海棠,Chaenomeles speciosa ;(Sweet) Nakai,蔷薇科、木瓜属,3月",
+"148,鹅掌楸,Liriodendron chinensis ;(Hemsl.) Sarg,木兰科、鹅掌楸属,5月",
+"149,金叶复叶槭,Acer negundo‘Aurea’,槭树科、槭属,4月",
+"150,七叶树,Aesculus chinensis,七叶树科、七叶树属,4月"
+			);
+
+		var begin = 0;
+		var end = tree_brand.length-1;
+
+		document.write("Begin<br><br>");
+
+		function getQRcode () {
+			document.write(begin);
+			// alert(tree_brand[begin]);
+
+			$.get('qrcode2.php?brand='+tree_brand[begin],function (result) {
+				
+				document.write(' '+result+'<br>');
+
+				if (begin < end) {
+					begin++;
+					getQRcode();
+				}else{
+					document.write('Finish!<br>');
+				}
+			});
+		}
+		getQRcode();
+
+
+	</script>	
+
+</body>
+</html>

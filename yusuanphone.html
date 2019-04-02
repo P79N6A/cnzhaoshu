@@ -1,0 +1,3504 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>预算采购</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+</head>
+<style type="text/css">
+    body{
+        margin:0;
+        padding:8px;
+        color:#434343;
+        background-color: #f8f8f8;
+        font-family: Helvetica,sans-serif;
+        user-select:none;
+    }
+    #menu{
+        z-index:999; 
+        position:fixed; 
+        bottom:0;
+        left: 0;
+        width:101%;
+    }
+    .menu_button {
+        -moz-user-select: none;
+        border-color: transparent;
+        border-right: 1px solid #ccc;
+        display: inline-block;
+        font-size: 16px;
+        font-weight: normal;
+        line-height: 1.42857;
+        margin-bottom: 0;
+        text-align: center;
+        vertical-align: middle;
+        white-space: nowrap;
+        background-color: #0089ff;
+        color: #ffffff;
+        float:left;
+        height:40px;
+        width:25%;
+    }
+    .history_button{
+        border: 1px solid #fff;
+        border-radius: 4px;
+        box-sizing: border-box;
+        display: inline-block;
+        font-size: 13px;
+        font-weight: normal;
+        background-color: #0089ff;
+        color: #fff;
+        height:30px;
+        width:47%;
+    }
+    .form-control {
+        border: 1px solid #e2e2e4;
+        background-color: #fff;
+        border-radius: 4px;
+        box-shadow: none;
+        color: #555;
+        font-size: 16px;
+        height: 25px;
+        padding: 5px 14px;
+        margin-bottom:2px;
+    }
+    .form_control {
+        border: 1px solid #e2e2e4;
+        background-color: #fff;
+        border-radius: 4px;
+        box-shadow: none;
+        color: #555;
+        font-size: 16px;
+        height: 30px;
+        padding: 5px 6px;
+    }
+
+    #order_table{
+        width:100%;
+    }
+    .table{
+        border-bottom:1px solid #ddd;
+        float: left;
+        width:100%;
+    }
+    .table_order{
+        width:8%;
+        float:left;
+        text-align: center;
+        line-height: 28px;
+        color: #bbb;
+    }
+    .table_content{
+        width:90%;
+        float:left;
+    }
+    .table_row1_clos1{
+        width:33%;
+        margin:3px auto;
+        float:left;
+        line-height:20px;
+    }
+    .table_row1_clos2{
+        width:67%;
+        margin:3px auto;
+        float:left;
+        line-height:20px;
+    }
+    .table_row2{
+        width:98%;
+        float:left;
+        line-height: 20px;
+        margin: 0px 0px 3px 0px;
+    }
+    .tree_name{
+        width:100%;
+        margin:2px auto 0px;
+        float:left;
+    }
+    .tree_number{
+        width:100%;
+        margin:0px auto 2px;
+        float:left;
+    }
+    .table_row1_clos2_data{
+        width:33%;
+        margin:2px auto;
+        float:left;
+        text-align: center;
+    }
+    .addressprice_address{
+        width:100%;
+        float:left;
+    }
+    .addressprice_price{
+        width:100%;
+        float:left;
+    }
+    .attributein_input{
+        width:65%;
+        height:40px;
+        font-size: 18px;
+        float:left;
+    }
+    .attributein_name{
+        width:30%;
+        height:40px;
+        font-size: 17px;
+        float:left;
+        line-height: 40px;
+        margin-left: 5%;
+    }
+    #attributein{
+        z-index:9999;
+        position:fixed;
+        bottom:0;  
+        left: 0;
+        right: 0;
+        background-color: #eee;
+        display: none;
+        box-shadow: 0 0 8px;
+        border-radius: 5px 5px 0 0;
+    }
+    #buttons{
+        margin-left:43%;
+    }
+    #hidden_attributein{
+        float: right;
+        text-align: right;
+        width:100%;
+        font-size: 30px;
+    }
+    .cxselect{
+        width:32.33%;
+        height:32px;
+        float:left;
+        line-height:35px;
+        margin: 7px 1% 0 0;
+    }
+    #tree_arrive_address_name{
+        float: left;
+        margin-left:2.5%;
+        width:96%;
+    }
+    .tree_order_lable{
+        padding-top: 15px;
+        font-size: 18px;
+        float: left;
+    }
+    .tree_origin_name{
+        width:100%;
+        float: left;
+    }
+    .provinces_name{
+        float:left;
+        width:24%;
+        box-sizing: border-box;
+        -moz-user-select: none;
+        border: 1px solid #fff;
+        border-radius: 4px;
+        display: inline-block;
+        font-size: 15px;
+        font-weight: normal;
+        line-height: 1.42857;
+        margin-bottom: 0;
+        padding: 4px 0;
+        text-align: center;
+        vertical-align: middle;
+        white-space: nowrap;
+        background-color: #ddd;
+        color: #666666;
+        margin:1% 1% 0 0;
+    }
+    
+    #add,#reset {
+        border: 1px solid transparent;
+        border-radius: 4px;
+        box-sizing: border-box;
+        display: inline-block;
+        font-size: 16px;
+        font-weight: normal;
+        margin-bottom: 5px;
+        margin-right: 12%;
+        background-color: #0089ff;
+        color: #ffffff;
+        float:left;
+        height:30px;
+        width:35%;
+    }   
+    #trunk_diameter1,#ground_diameter1,#crown1,#plant_height1,#branch_number1,#bough_number1,#branch_length1,#bough_length1,#pot_diameter1,#branch_point_height1,#age1,#edits,#plant_height_cm1,#crown_cm1,#substrate1{
+        display: none;
+    }
+    #supplierlist{
+        width:100%;
+        float: left;
+        display:none;
+        margin-bottom: 40px;
+        overflow-y: auto;
+    }
+    #screenlist{
+        width:100%;
+        float: left;
+        display:none;
+        margin-bottom: 10px;
+        overflow-y: auto;
+    }
+    #history_orders{
+        width:100%;
+        float: left;
+        display:none;
+        margin-bottom: 10px;
+    }
+    #customerlist,#bidhistory_info{
+        width:100%;
+        float: left;
+        display:none;
+        overflow-y: auto;
+    }
+    .history_title{
+        width:100%;
+        line-height: 30px;
+        font-size: 18px;
+        text-align: center;
+        margin-top: 10px;
+        float: left;
+    }
+    .title_ordertime{
+        width:28%;
+        float: left;
+    }
+    .title_ordername{
+        width:37%;
+        float: left;
+    }
+    .title_edit{
+        width:35%;
+        float: left;
+    }
+    #history_order_contents{
+        width:100%;
+        float: left;
+        max-height:200px;
+        overflow-y: auto;
+        border-top:5px solid #ddd;
+        border-bottom:5px solid #ddd;
+    } 
+    .history_order_content{
+        width:100%;
+        font-size: 16px;
+        float: left;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+    .ordername{
+        width:57%;
+        float: left;
+        margin:7px 0px;
+        text-align: left;
+    }
+    .ordertime{
+        width:43%;
+        float: left;
+        line-height: 32px;
+    }
+    .edit{
+        width:35%;
+        float: left;
+        line-height: 32px;
+    }
+    #tree_arrive_address_city{
+        padding-top: 5px;
+        float: left;
+        width:100%;
+        margin-bottom: 80px;
+    }
+    .tree_arrive_address_citys {
+        float:left;
+        width:100%;
+        margin-top: 4px;
+    }
+    .area_city{
+        font-size:17px;
+        width:25%;
+        margin-top: 6px;
+        float:left;
+        line-height: 20px;
+    }
+    .area_city_name{
+        width:75%;
+        float:left;
+    }
+    .city_bn {
+        -moz-user-select: none;
+        border: 2px solid #ffffff;
+        border-radius: 6px;
+        display: inline-block;
+        font-size: 14px;
+        font-weight: normal;
+        line-height: 1.42857;
+        margin-bottom: 0;
+        padding: 3px 6px;
+        text-align: center;
+        vertical-align: middle;
+        white-space: nowrap;
+        background-color: #ddd;
+        color: #666666;
+        float: left;
+    }
+    .alertordername,.alerttime {
+        z-index:99999;
+        position:fixed;
+        bottom:20%;
+        left:0%;
+        width:99%;
+        height:230px;
+        border-radius:5px;
+        border:solid 2px #aaa;
+        background-color:#eee;
+        display:none;
+        box-shadow: 0 0 10px #666;
+    }
+    .alert_btn {
+        -moz-user-select: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        cursor: pointer;
+        display: inline-block;
+        font-size: 14px;
+        font-weight: normal;
+        line-height: 1.42857;
+        padding: 6px 12px;
+        text-align: center;
+        vertical-align: middle;
+        white-space: nowrap;
+        background-color: #0089ff;
+        border-color: #0089ff;
+        color: #ffffff;
+        width:20%;
+        margin-top:4%;
+        margin-left:20%;
+    }
+    .form_control_alert{
+        border: 1px solid #e2e2e4;
+        box-shadow: none;
+        color: #c2c2c2;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        display: block;
+        font-size: 16px;
+        height: 23px;
+        line-height: 1.3;
+        padding: 6px 8px;
+        vertical-align: middle;
+        margin:10px auto;
+        width:90%;
+    }
+    #label1{
+        width:30%;
+        float: left;
+        margin-left: 4%;
+        text-align: center;
+        line-height: 35px;
+        font-size: 20px;
+        border-radius: 4px;
+        background-color: #0089ff;
+        color: #fff;
+    }
+    #label0{
+        width:30%;
+        float: left;
+        margin-left: 1%;
+        text-align: center;
+        line-height: 35px;
+        border-radius: 3px;
+        font-size: 20px;
+        background:#fff;
+    }
+    #label2{
+        width:30%;
+        float: left;
+        margin-left: 1%;
+        text-align: center;
+        line-height: 35px;
+        border-radius: 3px;
+        font-size: 20px;
+        background:#fff;
+    }
+    .title_label{
+        width:100%;
+        height:45px;
+        float: left;
+
+    }
+    #history{
+        float:left;
+        width:100%;
+        font-size: 16px;
+    }
+    .name{
+       float:left;
+       height:35px;
+       line-height:35px;
+       margin-top: 5px;
+       font-size: 18px;
+       width:13%;
+    }
+    .key_btn {
+        -moz-user-select: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        cursor: pointer;
+        display: inline-block;
+        font-size: 16px;
+        font-weight: normal;
+        line-height: 1.4;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        padding: 5px 13px;
+        text-align: center;
+        vertical-align: middle;
+        white-space: nowrap;
+        background-color: #0089ff;
+        border-color: #0089ff;
+        color: #ffffff;
+        float:right;
+        margin-right:13%;
+    }
+    .form-controls{
+        border: 1px solid #e2e2e4;
+        box-shadow: none;
+        color: #c2c2c2;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        display: block;
+        font-size: 16px;
+        height: 23px;
+        line-height: 1.3;
+        padding: 6px 8px;
+        vertical-align: middle;
+        margin-top:5px;
+        width:75%;
+        float:left;
+    }
+    .form-controltime{
+        border: 1px solid #e2e2e4;
+        box-shadow: none;
+        color: #c2c2c2;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        color: #555;
+        display: block;
+        font-size: 16px;
+        height: 23px;
+        line-height: 1.3;
+        padding: 6px 8px;
+        vertical-align: middle;
+        margin-top:5px;
+        width:29%;
+        float:left;
+    }
+    .hideform{
+        border: 1px solid #e2e2e4;
+        background-color: #fff;
+        border-radius: 4px;
+        box-shadow: none;
+        color: #555;
+        font-size: 16px;
+        width:29%;
+        padding: 4px 2px;
+    }
+    #history_order_content_orders{
+        width:100%;
+        float:left;
+        display:none;
+        margin-top: 10px;
+    }
+    .history_order_relcontent{
+        float:left;
+        width:65%;
+        border-radius: 1px;
+    }
+    .search_titel{
+        float:left;
+        width:100%;
+        background:#ddd;
+        border-radius: 4px;
+    }
+    .search_titel_name{
+        float: left;
+        width:20%;
+        font-size: 25px;
+        line-height: 35px;
+        margin-left: 40%;
+    }
+    #search_reset{
+        border: 1px solid #bbb;
+        border-radius: 4px;
+        box-sizing: border-box;
+        display: inline-block;
+        font-size: 17px;
+        font-weight: normal;
+        background-color: #bbb;
+        color: #fff;
+        height:35px;
+        line-height: 34px;
+        width:15%;
+        float: right;
+        text-align: center;
+    }
+    #history_ordername_title{
+        float:left;
+        width:100%;
+        background:#ddd;
+        text-align: center;
+        line-height: 35px;
+        height:35px;
+        font-size: 25px;
+        border-radius:4px;
+    }
+    .createneworder{
+        width:100%;
+        height:35px;
+        margin:20px 0 0;
+        line-height:35px;
+        border-radius: 4px;
+        float:left;
+        text-align: center;
+        background-color: #0089ff;
+        color: #ffffff;
+    }
+    .ordertitle{
+        width:98%;
+        line-height:40px;
+        background: #ddd;
+        border-radius: 3px;
+        padding-left: 2%;
+        float:left;
+        margin-bottom: 2px;
+    }
+    .ordercontent{
+        display: none;
+        background:#fff;
+        float:left;
+        margin-bottom: 10px;
+        width:100%;
+        overflow-y: auto;
+    }
+    .on .ordertitle{
+        background:#0089ff;
+    }
+    .on .ordercontent{
+        display:block;
+    }
+    .order{
+        float:left;
+        width:100%;
+        margin-bottom: 5px;
+    }
+    #tender,#bid{
+        display: none;
+        width:100%;
+    }
+    .screenlist{
+        width:32%;
+        padding: 5px 0;
+        font-size: 18px;
+        margin-right: 1%;
+        float: left;
+        text-align: center;
+        border-radius: 3px;
+        margin-bottom: 10px;
+        background:#fff;
+        color:#000;
+    }
+    .supplierlist{
+        width:32%;
+        padding: 5px 0;
+        font-size: 18px;
+        float: left;
+        margin-right: 1%;
+        text-align: center;
+        border-radius: 3px;
+        margin-bottom: 10px;
+        background:#fff;
+        color:#000;
+    }
+    .customerlist{
+        width:50%;
+        padding: 5px 0;
+        font-size: 18px;
+        float: left;
+        text-align: center;
+        border-radius: 3px;
+        margin-bottom: 10px;
+    }
+    .history_info{
+        width:32%;
+        padding: 5px 0;
+        border-radius: 3px;
+        margin-right: 1%;
+        font-size: 18px;
+        float: left;
+        text-align: center;
+        background:#0089ff;
+        margin-bottom: 10px;
+        color:#fff;
+    }
+    .bidhistory_info{
+        width:50%;
+        padding: 5px 0;
+        border-radius: 3px;
+        font-size: 18px;
+        float: left;
+        text-align: center;
+        background:#0089ff;
+        margin-bottom: 10px;
+        color:#fff;
+    }
+    .bid_content{
+        width:100%;
+        float: left;
+        height: auto;
+        margin: 5px 0;
+        background: #fff;
+        border-radius: 4px;
+    }
+    .bid_content_row1{
+        width:100%;
+        float: left;
+        height:30px;
+        line-height: 30px;
+    }
+    .bid_content_price{
+        width:28%;
+        float: left;
+    }
+    .bid_content_name{
+        width:35%;
+        float: left;
+        margin-left: 2%;
+    }
+    .bid_content_result{
+        width:33%;
+        float: left;
+        color:#a6a;
+        text-align: right;
+        font-size: 12px;
+    }
+    .bid_content_row2{
+        width:96%;
+        float: left;
+        margin-left: 2%;
+    }
+    .supplierinfo,.blacksupplierinfo{
+        float: left;
+        width:98%;
+        line-height: 1.4;
+        background: #fff;
+        padding: 3px 1%;
+        margin:2px 0;
+        border-radius: 4px;
+        position: relative;
+    }
+    .supplierimg,.blacksupplierimg{
+        width:30%;
+        float: left;
+        margin: 0 2%;
+        border-radius: 50%;
+        overflow:hidden;
+    }
+    .supplierinfo_address,.blacksupplierinfo_address{
+        line-height: 1.3;
+        width:65%;
+        float: left;
+    }
+    .supplierinfo_name,.blacksupplierinfo_name{
+        line-height: 1.1;
+        width:65%;
+        float: left;
+    }
+    .supplierinfo_phone,.blacksupplierinfo_phone{
+        line-height: 1.8;
+        width:65%;
+        float: left;
+    }
+    .supplierinfo_hit,.supplierinfo_cancel,.blacksupplierinfo_hit,.blacksupplierinfo_cancel{
+        width:25%;
+        float: left;
+        background: #E64340;
+        text-align: center;
+        color:#fff;
+        border-radius: 4px;
+        padding: 4px 0;
+        bottom: 8px;
+        position: absolute;
+        left:70%;
+    }
+    .orderinfos{
+        float: left;
+        width:94%;
+        padding: 0 3%;
+        color:#fff;
+        background: #aaa;
+        border-radius: 4px;
+        line-height: 30px;
+    }
+    .orderinfos_ordername{
+        float: left;
+        width:100%;
+        line-height: 1.5;
+    }
+    .orderinfos_username{
+        float: left;
+        width:65%;
+    }
+    .orderinfos_userphone{
+        float: left;
+        width:35%
+    }
+    #history_order_content_order{
+        float: left;
+        margin:5px 0;
+        width:100%;
+    }
+    .blackpersonlist,.blackcustomerlist{
+        width:100%;
+        float: left;
+        position: fixed;
+        z-index: 200;
+        bottom: 0px;
+        left:0px;
+    }
+    .blacktitle,.blackcustomertitle{
+        text-align: center;
+        background: #0089ff;
+        line-height:40px;
+        font-size: 18px;
+    }
+    #blackpersonlist,#blackcustomerlist{
+        overflow-y: auto;
+        background: #fff;
+        display: none;
+    }
+    .title_delete{
+        float: right;
+        display: none;
+    }
+    .on .title_delete{
+        float: right;
+        width:20%;
+        text-align: center;
+        border-radius: 3px;
+        color:#fff;
+        background:#E64340;
+        display: block;
+    }
+    .ordertitle_ordername{
+        float: left;
+        width:75%;
+        height: 40px;
+        overflow:hidden;
+    }
+    .order_ordername{
+        float: left;
+        width:70%;
+        height: 40px;
+        overflow:hidden;
+    }
+    .check .order_state{
+        border-radius: 5px;
+        background: #0089ff;
+    }
+    .order_state{
+        float: left;
+        width:30%;
+        height: 40px;
+        text-align: center;
+    }
+    .order_state0{
+        float: left;
+        width:30%;
+        height: 40px;
+        text-align: center;
+    }
+    .allorder{
+        float: left;
+        width: 100%;
+    }
+    .showone{
+        float: left;
+        width:100%;
+        border-top: 1px solid #eee;
+        padding:5px 0;
+    }
+    .row1{
+        float: left;
+        width:100%;
+    }
+    .showone_order{
+        width:8%;
+        margin-left: 2%;
+        float: left;
+        line-height: 27px;
+    }
+    .showone_name{
+        width:40%;
+        float: left;
+        line-height: 27px;
+    }
+    .showone_number{
+        width:30%;
+        float: left;
+        line-height: 27px;
+    }
+    .biduser{
+        float: left;
+    }
+    .row2{
+        float: left;
+        width:90%;
+        margin-left: 10%;
+        line-height: 18px;
+        font-size: 14px;
+    }
+    .row3{
+        float: left;
+        width:90%;
+        margin-left: 10%;
+        font-size: 14px;
+    }
+    .row4{
+        float: left;
+        margin-top: 5px;
+        padding:3px 0;
+        width:89%;
+        margin-left: 10%;
+        border:1px solid #eee;
+        display: none;
+        font-size: 14px;
+    }
+    .bids{
+        width:100%;
+        float:left;
+        margin:5px 0;
+    }
+    .image{
+        width:25%;
+        height:90px;
+        margin: 0 1%;
+        float:left;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        overflow: hidden;
+    }
+    .bidinfo{
+        width:40%;
+        margin:0 1%;
+        height:90px;
+        float:left;
+    }
+    .button{
+        width:31%;
+        height:90px;
+        float:left;
+    }
+    .bidinfo_name{
+        width:100%;
+        line-height: 16px;
+        float:left;
+    }
+    .bidinfo_phone{
+        width:100%;
+        line-height: 18px;
+        float:left;
+    }
+    .bidinfo_price,.bidinfo_count{
+        width:90%;
+        line-height: 17px;
+        float:left;
+        text-align: right;
+        padding-right:10%;
+    }
+    .supplier{
+        width:90%;
+        float:left;
+        margin-top: 5px;
+        padding:5px 3px;
+        font-size: 15px;
+        border-radius:3px;
+        background:#1AAD19;
+        color:#fff;
+        text-align: center;
+    }
+    .delete{
+        width:90%;
+        float:left;
+        margin-top: 15px;
+        padding:5px 3px;
+        font-size: 15px;
+        border-radius:3px;
+        background:#E64340;
+        color:#fff;
+        text-align: center;
+    }
+    #show{
+        float: left;
+        width: 100%;
+    }
+    .showone_title{
+        width:100%;
+        float: left;
+    }
+    .winning{
+        width:100%;
+        float: left;
+    }
+    #bigimages{
+        z-index: 500;
+        background: #fff;
+        display: none;
+        float: left;
+        position: absolute;
+    }
+    .bigimage{
+        width:98%;
+        float: left;
+        margin: 10px 1%;
+    }
+    .bid_number{
+        width:20px;
+        height:20px;
+        float:right;
+        border-radius:50%;
+        background:#E64340;
+        color:#fff;
+        line-height: 20px;
+        text-align: center;
+        margin-right: 10%;
+    }
+    #tenderfoot{
+        width: 80%; 
+        float: left; 
+        position: fixed; 
+        z-index: 300; 
+        bottom: 0px; 
+        left: 0px;
+        margin: 4px 10%;
+        background: #fff;
+        line-height: 35px;
+        text-align: center;
+        display: none;
+    }
+    .getphoto{
+        width: 40%; 
+        float: left; 
+        background: #0089ff;
+        border-radius: 4px;
+    }   
+    .sendmessage{
+        width: 40%; 
+        float: right;
+        background: #0089ff;
+        border-radius: 4px;
+    }
+    a{text-decoration:none}
+</style>
+<body>
+    <div class="title_label">
+        <div id="label1">我的采购</div>
+        <div id="label0">我的招标</div>
+        <div id="label2">我的投标</div>
+    </div>
+    <div id="current_order">
+        <div id="order_table"></div>
+        <div class="createneworder">新建订单</div>
+        <!-- 菜单选项 -->
+        <div id="menu">
+            <button class="menu_button" id="join_order">发招标</button>
+            <button class="menu_button" id="deal_budget">导预算</button>
+            <button class="menu_button" id="deal_purchase">导采购</button>
+            <button class="menu_button" id="input_order">录清单</button>
+        </div>
+        <!-- 录入清单 -->
+        <div id="attributein">
+            <div id="hidden_attributein">×&nbsp;</div>
+            <div>
+                <div class="attributein_name">苗木名称:</div>
+                <div class="attributein_input"><input type="text" id="name" class="form-control"></div>
+            </div>
+            <div>
+                <div class="attributein_name">数 量(株):</div>
+                <div class="attributein_input"><input type="text" onkeyup='this.value=this.value.replace(/\D/gi,"")' id="count" class="form-control"></div>
+            </div>
+            <div id="trunk_diameter1">
+                <div class="attributein_name">胸 径(公分):</div>
+                <div class="attributein_input"><input type="text" id="trunk_diameter" placeholder="10或10-12" onkeyup="value=value.replace(/[^\d\.\-\－]/g,'')" onpaste="return false"  class="form-control"></div>
+            </div>
+            <div id="ground_diameter1">
+                <div class="attributein_name">地 径(公分):</div>
+                <div class="attributein_input"><input type="text" id="ground_diameter" placeholder="10或10-12" onkeyup="value=value.replace(/[^\d\.\-\－]/g,'')" onpaste="return false" class="form-control"></div>
+            </div>
+            <div id="pot_diameter1">
+                <div class="attributein_name">盆 径(公分):</div>
+                <div class="attributein_input"><input type="text" id="pot_diameter" placeholder="10或10-12" onkeyup="value=value.replace(/[^\d\.\-\－]/g,'')" onpaste="return false" class="form-control"></div>
+            </div>
+            <div id="plant_height1">
+                <div class="attributein_name">株 高(米):</div>
+                <div class="attributein_input"><input type="text" id="plant_height" placeholder="10或10-12" onkeyup="value=value.replace(/[^\d\.\-\－]/g,'')" onpaste="return false" class="form-control"></div>
+            </div>
+            <div id="plant_height_cm1">
+                <div class="attributein_name">株 高(公分):</div>
+                <div class="attributein_input"><input type="text" id="plant_height_cm" placeholder="10或10-12" onkeyup="value=value.replace(/[^\d\.\-\－]/g,'')" onpaste="return false" class="form-control"></div>
+            </div>
+            <div id="crown1">
+                <div class="attributein_name">冠 幅(米):</div>
+                <div class="attributein_input"><input type="text" id="crown" placeholder="10或10-12" onkeyup="value=value.replace(/[^\d\.\-\－]/g,'')" onpaste="return false" class="form-control"></div>
+            </div>
+            <div id="crown_cm1">
+                <div class="attributein_name">冠 幅(公分):</div>
+                <div class="attributein_input"><input type="text" id="crown_cm" placeholder="10或10-12" onkeyup="value=value.replace(/[^\d\.\-\－]/g,'')" onpaste="return false" class="form-control"></div>
+            </div>
+            <div id="branch_number1">
+                <div class="attributein_name">分 枝 数(个):</div>
+                <div class="attributein_input"><input type="text" id="branch_number" placeholder="10" onkeyup="value=value.replace(/[^\d\.\-\－]/g,'')" onpaste="return false" class="form-control"></div>
+            </div>
+            <div id="bough_number1">
+                <div class="attributein_name">主 枝 数(个):</div>
+                <div class="attributein_input"><input type="text" id="bough_number" placeholder="10" onkeyup="value=value.replace(/[^\d\.\-\－]/g,'')" onpaste="return false" class="form-control"></div>
+            </div>
+            <div id="branch_length1">
+                <div class="attributein_name">条 长(米):</div>
+                <div class="attributein_input"><input type="text" id="branch_length" placeholder="10或10-12" onkeyup="value=value.replace(/[^\d\.\-\－]/g,'')" onpaste="return false" class="form-control"></div>
+            </div>
+            <div id="bough_length1">
+                <div class="attributein_name">主蔓(枝)长(米):</div>
+                <div class="attributein_input"><input type="text" id="bough_length" placeholder="10或10-12" onkeyup="value=value.replace(/[^\d\.\-\－]/g,'')" onpaste="return false" class="form-control"></div>
+            </div>
+            <div id="branch_point_height1">
+                <div class="attributein_name">分枝点高(米):</div>
+                <div class="attributein_input"><input type="text" id="branch_point_height" placeholder="10或10-12" onkeyup="value=value.replace(/[^\d\.\-\－]/g,'')" onpaste="return false" class="form-control"></div>
+            </div>
+            <div id="age1">
+                <div class="attributein_name">苗 龄(年):</div>
+                <div class="attributein_input"><input type="text" id="age" placeholder="10" onkeyup="value=value.replace(/[^\d\.\-\－]/g,'')" onpaste="return false" class="form-control"></div>
+            </div>
+            <div id="substrate1">
+                <div class="attributein_name">基 质:</div>
+                <div class="attributein_input"><input type="text" id="substrate" class="form-control"></div>
+            </div>
+            <div id="buttons">
+                <button type="button" id="reset">清空</button><button type="button" id="add">添加</button>
+            </div>
+        </div>
+    </div>    
+    <div id="tender">
+        <div class="screenlist">招标</div>
+        <div class="supplierlist">供货商</div>
+        <div class="history_info">历史信息</div>
+        <div id="screenlist">
+            <div id="tenderfoot">
+                <div class="getphoto">获取图片</div>
+                <div class="sendmessage">发送消息</div>
+            </div>
+        </div>
+        <div id="supplierlist">
+            <div class="blackpersonlist">
+                <div class="blacktitle">黑名单</div>
+                <div id="blackpersonlist"></div>
+            </div>
+        </div>
+        <div id="history_orders">
+            <div id="history">
+                <div class="search_titel"><div class="search_titel_name">搜索</div><div id="search_reset">清除</div></div>
+                <div class="name">名称</div><input type="text" id="key_name" class="form-controls">
+                <div class="name">地址</div><input type="text" id="key_area" class="form-controls">
+                <div class="name">时间</div><input type="date" id="key_time1" class="form-controltime"><div style="float:left;margin-top:14px;width:6%;text-align:center">至</div><input type="date" id="key_time2" class="form-controltime">
+            </div>
+            <div class="history_title">
+                <div class="title_ordername">订单名称</div>
+                <div class="title_ordertime">订单日期</div>
+                <div class="title_edit">操作</div>
+            </div>
+            <div id="history_order_contents">
+            </div>
+            <div id="history_order_content_orders">
+                <div id="history_ordername_title"></div>
+                <div id="history_order_content_order">
+                </div>
+                <input type="text" name="province" class="hideform">
+                <input type="text" name="city" class="hideform">
+                <input type="text" name="area" class="hideform">
+            </div>
+        </div>
+    </div>
+    <div id="bid">
+        <div class="customerlist">我的客户</div>
+        <div class="bidhistory_info">历史信息</div>
+        <div id="customerlist">
+            <div class="blackcustomerlist">
+                <div class="blackcustomertitle">黑名单</div>
+                <div id="blackcustomerlist"></div>
+            </div>
+        </div>
+        <div id="bidhistory_info"></div>
+    </div>
+
+    <div class="alertordername">
+        <div style="text-align:center;margin:6% 0px;"><h3>输入新订单名称及用苗地点</h3></div>
+        <input type="text" id="order_name" class="form_control_alert" placeholder="订单名称">
+        <div id="tree_arrive_address_name">
+            <select class="province cxselect form_control"></select>
+            <select class="city cxselect form_control"></select>
+            <select class="area cxselect form_control"></select>
+        </div>
+        <button type="button" class="alert_btn order_name_button_reset">取消</button>
+        <button type="button" id="order_name_button" class="alert_btn">提交</button>
+    </div>
+
+    <div class="alerttime">
+        <div style="text-align:center;margin:6% 0px;"><h3>输入订单截止日期</h3></div>
+        <input type="date" id="order_time" class="form_control_alert">
+
+        <button type="button" class="alert_btn order_time_button_reset">取消</button>
+        <button type="button" id="order_time_button" class="alert_btn">提交</button>
+    </div> 
+
+    <div id="bigimages"></div>
+
+    <script id="dot_table_order" type="text/x-dot-template">
+        {{ for(var i in it) { }}
+            <div id="{{=it[i].id}}" class="order">
+                <div class="ordertitle">
+                    <div class="ordertitle_ordername">{{=it[i].ordername ? it[i].ordername : ''}}</div>
+                    <div class="title_delete">删除</div>
+                </div>
+                <div class="ordercontent">
+                    <div id="order_table{{=it[i].id}}"></div>
+                    <div>
+                        <div class="tree_order_lable">苗源地点:</div>
+                        <div id="tree_origin_name{{=it[i].id}}" class="tree_origin_name"></div>
+                    </div>
+                    <div id="tree_arrive_address_city{{=it[i].id}}">
+                    </div>
+                </div>
+            </div>
+        {{ } }}
+    </script>
+
+    <script id="dot_screen_order" type="text/x-dot-template">
+        {{ for(var i in it) { }}
+            <div id="{{=it[i].id}}" class="order" send_msg="{{=it[i].send_msg}}">
+                <div class="ordertitle">
+                    <div class="order_ordername">{{=it[i].ordername ? it[i].ordername : ''}}</div>
+                    <div class="order_state" state="{{=tendertitlebuttonstate(it[i].review_state,it[i].tendering)}}">{{=tendertitlebutton(it[i].review_state,it[i].tendering)}}</div>
+                </div>
+                <div class="allorder" id="show{{=it[i].id}}">
+                </div>
+            </div>
+        {{ } }}
+    </script>
+
+    <script id="dot_bid_order" type="text/x-dot-template">
+        {{ for(var i in it) { }}
+            <div class="bid_content" data-userid="{{=it[i].userid}}" data-state="{{=it[i].state}}">
+                <div class="bid_content_row1">
+                    <div class="bid_content_name">{{=it[i].name}}</div>
+                    <div class="bid_content_price">{{=it[i].price}}元/株</div>
+                    <div class="bid_content_result" style="color:{{= (it[i].state==3) ? 'red' : '#888'}}">{{=witchsate(it[i].state)}}</div>
+                </div>
+                <div class="bid_content_row2">{{=attributes_show(it[i])}}</div>
+                <div class="orderinfos">
+                </div>
+            </div>
+        {{ } }}
+    </script>
+
+    <script id="dot_supplierlist" type="text/x-dot-template">
+        {{ for(var i in it) { }}
+            <div class="supplierinfo" data-userid="{{=it[i].supplier_id ? it[i].supplier_id : it[i].userid}}">
+                <img src="/headimg/96/{{=it[i].supplier_id ? it[i].supplier_id : it[i].userid}}.jpg"  onerror="onerrorHeadimg()" class="supplierimg">
+                <div class="supplierinfo_address">{{=it[i].province ? it[i].province : ''}}.{{=it[i].city ? it[i].city : ''}}</div>
+                <div class="supplierinfo_name">{{=it[i].name  ? it[i].name : ''}}</div>
+                <a href="tel:{{=it[i].phone}}" class="supplierinfo_phone">{{=it[i].phone ? it[i].phone : ''}}</a>   
+                <div class="supplierinfo_hit">拉黑</div>
+            </div>
+        {{ } }}
+    </script>
+
+    <script id="dot_blacksupplierlist" type="text/x-dot-template">
+        {{ for(var i in it) { }}
+            <div class="blacksupplierinfo"  data-userid="{{=it[i].supplier_id ? it[i].supplier_id : it[i].userid}}">
+                <img src="/headimg/96/{{=it[i].supplier_id ? it[i].supplier_id : it[i].userid}}.jpg"  onerror="onerrorHeadimg()" class="blacksupplierimg">
+                <div class="blacksupplierinfo_address">{{=it[i].province ? it[i].province : ''}}.{{=it[i].city ? it[i].city : ''}}</div>
+                <div class="blacksupplierinfo_name">{{=it[i].name ? it[i].name : ''}}</div>
+                <a href="tel:{{=it[i].phone}}" class="blacksupplierinfo_phone">{{=it[i].phone ? it[i].phone : ''}}</a>  
+                <div class="blacksupplierinfo_cancel">取消拉黑</div>
+            </div>
+        {{ } }}
+    </script>
+
+    <script id="dot_history_order_content" type="text/x-dot-template">
+        {{ for(var i in it) { }}
+            <div class="history_order_content" data-orderid="{{=it[i].id}}" data-address="{{=it[i].address}}">
+                <div class="history_order_relcontent">
+                    <div class="ordername">{{=it[i].ordername ? it[i].ordername : ''}}</div> 
+                    <div class="ordertime">{{=makesimple(it[i].time)}}</div>
+                </div>
+                <div class="edit">
+                    <button type="button" class="history_button history_order_delete">删除</button>
+                    <button type="button" class="history_button history_order_copy">另存</button>
+                </div>
+            </div>
+        {{ } }}
+    </script>
+
+    <script id="dot_show" type="text/x-dot-template">
+        {{ for(var i in it) { }}
+            <div class="showone" id="{{=it[i].id}}">
+                <div class="showone_title">
+                    <div class="row1">
+                        <div class="showone_order">{{=addone(i)}}</div>
+                        <div class="showone_name">{{=it[i].name}}</div>
+                        <div class="showone_number">{{=it[i].count}}株</div>
+                        <div class="bid_number" style="{{=it[i].num ? '' : 'background:#f8f8f8;color:#f8f8f8'}}">{{=it[i].num ? it[i].num : 0}}</div>
+                    </div>
+                    <div class="row2">{{=attributes_show(it[i])}}</div>
+                </div>
+                <div class="row4">
+                </div>
+            </div>
+        {{ } }}
+    </script>
+
+    <script id="dot_bids" type="text/x-dot-template">
+        {{ for(var i in it) { }}
+            <div class="bids" data-userid="{{=it[i].userid}}" check="{{= (it[i].state==2) ? true : false}}">
+                <div class="image" data-image="{{=it[i].image}}" style="background-image: url('./bidimage/{{=firstimage(it[i].image)}}.jpg')"></div>
+                <div class="bidinfo">
+                    <div class="bidinfo_name">{{=it[i].city  ? it[i].city : ''}}({{=it[i].username ? it[i].username : ''}})</div>
+                    <a href="tel:{{=it[i].phone}}" class="bidinfo_phone">{{=it[i].phone ? it[i].phone : ''}}</a> 
+                    <div class="bidinfo_count">{{=it[i].number}}株</div>
+                    <div class="bidinfo_price">{{=it[i].price}}元/株</div>
+                </div>
+                <div class="button">
+                    <div class="supplier" state="{{=buttonstate(it[i].relationshipstate,it[i].state)}}">{{=buttoname(it[i].relationshipstate,it[i].state)}}</div>
+                    {{= (it[i].state > 1) ? '' : '<div class="delete">删除</div>'}}
+                </div>
+            </div>
+        {{ } }}
+    </script>
+
+    <script src="./js/jquery-1.12.4.min.js"></script>
+    <script src="./js/zepto.min.js"></script>
+    <script src="./js/jquery.cxselect.min.js"></script>
+    <script src="./js/doT.min.js"></script>
+    
+    <script type="text/javascript">
+        var dot_table_order = doT.template($("#dot_table_order").text());
+        var dot_bid_order = doT.template($("#dot_bid_order").text());
+        var dot_supplierlist = doT.template($("#dot_supplierlist").text());
+        var dot_blacksupplierlist = doT.template($("#dot_blacksupplierlist").text());
+        var dot_history_order_content = doT.template($("#dot_history_order_content").text());
+        var dot_screen_order = doT.template($("#dot_screen_order").text());
+        var dot_show = doT.template($("#dot_show").text());
+        var dot_bids = doT.template($("#dot_bids").text());
+        var user = {userid:29908};
+        var tableheight = $(window).height()-85;
+        var blackheight = $(window).height()-40;
+        var working = 0;
+        var detailed_address;
+        var rand;
+        // 录入数据
+        var data = [];
+        // 当前在第几条
+        var datan = 0;
+        // 每条数据所在省份
+        var provinces = [];
+        // 修改的对象
+        var editen;
+        // 编号 所对应选择苗源地址和价格
+        var addressprice = [];
+        var unit;
+        var typename;
+        var type;
+        // 地址和价格信息
+        var addresspricess;
+        // 订单信息
+        var datas;
+        // 详细地址
+        var detailed_address;
+        // 历史清单
+        var order_detail = [];
+        // 各个城市的价格
+        var pricescity = [];
+        var sohard = [];
+        var cities = '';
+        var finalkey;
+        var finalprice;
+        var fatherprivious = '';
+        var button_ordernumber = 0;
+        var dictionary;
+        var dataid;
+        var snake = -1;
+        var mybidorder;
+        var mysupplier = [];
+        var mysupplierblack = [];
+        var mycustomer = [];
+        var mycustomerblack = [];
+        var myhistory_order;
+        var provinces_namehtml;
+        var isLoadingsupplier = false;
+        var isEndsupplier = false;
+        var isLoadingblacksupplier = false;
+        var isEndblacksupplier = false;
+        var isEndcustomer = false;
+        var isLoadingcustomer = false;
+        var isEndblackcustomer = false;
+        var isLoadingblackcustomer = false;
+        var isLoadingbidhistory = false;
+        var isEndbidhistory = false;
+        var isLoadinghistory_order = false;
+        var isEndhistory_order = false;
+        var provinces_name = ['安徽','北京','重庆','福建','甘肃','广东','广西','贵州','海南','河北','河南','黑龙江','湖北','湖南','山东','吉林','江苏','江西','辽宁','内蒙古','宁夏','青海','山西','陕西','上海','四川','天津','新疆','云南','浙江'];
+
+        $('#supplierlist').css('height',$(window).height()-140);
+        $('#screenlist').css('height',$(window).height()-140);
+        $('#customerlist').css('height',$(window).height()-140);
+        $('#bidhistory_info').css('height',$(window).height()-100);
+        $('#bigimages').css('height',$(window).height()-10);
+        $('#bigimages').css('width',$(window).width()-16);
+
+        $.cxSelect.defaults.url = './js/chinaarea.min.json';
+        $('#tree_arrive_address_name').cxSelect({
+            selects: ['province', 'city', 'area']
+        });
+
+        // 没有图片的
+        function onerrorHeadimg() {
+            var event = window.event || arguments.callee.caller.arguments[0]; // 获取event对象
+            var img = event.currentTarget || event.srcElement || event.target; // 获取触发事件的源对象
+            img.src = 'http://cnzhaoshu.com/headimg/96/1.jpg';
+        }
+
+        function getQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]); return null;
+        } 
+
+        var show_where = getQueryString("show");
+        if(show_where){
+            if(show_where==2) mybid();
+            if(show_where==1) mytender();
+        }
+
+        // 加载订单历史数据
+        function loadunfinisheddata(orderid){
+            if($('#order_table'+orderid).html()) return false;
+            var html = '';
+            $.getJSON('/com/order_temp_search.php',{userid:user.userid,orderid:orderid},function(json){
+                if(json){
+                    data[orderid] = [];
+                    var counts = 0;
+                    for (var i = 0; i < json.length; i++) {
+
+                        data[orderid][i] = json[i];
+                        datan = 1+i;
+                        var attr = attributes_show(json[i]);
+                        attribute_shift(data[orderid][i]);
+
+                        html += '<div class="table" id="'+json[i].id+'">';
+                        html += '<div class="table_order">'+datan+'</div>';
+                        html += '<div class="table_content">';
+                        html += '<div class="table_row1_clos1">';
+                        html += '<div class="tree_name">'+json[i].name+'</div>';
+                        html += '<div class="tree_number">'+json[i].count+json[i].unit+'</div>';
+                        html += '</div>';
+                        html += '<div class="table_row1_clos2">';
+                        html += '</div>';
+                        html += '<div class="table_row2">'+attr+'</div>';
+                        html += '</div>';
+                        html += '</div>';   
+                                
+                    }
+                    selectarea(data[orderid]);
+                    $('#order_table'+orderid).html(html);
+                }
+            });
+        }
+
+        // 批量查询地区价格
+        function selectarea(condition){
+            $.getJSON('/com/search_price_batch.php',{data:JSON.stringify(condition)},function(json){
+                provinces[working] = [];
+                addressprice[working] = [];
+                if(json){
+                    for (var i = 0; i < json.length; i++) {
+                        provinces[working][i] = [];
+                        addressprice[working][i] = {};
+                        for (var y = 0; y < condition.length; y++) {
+                            if(condition[y].id == json[i].id){
+                                addressprice[working][i].id = json[i].id;
+                                if(json[i].price){
+                                    var p = 0;
+                                    addressprice[working][i].price = [];
+                                    for (var z = 0; z < json[i].price.length; z++) {
+                                        if(json[i].price[z].total >= condition[y].count){
+                                            addressprice[working][i].price[p] = json[i].price[z];
+                                            provinces[working][i][p] = json[i].price[z].province;
+                                            p++;
+                                        }
+                                    }
+                                }else{
+                                    addressprice[working][i].price = [];
+                                    provinces[working][i] = '';
+                                }
+                            }
+                        }
+                    }
+                    var haves = [''];
+                    for (var x = 0; x < provinces[working].length; x++) {
+                        for (var z = 0; z < provinces[working][x].length; z++) {
+                            var y = 0;
+                            for (var i = 0; i < haves.length; i++) {
+                                if(haves[i] != provinces[working][x][z]){
+                                    ++y;
+                                }
+                                if(y == haves.length){
+                                    haves[haves.length] = provinces[working][x][z];
+                                }
+                            }
+                        }
+                    }   
+                    // 显示交集省份
+                    $('.on .provinces_name').hide();
+                    for (var i = 0; i < haves.length; i++) {
+                        $('#tree_origin_name'+working+' input[type="checkbox"][value="'+haves[i]+'"]').parent().show();
+                    }   
+                }
+            });
+        }
+
+        // 加载历史订单名称
+        function loadunfinishedorder(){
+            $.getJSON('/com/unfinished_order.php',{userid:user.userid,state:0},function(data){
+                if(data){
+                    $("#order_table").append(dot_table_order(data));
+                    loadprovincesaddress();
+                    $('.tree_origin_name').html(provinces_namehtml);
+                }
+            })
+        }
+
+        // 规格拼接
+        function attributes_show(data_attribute){
+            var attr = '';
+            if(data_attribute.trunk_diameter){
+                var at = data_attribute.trunk_diameter.replace(',','-');
+                attr += '胸径:'+at+'公分 ';
+            }
+            if(data_attribute.ground_diameter){
+                var at = data_attribute.ground_diameter.replace(',','-');
+                attr += '地径:'+at+'公分 ';
+            }
+            if(data_attribute.pot_diameter){
+                var at = data_attribute.pot_diameter.replace(',','-');
+                attr += '盆径:'+at+'公分 ';
+            }
+            if(data_attribute.plant_height){
+                var at = data_attribute.plant_height.replace(',','-');
+                attr += '株高:'+at+'米 ';
+            }
+            if(data_attribute.plant_height_cm){
+                var at = data_attribute.plant_height_cm.replace(',','-');
+                attr += '株高:'+at+'公分 ';
+            }
+            if(data_attribute.crown){
+                var at = data_attribute.crown.replace(',','-');
+                attr += '冠幅:'+at+'米 ';
+            }
+            if(data_attribute.crown_cm){
+                var at = data_attribute.crown_cm.replace(',','-');
+                attr += '冠幅:'+at+'公分 ';
+            }
+            if(data_attribute.branch_number){
+                var at = data_attribute.branch_number.replace(',','-');
+                attr += '分枝数:'+at+'个 ';
+            }
+            if(data_attribute.bough_number){
+                var at = data_attribute.bough_number.replace(',','-');
+                attr += '主枝数:'+at+'个 ';
+            }
+            if(data_attribute.age){
+                var at = data_attribute.age.replace(',','-');
+                attr += '苗龄:'+at+'年 ';
+            }
+            if(data_attribute.branch_length){
+                var at = data_attribute.branch_length.replace(',','-');
+                attr += '条长:'+at+'米 ';
+            }
+            if(data_attribute.bough_length){
+                var at = data_attribute.bough_length.replace(',','-');
+                attr += '主蔓(枝)长:'+at+'米 ';
+            }
+            if(data_attribute.branch_point_height){
+                var at = data_attribute.branch_point_height.replace(',','-');
+                attr += '分枝点高:'+at+'米 ';
+            }
+            if(data_attribute.substrate){
+                var at = data_attribute.substrate;
+                attr += '基质:'+at;
+            }
+            
+            return attr;
+        }
+
+        // 规格里数组变为字符串
+        function attribute_shift(shift){
+            if(shift.trunk_diameter){
+                shift.trunk_diameter = shift.trunk_diameter.split(',');
+            }
+            if(shift.ground_diameter){
+                shift.ground_diameter = shift.ground_diameter.split(',');
+            }
+            if(shift.plant_height){
+                shift.plant_height = shift.plant_height.split(',');
+            }
+            if(shift.crown){
+                shift.crown = shift.crown.split(',');
+            }
+            if(shift.branch_number){
+                shift.branch_number = shift.branch_number.split(',');
+            }
+            if(shift.bough_number){
+                shift.bough_number = shift.bough_number.split(',');
+            }
+            if(shift.age){
+                shift.age = shift.age.split(',');
+            }
+            if(shift.branch_length){
+                shift.branch_length = shift.branch_length.split(',');
+            }
+            if(shift.bough_length){
+                shift.bough_length = shift.bough_length.split(',');
+            }
+            if(shift.branch_point_height){
+                shift.branch_point_height = shift.branch_point_height.split(',');
+            }
+            if(shift.pot_diameter){
+                shift.pot_diameter = shift.pot_diameter.split(',');
+            }
+            if(shift.crown_cm){
+                shift.crown_cm = shift.crown_cm.split(',');
+            }
+            if(shift.plant_height_cm){
+                shift.plant_height_cm = shift.plant_height_cm.split(',');
+            }
+        }
+
+        // 建省份
+        function loadprovincesaddress(){
+            provinces_namehtml = '';
+            for (var i = 0; i < provinces_name.length; i++) {
+                provinces_namehtml += '<label class="provinces_name" style="display:none"><input type="checkbox" value="'+provinces_name[i]+'">'+provinces_name[i]+'</label>';
+            }
+        }
+        
+        // 加载字典
+        function loaddictionary(){
+            $.getJSON('/com/dictionary_attribute_search.php',function(json){
+                if (json) {
+                    dictionary = json;
+                }
+            });
+        }
+
+        // 添加及修改数据
+        function toadd(){
+            var caozuo = $('#add').html();
+            var content = {};
+            if($.trim($('#name').val())!='') content.name = $('#name').val();
+            if($.trim($('#trunk_diameter').val())!='') content.trunk_diameter = sort($('#trunk_diameter').val());
+            if($.trim($('#plant_height').val())!='') content.plant_height = sort($('#plant_height').val());
+            if($.trim($('#crown').val())!='') content.crown = sort($('#crown').val());
+            if($.trim($('#branch_point_height').val())!='') content.branch_point_height = sort($('#branch_point_height').val());
+            if($.trim($('#branch_number').val())!='') content.branch_number = sort($('#branch_number').val());
+            if($.trim($('#ground_diameter').val())!='') content.ground_diameter = sort($('#ground_diameter').val());
+            if($.trim($('#bough_number').val())!='') content.bough_number = sort($('#bough_number').val());
+            if($.trim($('#plant_height_cm').val())!='') content.plant_height_cm = sort($('#plant_height_cm').val());
+            if($.trim($('#crown_cm').val())!='') content.crown_cm = sort($('#crown_cm').val());
+            if($.trim($('#age').val())!='') content.age = sort($('#age').val());
+            if($.trim($('#branch_length').val())!='') content.branch_length = sort($('#branch_length').val());
+            if($.trim($('#pot_diameter').val())!='') content.pot_diameter = sort($('#pot_diameter').val());
+            if($.trim($('#bough_length').val())!='') content.bough_length = sort($('#bough_length').val());
+            if($.trim($('#substrate').val())!='') content.substrate = $('#substrate').val();
+            if($.trim($('#count').val())!='') content.count = $('#count').val();
+            if(isEmptyObject(content) && (content.count != null) && (content.name != null)){
+                if(unit || typename || type){
+                    content.unit = unit;
+                    content.typename = typename;
+                    content.type = type;
+                }else{
+                    content.unit = '株';
+                    content.typename = '无';
+                    content.type = 11;
+                }
+                $('#attributein input').val('');
+                hideattribute();
+                var attr = guige(content);
+                    if(caozuo == '添加'){
+                        randomget();
+                        content.id = randomget();
+                        $.get('/com/order_temp_add.php',{uid:user.userid, data:JSON.stringify(content),orderid:working},function(result){
+                            if(result){
+                                screenaddress(content);
+                                data[working][data[working].length] = content;
+                            }
+                        });
+                    }else{
+                        content.id =  dataid;
+                        data[working][editen] = content;
+                        $('#add').html('添加');
+                        $('#reset').html('清空');
+                        $.get('/com/order_temp_update.php',{uid:user.userid, data:JSON.stringify(content)},function(result){
+                            if(result) screenaddress(content);
+                        });
+                    }
+            }else{
+                alert('名称或数量未填写');
+            }
+        }
+
+        // 名称联想规格
+        function findname(){
+            // 发送ajax查询名称所对应的属性
+            var name = $('#name').val();
+            var json;
+            for (var i = 0; i < dictionary.length; i++) {
+                if(dictionary[i].name == name){
+                    json = dictionary[i];
+                }
+            } 
+            var dictionary_attributes = {5:'trunk_diameter',6:'ground_diameter',7:'pot_diameter',8:'age',9:'crown',10:'plant_height',11:'branch_length',12:'bough_length',13:'branch_point_height',14:'branch_number',15:"bough_number",17:'plant_height_cm',18:'crown_cm',19:'substrate'};
+            for (var i = 5; i < 20; i++) {
+              $('#'+dictionary_attributes[i]+'1').hide();
+            }
+
+            if(!json){
+                $('#name-id').val(name);
+                $('#trunk_diameter1').show();
+                $('#crown1').show();
+                $('#plant_height1').show();
+            }else{
+                var attribute = json.attribute;
+                unit = json.unit;
+                typename = json.typename;
+                type = json.type;
+                var attributes = attribute.split(',');
+                for (var z = 0; z < attributes.length; z++) {
+                    if(dictionary_attributes[ attributes[z] ]){
+                        $('#'+dictionary_attributes[ attributes[z] ]+'1').show();
+                    }
+                }
+            }
+        }
+
+        // 隐藏所有规格
+        function hideattribute(){
+            var dictionary_attributes = {5:'trunk_diameter',6:'ground_diameter',7:'pot_diameter',8:'age',9:'crown',10:'plant_height',11:'branch_length',12:'bough_length',13:'branch_point_height',14:'branch_number',15:"bough_number",17:'plant_height_cm',18:'crown_cm',19:'substrate'};
+            for (var i = 5; i < 20; i++) {
+                $('#'+dictionary_attributes[i]+'1').hide();
+            }
+        }
+
+        // 拼接规格
+        function guige(content){
+            var attr = '';
+            if(parseFloat(content.trunk_diameter) > 0){
+                attr += ' 胸径:'+mark(content.trunk_diameter)+'cm';
+            }
+            if(parseFloat(content.ground_diameter) > 0){
+                attr += ' 地径:'+mark(content.ground_diameter)+'cm';
+            }
+            if(parseFloat(content.pot_diameter) > 0){
+                attr += ' 盆径:'+mark(content.pot_diameter)+'cm';
+            }
+            if(parseFloat(content.plant_height) > 0){
+                attr += ' 株高:'+mark(content.plant_height)+'m';
+            }
+            if(parseFloat(content.plant_height_cm) > 0){
+                attr += ' 株高:'+mark(content.plant_height_cm)+'cm';
+            }
+            if(parseFloat(content.crown) > 0){
+                attr += ' 冠幅:'+mark(content.crown)+'m';
+            }
+            if(parseFloat(content.crown_cm) > 0){
+                attr += ' 冠幅:'+mark(content.crown_cm)+'cm';
+            }
+            if(parseFloat(content.branch_number) > 0){
+                attr += ' 分枝数:'+mark(content.branch_number)+'个';
+            }
+            if(parseFloat(content.bough_number) > 0){
+                attr += ' 主枝数:'+mark(content.bough_number)+'个';
+            }
+            if(parseFloat(content.age) > 0){
+                attr += ' 苗龄:'+mark(content.age)+'年';
+            }
+            if(parseFloat(content.branch_length) > 0){
+                attr += ' 条长:'+mark(content.branch_length)+'m';
+            }
+            if(parseFloat(content.bough_length) > 0){
+                attr += ' 主蔓(枝)长:'+mark(content.bough_length)+'m';
+            }
+            if(parseFloat(content.branch_point_height) > 0){
+                attr += ' 分枝点高:'+mark(content.branch_point_height)+'m';
+            }
+            if(content.substrate != undefined){
+                attr += ' 基质:'+content.substrate;
+            }
+            return attr;
+        }
+
+        // 生成编号
+        function randomget(){
+            var number = '';
+            var mydate = new Date();
+            number += mydate.getFullYear();
+            var Month = mydate.getMonth()+1;
+            if(Month < 10) Month = '0'+ Month;
+            number += Month;
+
+            var day = mydate.getDate();
+            if(day < 10) day = '0'+ day;
+            number += day;
+
+            var Hours = mydate.getHours();
+            if(Hours < 10) Hours = '0'+ Hours;
+            number += Hours;
+
+            var Minutes = mydate.getMinutes();
+            if(Minutes < 10) Minutes = '0'+ Minutes;
+            number += Minutes;
+
+            var Seconds = mydate.getSeconds();
+            if(Seconds < 10) Seconds = '0'+ Seconds;
+            number += Seconds;
+
+            var Milliseconds = mydate.getMilliseconds();
+            if(Milliseconds < 10){
+                Milliseconds = '00'+ Milliseconds;
+            }else if(Milliseconds < 100){
+                Milliseconds = '0'+ Milliseconds;
+            } 
+            number += Milliseconds;
+
+            return number;
+        }
+
+        // 查询符合规格的苗木所在信息
+        function screenaddress(tiaojian){
+            $.getJSON('/com/search_price.php',{data:JSON.stringify(tiaojian)},function(json){
+                if(json){
+                    var info = json.price;
+                    // 将省份信息给addressprice数组
+                    if(editen > -1){
+                        addressprice[editen] = json;
+                        editen = -1;
+                    }else{
+                        addressprice[working][addressprice[working].length] = json;
+                    }
+                    if(json.price){
+                        var infoprovinces = [];
+                        // 获取省份信息给provinces数组中
+                        var m = 0;
+                        for (var i = 0; i < info.length; i++) {
+                            m += 1;
+                            var count = info[i].count;
+                            var province = info[i].province;
+                            var total = info[i].total;
+                            if(total >= tiaojian.count){
+                                infoprovinces[i] = province;
+                            }
+                        }
+                        provinces[working][provinces[working].length] = infoprovinces;
+                    }
+                        var haves = [''];
+
+                        for (var x = 0; x < provinces[working].length; x++) {
+                            for (var z = 0; z < provinces[working][x].length; z++) {
+                                var y = 0;
+                                for (var i = 0; i < haves.length; i++) {
+                                    if(haves[i] != provinces[working][x][z]){
+                                        ++y;
+                                    }
+                                    if(y == haves.length){
+                                        haves[haves.length] = provinces[working][x][z];
+                                    }
+                                }
+                            }
+                        }   
+                        $('#tree_origin_name'+working+' .provinces_name').hide();
+                        $('.tree_arrive_address_citys').hide();
+                        $('input[type="checkbox"]').prop("checked",false);
+                        cities = '';
+                        fatherprivious = '';
+                        pricescity = [];
+                        sohard = [];
+                        for (var i = 0; i < haves.length; i++) {
+                            $('#tree_origin_name'+working+' input[type="checkbox"][value="'+haves[i]+'"]').parent().show();
+                        }   
+                        showprice();
+                }
+            });
+        }
+
+        // 价格展示
+        function showprice(){
+            finalkey = [];
+            finalkey[working] = [];
+            finalprice = [];
+            var allprice = [];
+            var allareaprice = [];
+            var shengfen = '';
+            $('#tree_origin_name'+working+' input:checkbox:checked').each(function() {
+                shengfen += $(this).val()+',';
+            });
+            shengfen = shengfen.substring(0,shengfen.length-1);
+            var htmld = '';
+            shengfen = shengfen.split(',');
+            var countes = 0;
+            for (var z = 0; z < shengfen.length; z++) {
+                allprice[z] = 0;
+            }
+            for (var q = 0; q < cities.length; q++) {
+                allareaprice[q] = 0;
+            }
+            var y = 0;
+            for (var i = 0; i < data[working].length; i++) {
+                if(data[working][i]&&addressprice[working][i].price){
+                    y++;
+                    var k = y - 1;
+                    finalprice[k] = [];
+                    var attr = guige(data[working][i]);
+                    var price = addressprice[working][i].price;
+                    htmld += '<div class="table" id="'+data[working][i].id+'">';
+                    htmld += '<input type="hidden" name="id" class="id"  value="'+data[working][i].id+'">';
+                    htmld += '<div class="table_order">'+y+'</div>';
+                    htmld += '<div class="table_content">';
+                    htmld += '<div class="table_row1_clos1">';
+                    htmld += '<div class="tree_name">'+data[working][i].name+'</div>';
+                    htmld += '<div class="tree_number">'+data[working][i].count+data[working][i].unit+'</div>';
+                    htmld += '</div>';
+                    htmld += '<div class="table_row1_clos2">';
+
+                    for (var x = 0; x < shengfen.length; x++) {
+                        if(shengfen[x]){
+
+                            var tt = 0;
+                            if(fatherprivious){
+                                for (var t = 0; t < fatherprivious.length; t++) {
+                                    if(fatherprivious[t] == shengfen[x]){
+                                        tt = 1;
+                                    }
+                                }
+                            }
+                            if(tt == 0){
+                                htmld += '<div class="table_row1_clos2_data">';
+                                htmld += '<div class="addressprice_address">'+shengfen[x]+'</div>';
+                                finalkey[working][finalkey[working].length] = shengfen[x];
+                                var z = 0;
+                                if(addressprice[working][i].price[0]){
+                                    for (var m = 0; m < price.length; m++) {
+
+                                        if(price[m].province == shengfen[x]){
+                                            htmld += '<td class="addressprice_price">'+(price[m].avg).toFixed(0)+'</td>';
+                                            finalprice[k][finalprice[k].length] = price[m].avg;
+                                        }else{
+                                            ++z;
+                                        }
+                                        if(z == price.length){
+                                            htmld += '<div class="addressprice_price">0</div>';
+                                            finalprice[k][finalprice[k].length] = 0;
+                                        }
+                                    }
+                                }else{
+                                    htmld += '<div class="addressprice_price">0</div>';
+                                    finalprice[k][finalprice[k].length] = 0;
+                                }
+                                htmld += '</div>';
+                            }
+
+
+                        }
+                    }
+
+                    if(cities[0]){
+                        for (var z = 0; z < shengfen.length; z++) {
+                            for (var q = 0; q < cities.length; q++) {
+                                var parentss = $('input[value='+cities[q]+']').parents('.tree_arrive_address_citys').find('.area_city').html();
+                                parentss = parentss.replace(':','');
+                                if(parentss == shengfen[z]){
+                                    htmld += '<div class="table_row1_clos2_data">';
+                                    htmld += '<div class="addressprice_address">'+cities[q]+'</div>';
+                                    finalkey[working][finalkey[working].length] = cities[q];
+                                    if(pricescity[shengfen[z]][i][cities[q]] != undefined){
+                                        var pricesss = pricescity[shengfen[z]][i][cities[q]];
+                                        if(pricesss){
+                                            htmld += '<td class="addressprice_price">'+pricesss+'</td>';
+                                            finalprice[k][finalprice[k].length] = pricesss;
+                                        }else if(sohard[shengfen[z]][cities[q]]){
+                                            htmld += '<div class="addressprice_price">0</div>';
+                                            finalprice[k][finalprice[k].length] = 0;
+                                        }
+                                    }else{
+                                        htmld += '<div class="addressprice_price">0</div>';
+                                        finalprice[k][finalprice[k].length] = 0;
+                                    }
+                                    htmld += '</div>';
+                                    
+                                }
+                            }
+                        }
+                    }
+
+
+                    htmld += '</div>';
+                    htmld += '<div class="table_row2">'+attr+'</div>';
+                    htmld += '</div>';
+                    htmld += '</div>';
+                }
+            }
+            $('#order_table'+working).html();
+            $('#order_table'+working).html(htmld);
+        }
+
+        // 符合要求的城市
+        function haveareacity(same){
+            var areacity = '';
+            pricescity[same] = [];
+            for (var i = 0; i < addressprice[working].length; i++) {
+                if(addressprice[working][i]){
+                    pricescity[same][i] = [];
+                    var areaprice = addressprice[working][i].price;
+                    if(areaprice){
+                        for (var x = 0; x < areaprice.length; x++) {
+                            if(areaprice[x].province == same){
+                                var areacitys = areaprice[x].city;
+                                for (var y = 0; y < areacitys.length; y++) {
+                                    areacity += areacitys[y].city+'.';
+                                    pricescity[same][i][areacitys[y].city] = areacitys[y].avg;
+                                }
+                            }
+                        } 
+                    }else{
+                        pricescity[same][i] = 0;
+                    }
+                }
+            }
+
+            areacity = areacity.substring(0,areacity.length-1);
+            areacity = areacity.split('.');
+            var zsareacity = [];
+            for (var i = 0; i < areacity.length; i++) {
+                var y = 0;
+                if(zsareacity.length == 0){
+                    zsareacity[0] = areacity[i];
+                }else{
+                    for (var x = 0; x < zsareacity.length; x++) {
+                        if(areacity[i] != zsareacity[x]){
+                            y++;
+                        }
+                        if(y == zsareacity.length){
+                            zsareacity[zsareacity.length] = areacity[i];
+                        }
+                            
+                    }
+                }
+            }
+            return zsareacity;
+        }
+
+        // 修改本条数据
+        function attributeedite(){
+            var content = data[working][editen];
+            var dictionary_attributes = {5:'trunk_diameter',6:'ground_diameter',7:'pot_diameter',8:'age',9:'crown',10:'plant_height',11:'branch_length',12:'bough_length',13:'branch_point_height',14:'branch_number',15:"bough_number",17:'plant_height_cm',18:'crown_cm',19:'substrate'};
+            for (var i = 5; i < 20; i++) {
+                if(content[dictionary_attributes[i]]){
+                    $('#'+dictionary_attributes[i]+'1').css('display','black');
+                    $('#'+dictionary_attributes[i]).val(content[dictionary_attributes[i]]);
+                }
+            }
+            $('#add').html('修改');
+            $('#reset').html('删除');
+            // 隐藏规格
+            hideattribute();
+            $('#attributein').show();
+            var name = $('#name').val(content.name);
+            findname();
+            $('#count').val(content.count);
+            $('#trunk_diameter').val(join(content.trunk_diameter));
+            $('#plant_height').val(join(content.plant_height));
+            $('#crown').val(join(content.crown));
+            $('#branch_point_height').val(join(content.branch_point_height));
+            $('#branch_number').val(join(content.branch_number));
+            $('#ground_diameter').val(join(content.ground_diameter));
+            $('#bough_number').val(join(content.bough_number));
+            $('#crown_cm').val(join(content.crown_cm));
+            $('#plant_height_cm').val(join(content.plant_height_cm));
+            $('#age').val(join(age));
+            $('#branch_length').val(join(content.branch_length));
+            $('#pot_diameter').val(join(content.pot_diameter));
+            $('#bough_length').val(join(content.bough_length));
+        }
+
+        // 查看此规格的所有数据
+        function showattributeindex() {
+            var content = data[working][editen];
+            var indexdata = '"exact":1,"key":"'+content.name+'"';
+            if(content.trunk_diameter){
+                if(content.trunk_diameter[1]){
+                    indexdata += ',"dbh":"'+content.trunk_diameter[0]+'-'+content.trunk_diameter[1]+'"';
+                }else if(content.trunk_diameter[0]){
+                    indexdata += ',"dbh":"'+content.trunk_diameter[0]+'"';
+                }
+            }else if(content.ground_diameter){
+                if(content.ground_diameter[1]){
+                    indexdata += ',"dbh":"'+content.ground_diameter[0]+'-'+content.ground_diameter[1]+'"';
+                }else if(content.ground_diameter[0]){
+                    indexdata += ',"dbh":"'+content.ground_diameter[0]+'"';
+                }
+            }else if(content.pot_diameter){
+                if(content.pot_diameter[1]){
+                    indexdata += ',"dbh":"'+content.pot_diameter[0]+'-'+content.pot_diameter[1]+'"';
+                }else if(content.pot_diameter[0]){
+                    indexdata += ',"dbh":"'+content.pot_diameter[0]+'"';
+                }
+            }
+            if(content.plant_height){
+                if(content.plant_height[1]){
+                    indexdata += ',"height":"'+content.plant_height[0]+'-'+content.plant_height[1]+'"';
+                }else if(content.plant_height[0]){
+                    indexdata += ',"height":"'+content.plant_height[0]+'"';
+                }
+            }else if(content.branch_length){
+                if(content.branch_length[1]){
+                    indexdata += ',"height":"'+content.branch_length[0]+'-'+content.branch_length[1]+'"';
+                }else if(content.branch_length[0]){
+                    indexdata += ',"height":"'+content.branch_length[0]+'"';
+                }
+            }else if(content.bough_length){
+                if(content.bough_length[1]){
+                    indexdata += ',"height":"'+content.bough_length[0]+'-'+content.bough_length[1]+'"';
+                }else if(content.bough_length[0]){
+                    indexdata += ',"height":"'+content.bough_length[0]+'"';
+                }
+            }else if(content.plant_height_cm){
+                if(content.plant_height_cm[1]){
+                    indexdata += ',"height":"'+(content.plant_height_cm[0])/100+'-'+(content.plant_height_cm[1])/100+'"';
+                }else if(content.plant_height_cm[0]){
+                    indexdata += ',"height":"'+(content.plant_height_cm[0])/100+'"';
+                }
+            }
+            if(content.crown){
+                if(content.crown[1]){
+                    indexdata += ',"crownwidth":"'+content.crown[0]+'-'+content.crown[1]+'"';
+                }else if(content.crown[0]){
+                    indexdata += ',"crownwidth":"'+content.crown[0]+'"';
+                }
+            }
+            if(content.crown_cm){
+                if(content.crown_cm[1]){
+                    indexdata += ',"crownwidth":"'+(content.crown_cm[0])/100+'-'+(content.crown_cm[1])/100+'"';
+                }else if(content.crown_cm[0]){
+                    indexdata += ',"crownwidth":"'+(content.crown_cm[0])/100+'"';
+                }
+            }
+            if(content.branch_point_height){
+                if(content.branch_point_height[1]){
+                    indexdata += ',"branch_point_height":"'+content.branch_point_height[0]+'-'+content.branch_point_height[1]+'"';
+                }else if(content.branch_point_height[0]){
+                    indexdata += ',"branch_point_height":"'+content.branch_point_height[0]+'"';
+                }
+            }
+            if(content.branch_number){
+                if(content.plant_height[1]){
+                    indexdata += ',"branch_bough_number":"'+content.branch_number[0]+'-'+content.branch_number[1]+'"';
+                }else if(content.branch_number[0]){
+                    indexdata += ',"branch_bough_number":"'+content.branch_number[0]+'"';
+                }
+            }
+            if(content.bough_number){
+                if(content.bough_number[1]){
+                    indexdata += ',"branch_bough_number":"'+content.bough_number[0]+'-'+content.bough_number[1]+'"';
+                }else if(content.bough_number[0]){
+                    indexdata += ',"branch_bough_number":"'+content.bough_number[0]+'"';
+                }
+            }
+            if(content.substrate){
+                if(content.substrate){
+                    indexdata += ',"substrate":"'+content.substrate+'"';
+                }
+            }
+            window.location = 'http://cnzhaoshu.com/m.php?where={'+indexdata+'}';
+            snake = -1; 
+        }
+
+        // 重置及删除
+        function reset(){
+            var rightbtnname = $('#reset').html();
+            if(rightbtnname == '清空'){
+                $('#attributein input').val('');
+            }else{
+                var deleteid = data[working][editen]['id'];
+                editen = -1;
+                // 删除数据
+                $.get('/com/order_temp_deleteall.php',{userid:user.userid, id:deleteid},function(result){
+                    if(result){
+                        var deleteoverdata = [];
+                        var deleteoveraddressprice = [];
+                        var deleteoverprovinces = [];
+
+                        for (var i = 0; i < data[working].length; i++) {
+                            if(data[working][i].id != deleteid){
+                                deleteoverdata[deleteoverdata.length] = data[working][i];
+                                deleteoveraddressprice[deleteoveraddressprice.length] = addressprice[working][i];
+                                deleteoverprovinces[deleteoverprovinces.length] = provinces[working][i];
+                            }
+                        }
+                        data[working] = deleteoverdata;
+                        addressprice[working] = deleteoveraddressprice;
+                        provinces[working] = deleteoverprovinces;
+                        var haves = [''];
+                        for (var x = 0; x < provinces[working].length; x++) {
+                            for (var z = 0; z < provinces[working][x].length; z++) {
+                                var y = 0;
+                                for (var i = 0; i < haves.length; i++) {
+                                    if(haves[i] != provinces[working][x][z]){
+                                        ++y;
+                                    }
+                                    if(y == haves.length){
+                                        haves[haves.length] = provinces[working][x][z];
+                                    }
+                                }
+                            }
+                        }
+
+                        $('#tree_origin_name'+working+' .provinces_name').hide();
+                        for (var i = 0; i < haves.length; i++) {
+                            $('#tree_origin_name'+working+' input[type="checkbox"][value="'+haves[i]+'"]').parent().show();
+                        }   
+
+                        $('#tree_origin_name'+working+' input:checkbox:checked').each(function() {
+                            if($(this).is(':visible') == false)
+                                $(this).prop("checked",false);
+                        });
+                    }
+                    showprice();
+                    $('#attributein input').val('');
+                    hideattribute();
+                    $('#add').html('添加');
+                    $('#reset').html('清空');
+                });
+            }
+        }
+
+        function join(req){
+            if(req){
+                if(req[1]){
+                    return req[0]+'-'+req[1];
+                }else{
+                    return req[0];
+                }
+            }
+        }
+
+        function isEmptyObject(e) {  
+            var t;  
+            for (t in e) return true;  
+            return false;  
+        }
+
+        function mark(att){
+            if(att){
+                if(att[1]){
+                    return att[0]+'-'+att[1];
+                }else if(parseFloat(att[0]) > 0){
+                    return att[0];
+                }
+            }
+        }  
+
+        function bindInputEvent(){
+            $('#name').blur(function(){
+                findname();
+            })
+        }
+
+        function sort(req){
+
+            return req.replace('－','-').replace('。','.').replace('一','-').replace('_','-').split('-');
+        }
+
+        function final_deal(){
+            if(!data[working]) return;
+            var finalallprice = [];
+            var as = 0;
+            for (var x = 0; x < data[working].length; x++) {
+                if(data[working][x]){
+                    finalallprice[as] = {};
+                    finalallprice[as].id = data[working][x].id;
+                    as++;
+                }
+            }
+            if(finalkey && finalkey[working] && finalkey[working].length){
+                var sss = finalkey[working].length/finalprice.length;
+                for (var x = 0; x < finalprice.length; x++) {
+                    for (var i = 0; i < sss; i++) {
+                        finalallprice[x][finalkey[working][i]] = finalprice[x][i];
+                    }
+                }
+                var newdata = 0;
+                var typedata = [];
+                var typeaddressprices = finalallprice;
+                for (var i = 1; i < 12; i++) {
+                    for (var x = 0; x < data[working].length; x++) {
+                        if((data[working][x].type == i) && data[working][x]){
+                            typedata[newdata] = data[working][x];
+                            newdata++;
+                        }
+                    }
+                }
+            }else{
+                var newdata = 0;
+                var typedata = [];
+                var typeaddressprices = 1;
+                for (var i = 1; i < 12; i++) {
+                    for (var x = 0; x < data[working].length; x++) {
+                        if((data[working][x].type == i) && data[working][x]){
+                            typedata[newdata] = data[working][x];
+                            newdata++;
+                        }
+                    }
+                }
+            }   
+            
+            datas = JSON.stringify(typedata);
+            addresspricess = JSON.stringify(typeaddressprices);
+        }
+
+        // 加载投标信息
+        function loadbidorder(){
+            if (isLoadingbidhistory) return;
+            isLoadingbidhistory = true;
+            var limit = $('#bidhistory_info .bid_content').length + ',' + 20;
+            $.getJSON('/com/search_mybidorder.php',{userid:user.userid,limit:limit},function(json){
+                if(json){
+                    $('#bidhistory_info').append(dot_bid_order(json));
+                }else{
+                    isEndbidhistory = true;
+                }
+                isLoadingbidhistory = false;
+            })
+        }
+
+        // 加载供应商
+        function loadsupplier(){
+            if (isLoadingsupplier) return;
+            isLoadingsupplier = true;
+            var limit = $('#supplierlist .supplierinfo').length + ',' + 10;
+            $.getJSON('/com/search_mysupplier.php',{userid:user.userid,limit:limit},function(json){
+                if(json){
+                    for (var i = 0; i < json.length; i++) {
+                        var mark =true;
+                        for (var j = 0; j < mysupplier.length; j++) {
+                            if(mysupplier[j].supplier_id == json[i].supplier_id) mark = false;
+                        }
+                        if(mark){
+                            mysupplier[mysupplier.length] = json[i];
+                            var news = [];
+                            news[0] = json[i];
+                            $('#supplierlist').append(dot_supplierlist(news));
+                        } 
+                    }
+                    if(json.length < 10) isEndsupplier = true;
+                }else{
+                    isEndsupplier = true;
+                }
+                isLoadingsupplier = false;
+            })
+        }
+
+        // 加载供应商(黑名单)
+        function loadblacksupplier(){
+            if (isLoadingblacksupplier) return;
+            isLoadingblacksupplier = true;
+            var limit = $('#supplierlist .blacksupplierinfo').length + ',' + 10;
+            $.getJSON('/com/search_mysupplierblack.php',{userid:user.userid,limit:limit},function(json){
+                if(json){
+                    for (var i = 0; i < json.length; i++) {
+                        var mark =true;
+                        for (var j = 0; j < mysupplierblack.length; j++) {
+                            if(mysupplierblack[j].supplier_id == json[i].supplier_id) mark = false;
+                        }
+                        if(mark){
+                            mysupplierblack[mysupplierblack.length] = json[i];
+                            var news = [];
+                            news[0] = json[i];
+                            $('#blackpersonlist').append(dot_blacksupplierlist(news));
+                        } 
+                    }
+                    if(json.length < 10) isEndblacksupplier = true;
+                }else{
+                    isEndblacksupplier = true;
+                }
+                isLoadingblacksupplier = false;
+            })
+        }
+
+        // 加载客户
+        function loadcustomer(){
+            if(isLoadingcustomer) return false;
+            isLoadingcustomer = true;
+            var limit = $('#customerlist .supplierinfo').length + ',' + 10;
+            $.getJSON('/com/search_mycustomer.php',{userid:user.userid,limit:limit},function(json){
+                if(json){
+                    for (var i = 0; i < json.length; i++) {
+                        var mark = true;
+                        for (var j = 0; j < mycustomer.length; j++) {
+                            if(mycustomer[j].userid == json[i].userid) mark = false;
+                        }
+                        if(mark){
+                            mycustomer[mycustomer.length] = json[i];
+                            var news = [];
+                            news[0] = json[i];
+                            $('#customerlist').append(dot_supplierlist(news));
+                        } 
+                    }
+                    if(json.length < 10) isEndcustomer = true;
+                }else{
+                    isEndcustomer = true;
+                }
+                isLoadingcustomer = false;
+            })
+        }
+
+        // 加载客户(黑名单)
+        function loadblackcustomer(){
+            if (isLoadingblackcustomer) return;
+            isLoadingblackcustomer = true;
+            var limit = $('#customerlist .blacksupplierinfo').length + ',' + 10;
+            $.getJSON('/com/search_mycustomerblack.php',{userid:user.userid,limit:limit},function(json){
+                if(json){
+                    for (var i = 0; i < json.length; i++) {
+                        var mark =true;
+                        for (var j = 0; j < mycustomerblack.length; j++) {
+                            if(mycustomerblack[j].userid == json[i].userid) mark = false;
+                        }
+                        if(mark){
+                            mycustomerblack[mycustomerblack.length] = json[i];
+                            var news = [];
+                            news[0] = json[i];
+                            $('#blackcustomerlist').append(dot_blacksupplierlist(news));
+                        } 
+                    }
+                    if(json.length < 10) isEndblackcustomer = true;
+                }else{
+                    isEndblackcustomer = true;
+                }
+                isLoadingblackcustomer = false;
+            })
+        }
+
+        // 加载招标信息
+        function loadHistoryOrder(){
+            if (isLoadinghistory_order) return;
+            isLoadinghistory_order = true;
+            var key_name = $('#key_name').val();
+            var key_area = $('#key_area').val();
+            var key_time1 = $('#key_time1').val();
+            var key_time2 = $('#key_time2').val();
+            if(key_name || key_area || key_time1 || key_time2){
+                var searchingmark = true;
+            }else{
+                var limit = $('#history_order_contents .history_order_content').length + ',' + 15;
+            }
+            $.getJSON('/com/orders_index_search.php',{area:key_area,name:key_name,time1:key_time1,time2:key_time2,userid:user.userid,limit:limit},function(json){
+                if(searchingmark){
+                    if(json){
+                        $('#history_order_contents').html(dot_history_order_content(json));
+                    }else{
+                        $('#history_order_contents').html('');
+                    }
+                    isEndhistory_order = true;
+                    isLoadinghistory_order = false;
+                }else{
+                    if(json){
+                        $('#history_order_contents').append(dot_history_order_content(json));
+                        if(json.length < 15) isEndhistory_order = true;
+                    }else{
+                        isEndhistory_order = true;
+                    }
+                    isLoadinghistory_order = false;
+                }
+
+            });
+        }
+
+        // 供应商拉黑 拉白
+        function changesupplierstate(supplierid,state,that){
+            $.getJSON('/com/update_editesupplier.php',{userid:user.userid,supplierid:supplierid,state:state},function(result){
+                if(result){
+                    if(state == 1){
+                        var b = [];
+                        for (var i = 0; i < mysupplierblack.length; i++) {
+                            if(mysupplierblack[i].supplier_id != supplierid){
+                                b[b.length] = mysupplierblack[i];
+                            }else{
+                                mysupplier[mysupplier.length] = mysupplierblack[i];
+                                var news = [];
+                                news[0] = mysupplierblack[i];
+                                $('#supplierlist').append(dot_supplierlist(news));
+                            }
+                        }
+                        that.remove();
+                        mysupplierblack = b;
+                        var number = $('#supplierlist .blacksupplierinfo').length;
+                        if((number < 10) && (!isEndblacksupplier)) loadblacksupplier();
+                    } 
+                    if(state == 2){
+                        var b = [];
+                        for (var i = 0; i < mysupplier.length; i++) {
+                            if(mysupplier[i].supplier_id != supplierid){
+                                b[b.length] = mysupplier[i];
+                            }else{
+                                mysupplierblack[mysupplierblack.length] = mysupplier[i];
+                                var news = [];
+                                news[0] = mysupplier[i];
+                                $('#blackpersonlist').append(dot_blacksupplierlist(news));
+                            }
+                        }
+                        mysupplier = b;
+                        that.remove();
+                        var number = $('#supplierlist .supplierinfo').length;
+                        if((number < 10) && (!isEndsupplier)) loadsupplier();
+                    } 
+                }
+            })
+        }
+
+        // 客户拉黑 拉白
+        function changecustomerstate(customerid,state,that){
+            $.getJSON('/com/update_editecustomer.php',{userid:customerid,supplierid:user.userid,state:state},function(result){
+                if(result){
+                    if(state == 1){
+                        var b = [];
+                        for (var i = 0; i < mycustomerblack.length; i++) {
+                            if(mycustomerblack[i].userid != customerid){
+                                b[b.length] = mycustomerblack[i];
+                            }else{
+                                mycustomer[mycustomer.length] = mycustomerblack[i];
+                                var news = [];
+                                news[0] = mycustomerblack[i];
+                                $('#customerlist').append(dot_supplierlist(news));
+                            }
+                        }
+                        that.remove();
+                        mycustomerblack = b;
+                        var number = $('#customerlist .blacksupplierinfo').length;
+                        if((number < 10) && (!isEndblackcustomer)) loadblackcustomer();
+                    } 
+                    if(state == 2){
+                        var b = [];
+                        for (var i = 0; i < mycustomer.length; i++) {
+                            if(mycustomer[i].userid != customerid){
+                                b[b.length] = mycustomer[i];
+                            }else{
+                                mycustomerblack[mycustomerblack.length] = mycustomer[i];
+                                var news = [];
+                                news[0] = mycustomer[i];
+                                $('#blackcustomerlist').append(dot_blacksupplierlist(news));
+                            }
+                        }
+                        mycustomer = b;
+                        that.remove();
+                        var number = $('#customerlist .supplierinfo').length;
+                        if((number < 10) && (!isEndcustomer)) loadcustomer();
+                    } 
+                }
+            })
+        }
+
+        // 按键名称
+        function witchsate(staten){
+            if(staten == -1){
+                return '未通过';
+            }else if(staten == 1){
+                return '待审核';
+            }else if(staten == 2){
+                return '已中标';
+                // return '等待买家付定金';
+            }else if(staten == 3){
+                return '已付定金';
+            }
+        }
+
+        function buttonstate(relationshipstate,state){
+            if(relationshipstate){
+                return state;
+            }else{
+                return relationshipstate;
+            }
+        }
+
+        function buttoname(relationshipstate,state){
+            if(relationshipstate){
+                if(state == 1){
+                    return '中标';
+                }else if(state == 2){
+                    return '已中标';
+                    // return '付定金';
+                }else if(state == 3){
+                    return '已付定金';
+                }
+            }else{
+                return '成为供应商';
+            }
+        }
+
+        function tendertitlebutton(review_state,tendering){
+            if(review_state == 0){
+                return '待审核';
+            }else if((review_state == 1) && (tendering == 0)){
+                return '审核完成';
+            }else if(tendering == 1){
+                return '正在招标';
+            }
+        }
+
+        function tendertitlebuttonstate(review_state,tendering){
+            if(review_state == 0){
+                return 1;
+            }else if((review_state == 1) && (tendering == 0)){
+                return 2;
+            }else if(tendering == 1){
+                return 3;
+            }
+        }
+
+        function opentendertitlebutton(name,thisbuttonstate){
+            if(name == '待审核'){
+                thisbuttonstate.find('.order_state').attr('class','order_state0');
+                return '待审核';
+            }else if(name == '审核完成'){
+                thisbuttonstate.find('.order_state').attr('state','4');
+                return '去招标';
+            }else if(name == '正在招标'){
+                thisbuttonstate.find('.order_state').attr('state','6');
+                return '停止招标';
+            }else if(name == '去招标'){
+                return '审核完成';
+            }else if(name == '停止招标'){
+                return '正在招标';
+            }
+        }
+
+        function makesimple(time){
+
+            return time.split(' ')[0];
+        }
+
+        function showhistoryorder(json){
+            $('#history_order_content_order').html();
+            if(json){
+                var address_price = [];
+                for (var i = 0; i < json.length; i++) {
+                    address_price[i] = json[i].address_price; // 有可能没有
+                }
+                var pricees = [];
+                var addresspricees = [];
+                for (var i = 0; i < address_price.length; i++) {
+                    // 必须做判断，否则split出错
+                    if (address_price[i]) {
+                        address_price[i] = address_price[i].split(',');
+                        pricees[i] = [];
+                        for (var x = 0; x < address_price[i].length; x++) {
+                            address_price[i][x] = address_price[i][x].split(':');
+                            pricees[i][address_price[i][x][0]] = address_price[i][x][1];
+                            addresspricees[x] = address_price[i][x][0];
+                        }
+                    }
+                }
+            }
+            var order_content = '';
+            for (var i = 0; i < json.length; i++) {
+                var attr = attributes_show(json[i]);
+                order_content += '<div class="table" data-orderid="'+json[i].id+'">';
+                order_content += '<div class="table_order">'+(1+i)+'</div>';
+                order_content += '<div class="table_content">';
+                order_content += '<div class="table_row1_clos1">';
+                order_content += '<div class="tree_name">'+json[i].name+'</div>';
+                order_content += '<div class="tree_number">'+json[i].count+json[i].unit+'</div>';
+                order_content += '</div>';
+                order_content += '<div class="table_row1_clos2">';
+                if(json[0].address_price){
+                    for (var x = 0; x < addresspricees.length; x++) {
+                        order_content += '<div class="table_row1_clos2_data">';
+                        order_content += '<div class="addressprice_address">'+addresspricees[x]+'</div>';
+                        order_content += '<td class="addressprice_price">'+pricees[i][addresspricees[x]]+'</td>';
+                        order_content += '</div>';
+                    }
+                }
+                order_content += '</div>';
+                order_content += '<div class="table_row2">'+attr+'</div>';
+                order_content += '</div>';
+                order_content += '</div>';
+            }
+            $('#history_order_content_order').html(order_content);
+        }
+
+        function addone(one){
+            var a = 1+parseInt(one);
+            return a+'.';
+        }
+
+        function firstimage(imageid){
+            if(imageid){
+                if(imageid.length > 15){
+                    var a = imageid.split(',');
+                    return a[0];
+                }else{
+                    return imageid;
+                }
+            }else{
+                return 0;
+            }
+        }
+
+        function loadscreenlist(){
+            $.getJSON('/com/search_tendering.php',{userid:user.userid},function(json){
+                $('#screenlist').append(dot_screen_order(json));
+            })
+        }
+
+        function findorders(orderid,that){
+            $.getJSON('/com/search_mytreeorders.php',{orderid:orderid},function(json){
+                if(json){
+                    $('.check .allorder').html(dot_show(json));
+                    that.parent().find('.allorder').css('height','auto');
+                }
+            })
+        }
+
+        function loadorderrespond(bidorderid,orderid,that){
+            $.getJSON('/com/search_upbidorder.php',{id:bidorderid,userid:user.userid,orderid:orderid},function(json){
+                if(json){
+                    $('.open .row4').html(dot_bids(json));
+                    that.parent().find('.row4').show();
+                    var parentheight = that.parents('.allorder').find('.showone').length*55;
+                    that.parents('.allorder').animate({'height':(parentheight+json.length*100+11)});
+                    that.parent().find('.row4').animate({'height':json.length*100});
+                }else{
+                    var parentheight = that.parents('.allorder').find('.showone').length*55;
+                    that.parents('.allorder').animate({'height':(parentheight)});
+                }
+            })
+        }
+
+        function mytender(){
+            $('#label0').css({"background":"#0089ff","color":"#fff"});
+            $('#label0').siblings().css({"background":"#fff","color":"#000"});
+            $('#current_order').hide();
+            $('#tender').show();
+            $('#bid').hide();
+            $('#screenlist').show();
+            $('.screenlist').css({"background":"#0089ff","color":"#fff"});
+            $('#history_orders').hide();
+            $('#supplierlist').hide();
+            $('.history_info').css({"background":"#fff","color":"#000"});
+            $('.supplierlist').css({"background":"#fff","color":"#000"});
+            $('#screenlist .order').remove();
+            loadscreenlist();
+        }
+
+        function mybid(){
+            $('#label2').css({"background":"#0089ff","color":"#fff"});
+            $('#label2').siblings().css({"background":"#fff","color":"#000"});
+            $('#current_order').hide();
+            $('#tender').hide();
+            $('#bid').show();
+            if($("#customerlist").is(":hidden")){
+                $('#bidhistory_info').show();
+                if(!mybidorder) loadbidorder();
+            }
+        }
+
+        function mycurrent_order(){
+            $('#label1').css({"background":"#0089ff","color":"#fff"});
+            $('#label1').siblings().css({"background":"#fff","color":"#000"});
+            $('#current_order').show();
+            $('#tender').hide();
+            $('#bid').hide();
+            loadunfinishedorder()
+        }
+
+        // 所有按钮
+        function bindButtonEvent(){
+            $('#label1').click(function(){
+                $('#label1').css({"background":"#0089ff","color":"#fff"});
+                $('#label1').siblings().css({"background":"#fff","color":"#000"});
+                $('#current_order').show();
+                $('#tender').hide();
+                $('#bid').hide();
+            });
+
+            $('#label2').click(function(){
+                mybid();
+            });
+
+            $('#label0').click(function(){
+                $('#label0').css({"background":"#0089ff","color":"#fff"});
+                $('#label0').siblings().css({"background":"#fff","color":"#000"});
+                $('#current_order').hide();
+                $('#tender').show();
+                $('#bid').hide();
+                if($("#supplierlist").is(":hidden") && $("#screenlist").is(":hidden")){
+                    $('#history_orders').show();
+                    var number = $('#history_order_contents .history_order_content').length;
+                    if((number < 15) && (!isEndhistory_order)) loadHistoryOrder();
+                }else if($("#history_orders").is(":hidden") && $("#supplierlist").is(":hidden")){
+                    $('#screenlist').show();
+                    var number = $('#screenlist .order').length;
+                    if(!number) loadscreenlist();
+                }else{
+                    $('#supplierlist').show();
+                    var number = $('#supplierlist .supplierinfo').length;
+                    if(!number) loadsupplier();
+                }
+            });
+
+            $('#supplierlist').scroll(function() {
+                if (isEndsupplier || isLoadingsupplier) return;
+                var scrollHeight = $(this)[0].scrollHeight;
+                var scrollTop = $(this)[0].scrollTop;
+                var elementHight = $(this).height();
+                if(scrollTop + elementHight >= scrollHeight-100) {
+                    loadsupplier();
+                } 
+            });
+
+            // 瀑布加载我的历史订单
+            $('#history_order_contents').scroll(function () {
+                if (isLoadinghistory_order || isEndhistory_order) return;
+                var scrollHeight = $(this)[0].scrollHeight;
+                var scrollTop = $(this)[0].scrollTop;
+                var elementHight = $(this).height();
+                if(scrollTop + elementHight >= scrollHeight-50) {
+                    loadHistoryOrder();
+                } 
+            });
+
+            // 新建订单
+            $('.createneworder').click(function(){
+                $('.alertordername').show();
+                $('#order_name').focus();
+            })
+            
+            // 创建新订单
+            $('#order_name_button').click(function(){
+                $('.alertordername').hide();
+                var ordername = $('#order_name').val();
+                if(ordername){
+                    var province = $(".province").val();
+                    var city = $(".city").val();
+                    var area = $(".area").val();
+                    if(province&&(province!=0)) detailed_address = province;
+                    if(city&&(city!=0)) detailed_address += '.'+city;
+                    if(area&&(area!=0)) detailed_address += '.'+area;
+                    var orderid = $('#order_name_button').data('orderid');
+                    if(orderid){
+                        $.post('/com/copy_neworder.php',{orderid:orderid,userid:user.userid,ordername:ordername,address:detailed_address},function(data){
+                            if(data){
+                                var newdataorder = [{id:data,ordername:ordername}];
+                                $("#order_table").append(dot_table_order(newdataorder));
+                                $('#'+data+' .tree_origin_name').html(provinces_namehtml);
+                            }
+                        })
+                    }else{
+                        $.post('/com/create_neworder.php',{userid:user.userid,ordername:ordername,address:detailed_address},function(data){
+                            if(data){
+                                var newdataorder = [{id:data,ordername:ordername}];
+                                $("#order_table").append(dot_table_order(newdataorder));
+                                $('#'+data+' .tree_origin_name').html(provinces_namehtml);
+                            }
+                        })
+                    }
+                }
+            })
+
+            // 取消创建订单
+            $('.order_name_button_reset').click(function(){
+                $('.alertordername').hide();
+                $('#order_name_button').removeAttr('data-orderid');
+                $('#order_name').val('');
+            })
+            
+            // 点击订单标头展开内容
+            $('#order_table').on('click','.ordertitle',function(){
+                if($(this).parent().hasClass('on')){
+                    $(this).parent().removeClass('on');
+                    $('#order_table .ordercontent').animate({'height':'0'});
+                    working = 0;
+                }else{
+                    working = $(this).parent().attr('id');
+                    $('#order_table .order').removeClass('on');
+                    $(this).parent().addClass('on');
+                    $(this).parent().find('.ordercontent').animate({'height':tableheight});
+                    $(this).parent().siblings().find('.ordercontent').animate({'height':'0'});
+                    var top = $(this).offset().top;
+                    loadunfinisheddata(working);
+                }
+            })
+
+            // 删除采购单
+            $('#order_table').on('click','.title_delete',function(event){
+                var id = $(this).parents('.on').attr('id');
+                var that = $(this);
+                $.getJSON('/com/order_temp_delete.php',{orderid:id},function(result){
+                    if(result){
+                        that.parents('.on').remove(); 
+                    } 
+                })
+                event.stopPropagation();
+            })
+
+            // 添加数据
+            $('#add').click(function(){
+                toadd();
+                var scrollheight = document.documentElement.scrollHeight;
+                // 跳至底部
+                $("html,body").animate({scrollTop:scrollheight}, 10);
+            })
+
+            // 重置及删除
+            $('#reset').click(function(){
+                reset();
+            })
+
+            // 显示录入框
+            $('#input_order').click(function(){
+                if(working){
+                    $('#attributein').show();
+                    $('#attributein input:text:first').focus();
+                }else{
+                    alert('请先选定您要录入的订单!');
+                }
+            })
+
+            // 隐藏录入框
+            $('#hidden_attributein').click(function(){
+                $('#attributein').hide();
+                editen = -1;
+                $('#attributein input').val('');
+                hideattribute();
+                $('#add').html('添加');
+                $('#reset').html('清空');
+            })
+
+            // 选择省份
+            $('#order_table').on('change','.provinces_name',function(){
+                var areahtml = '';
+                var shengfen = '';
+                $('#tree_origin_name'+working+' input:checkbox:checked').each(function() {
+                    shengfen += $(this).val()+',';
+                });
+                if(shengfen.length > 0){
+                    shengfen = shengfen.substring(0,shengfen.length-1);
+                    shengfen = shengfen.split(',');
+                    for (var i = 0; i < shengfen.length; i++) {
+                            var citys = haveareacity(shengfen[i]);
+                            if(citys){
+                                areahtml += '<div class="tree_arrive_address_citys">';
+                                areahtml += '<div class="area_city">'+shengfen[i]+':</div>';
+                                areahtml += '<div class="area_city_name">';
+                                sohard[shengfen[i]] = [];
+                                for (var x = 0; x < citys.length; x++) {
+                                    areahtml += '<label class="city_bn"><input type="checkbox" value="'+citys[x]+'">'+citys[x]+'</label>';
+                                    sohard[shengfen[i]][citys[x]] = 1;
+                                }
+
+                                areahtml += '</div>';
+                                areahtml += '</div>';
+                            }
+                    }
+                    $('#tree_arrive_address_city'+working).html(areahtml);
+                }else{
+                    $('#tree_arrive_address_city'+working).html('');
+                }
+                if(cities != ''){
+                    for (var i = 0; i < cities.length; i++) {
+                        $('#tree_arrive_address_city'+working+' input[value='+cities[i]+']').attr('checked','checked');
+                    }
+                }
+                showprice();
+            });
+
+            // 选择城市
+            $('#order_table').on('change','.city_bn',function(){
+                var fouk = '';
+                cities = '';
+                $('#tree_arrive_address_city'+working+' input:checkbox:checked').each(function() {
+                    cities += $(this).val()+',';
+                    fouk += $(this).parents('.tree_arrive_address_citys').find('.area_city').html();
+                });
+                if(cities.length > 0){
+                    cities = cities.substring(0,cities.length-1);
+                    cities = cities.split(',');
+                }
+                if(fouk.length > 0){
+                    fouk = fouk.substring(0,fouk.length-1);
+                    fouk = fouk.split(':');
+                }
+                fatherprivious = fouk;
+                showprice();
+            });
+
+            // 点击一条数据
+            $('#order_table').on("click",".table",function(){
+                $(this).css('background','#eee');
+                $(this).siblings().css('background','transparent');
+                dataid = $(this).attr('id');
+                for (var i = 0; i < data[working].length; i++) {
+                    if(data[working][i].id == dataid){
+                        editen = i;
+                    }
+                }
+                if(snake == dataid){
+                    showattributeindex();
+                }else{
+                    snake = dataid;
+                    attributeedite();
+                }
+            });
+
+            // 提交
+            $('#join_order').click(function(){
+                final_deal();
+                $.post('/com/order_insert.php',{uid:user.userid, data:datas, addressprices:addresspricess, orderid:working},function(json){   
+                    if(json){
+                        mytender();
+                    } 
+                });
+            });
+
+            // 预算单
+            $('#deal_budget').click(function(){
+                final_deal();
+                window.location = '/com/budgetexcel.php?userid='+user.userid+'&orderid='+working+'&addressprices='+addresspricess;
+            });
+
+            // 采购单
+            $('#deal_purchase').click(function(){
+                final_deal();
+                window.location = '/com/purchaseexcel.php?userid='+user.userid+'&orderid='+working+'&addressprices='+addresspricess;
+            });
+
+            // 展示历史订单详情
+            $('#history_order_contents').on('click','.history_order_relcontent',function(){
+                $('.history_order_relcontent').css('background','#f8f8f8');
+                $(this).css('background','#ddd');
+                $('#history_order_content_orders').show();
+
+                var orderid = $(this).parents('.history_order_content').data('orderid');
+                var ordername = $(this).parents('.history_order_content').find('.ordername').html();
+
+                $('#history_ordername_title').html(ordername);
+                var horderaddress = $(this).parents('.history_order_content').data('address');
+
+                if(horderaddress){
+                    var orderaddress = horderaddress.split('.');
+                    $('#history_order_content_orders input[name="province"]').val(orderaddress[0]);
+                    if(orderaddress[1]){
+                        $('#history_order_content_orders input[name="city"]').val(orderaddress[1]);
+                    }else{
+                        $('#history_order_content_orders input[name="city"]').val('市');
+                    }
+                    if(orderaddress[2]){
+                        $('#history_order_content_orders input[name="area"]').val(orderaddress[2]);
+                    }else{
+                        $('#history_order_content_orders input[name="area"]').val('县'); 
+                    }
+                }else{
+                    $('#history_order_content_orders input[name="province"]').val('省');
+                    $('#history_order_content_orders input[name="city"]').val('市');
+                    $('#history_order_content_orders input[name="area"]').val('县');
+                }
+                $.getJSON('/com/order_search.php',{orderid:orderid},function(json){
+                    showhistoryorder(json);
+                    $("html,body").animate({scrollTop:510}, 10);
+                });
+            });
+
+            // 展示投标信息(招标方信息)
+            $('#bidhistory_info').on('click','.bid_content',function(){
+                var that = $(this);
+                var thatclass = $(this).find('.orderinfos');
+                if(that.hasClass('shownow')){
+                    thatclass.animate({'height':'0'},10);
+                    that.removeClass('shownow');
+                    thatclass.html('');
+                }else{
+                    $('.shownow .orderinfos').animate({'height':'0'},10);
+                    that.siblings('.bid_content').removeClass('shownow');
+                    $('.orderinfos').html('');
+                    var state = that.data('state');
+                    if(state > 1){
+                        that.addClass('shownow');
+                        var userid = that.data('userid');
+                        $.getJSON('/com/search_orderuserinfo.php',{userid:userid},function(json){
+                            if(json){
+                                thatclass.animate({'height':'30'},100);
+                                $('<div>').addClass('orderinfos_username').html(json.name).appendTo(thatclass);
+                                $('<div>').addClass('orderinfos_userphone').html(json.phone).appendTo(thatclass);
+                            }
+                        })
+                    }
+                    
+                }
+            });
+
+            // 点击我的供应商黑名单
+            $('.blacktitle').click(function(){
+                if($('#blackpersonlist').is(":hidden")){
+                    $('#blackpersonlist').show();
+                }
+                if($(this).hasClass('openblack')){
+                    $('#blackpersonlist').animate({'height':'0'});
+                    $(this).removeClass('openblack');
+                }else{
+                    var number = $('#supplierlist .blacksupplierinfo').length;
+                    if((number < 10) && (!isEndblacksupplier)) loadblacksupplier();
+                    $('#blackpersonlist').animate({'height':blackheight});
+                    $('#blackpersonlist').css('height',blackheight);
+                    $(this).addClass('openblack');
+                }
+            })
+
+            // 点击我的客户黑名单
+            $('.blackcustomertitle').click(function(){
+                if($('#blackcustomerlist').is(":hidden")){
+                    $('#blackcustomerlist').show();
+                }
+                if($(this).hasClass('openblack')){
+                    $('#blackcustomerlist').animate({'height':'0'});
+                    $(this).removeClass('openblack');
+                }else{
+                    var number = $('#customerlist .blacksupplierinfo').length;
+                    if((number < 10) && (!isEndblackcustomer)) loadblackcustomer();
+                    $('#blackcustomerlist').animate({'height':blackheight});
+                    $('#blackcustomerlist').css('height',blackheight);
+                    $(this).addClass('openblack');
+                }
+            })
+
+            // 瀑布加载我的供应商黑名单
+            $('#blackpersonlist').scroll(function () {
+                if (isLoadingblacksupplier || isEndblacksupplier) return;
+                var scrollHeight = $(this)[0].scrollHeight;
+                var scrollTop = $(this)[0].scrollTop;
+                var elementHight = $(this).height();
+                if(scrollTop + elementHight >= scrollHeight-100) {
+                    loadblacksupplier();
+                } 
+            });
+
+            // 供应商拉黑
+            $('#supplierlist').on('click','.supplierinfo_hit',function(){
+                var that = $(this).parent();
+                var userid = $(this).parent().data('userid');
+                changesupplierstate(userid,2,that);
+            })
+            // 供应商拉白
+            $('#supplierlist').on('click','.blacksupplierinfo_cancel',function(){
+                var that = $(this).parent();
+                var userid = $(this).parent().data('userid');
+                changesupplierstate(userid,1,that);
+            })
+            // 客户拉黑
+            $('#customerlist').on('click','.supplierinfo_hit',function(){
+                var that = $(this).parent();
+                var userid = $(this).parent().data('userid');
+                changecustomerstate(userid,2,that);
+            })
+            // 客户拉白
+            $('#customerlist').on('click','.blacksupplierinfo_cancel',function(){
+                var that = $(this).parent();
+                var userid = $(this).parent().data('userid');
+                changecustomerstate(userid,1,that);
+            })
+
+            // 我的供应商
+            $('.supplierlist').click(function(){
+                $('#supplierlist').show();
+                $('.supplierlist').css({"background":"#0089ff","color":"#fff"});
+                $('#history_orders').hide();
+                $('#screenlist').hide();
+                $('.history_info').css({"background":"#fff","color":"#000"});
+                $('.screenlist').css({"background":"#fff","color":"#000"});
+                var number = $('#supplierlist .supplierinfo').length;
+                if(!number) loadsupplier();
+            })
+            // 瀑布加载我的投标
+            $('#bidhistory_info').scroll(function () {
+                if (isLoadingbidhistory || isEndbidhistory) return;
+                var scrollHeight = $(this)[0].scrollHeight;
+                var scrollTop = $(this)[0].scrollTop;
+                var elementHight = $(this).height();
+                if(scrollTop + elementHight >= scrollHeight-100) {
+                    loadbidorder();
+                } 
+            });
+
+            // 投标信息
+            $('.screenlist').click(function(){
+                $('#screenlist').show();
+                $('.screenlist').css({"background":"#0089ff","color":"#fff"});
+                $('#history_orders').hide();
+                $('#supplierlist').hide();
+                $('.history_info').css({"background":"#fff","color":"#000"});
+                $('.supplierlist').css({"background":"#fff","color":"#000"});
+                var number = $('#screenlist .order').length;
+                if(!number) loadscreenlist();
+            })
+
+            // 点击订单标头展开内容(投标)
+            $('#screenlist').on('click','.ordertitle',function(){
+                var that = $(this);
+                var send_msg = that.parent().attr('send_msg');
+
+                $('.open .row4').hide();
+                $('.open .row4').animate({'height':'0'});
+                $('.open').removeClass('open');
+                if(that.parent().hasClass('check')){
+                    var name = opentendertitlebutton(that.find('.order_state').html(),that);
+                    that.find('.order_state').html(name);
+
+                    that.parent().removeClass('check');
+                    $('#screenlist .allorder').animate({'height':'0'});
+                    $('#screenlist .allorder').hide();
+                    $('#tenderfoot').hide();
+                    $('.sendmessage').attr('orderid',null);
+                    $('.getphoto').attr('orderid',null);
+                }else{
+                    $('#tenderfoot').show();
+                    var orderid = that.parent().attr('id');
+                    if(send_msg == 1){
+                        $('.sendmessage').attr('orderid',null);
+                    }else{
+                        $('.sendmessage').attr('orderid',orderid);
+                    }
+
+                    $('.getphoto').attr('orderid',orderid);
+                    var name = opentendertitlebutton(that.parents('#screenlist').find('.check .order_state').html(),that);
+                    that.parents('#screenlist').find('.check .order_state').html(name);
+
+                    var name = opentendertitlebutton(that.find('.order_state').html(),that);
+                    that.find('.order_state').html(name);
+                    $('#screenlist .order').removeClass('check');
+                    that.parent().addClass('check');
+                    that.parent().siblings().find('.allorder').animate({'height':'0'});
+                    that.parent().siblings().find('.allorder').hide();
+                    that.parent().find('.allorder').show();
+                    var lengthss = that.parent().find('.showone').length;
+                    if(lengthss){
+                        that.parent().find('.allorder').css('height','auto');
+                    }else{
+                        findorders(orderid,that);
+                    }
+                }
+            })
+
+            $('#screenlist').on('click','.showone_title',function(){
+                var that = $(this);
+                that.find('.bid_number').hide();
+                if(that.parent().hasClass('open')){
+                    that.parent().removeClass('open');
+                    $('#screenlist .row4').hide();
+                    $('#screenlist .row4').animate({'height':'0'});
+                    var parentheight = that.parents('.allorder').find('.showone').length*55;
+                    that.parents('.allorder').animate({'height':(parentheight)});
+                }else{
+                    var bidorder = that.parent().find('.bids').length;
+                    var orderid = that.parents('.order').attr('id');
+                    var id = that.parent().attr('id');
+                    that.parent().siblings().find('.row4').animate({'height':'0'});
+                    $('#screenlist .row4').hide();
+                    $('#screenlist .showone').removeClass('open');
+                    that.parent().addClass('open');
+                    if(bidorder){
+                        that.parent().find('.row4').show();
+                        var parentheight = that.parents('.allorder').find('.showone').length*55;
+                        that.parents('.allorder').animate({'height':(parentheight+bidorder*100+11)});
+                        that.parent().find('.row4').animate({'height':bidorder*100});
+                    }else{
+                        loadorderrespond(id,orderid,that);
+                    } 
+                }
+            })
+
+            // 瀑布加载我的供应商黑名单
+            $('#blackpersonlist').scroll(function () {
+                if (isLoadingblacksupplier || isEndblacksupplier) return;
+                var scrollHeight = $(this)[0].scrollHeight;
+                var scrollTop = $(this)[0].scrollTop;
+                var elementHight = $(this).height();
+                if(scrollTop + elementHight >= scrollHeight-100) {
+                    loadblacksupplier();
+                } 
+            });
+
+            $('.history_info').click(function(){
+                $('#supplierlist').hide();
+                $('.supplierlist').css({"background":"#fff","color":"#000"});
+                $('#screenlist').hide();
+                $('.screenlist').css({"background":"#fff","color":"#000"});
+                $('#history_orders').show();
+                $('.history_info').css({"background":"#0089ff","color":"#fff"});
+            })
+
+            $('.customerlist').click(function(){
+                $('#customerlist').show();
+                $('.customerlist').css({"background":"#0089ff","color":"#fff"});
+                $('#bidhistory_info').hide();
+                $('.bidhistory_info').css({"background":"#fff","color":"#000"});
+                var number = $('#customerlist .supplierinfo').length;
+                if(!number) loadcustomer();
+            })
+            // 瀑布加载我的客户
+            $('#customerlist').scroll(function () {
+                if(isLoadingcustomer || isEndcustomer) return;
+                var scrollHeight = $(this)[0].scrollHeight;
+                var scrollTop = $(this)[0].scrollTop;
+                var elementHight = $(this).height();
+                if(scrollTop + elementHight >= scrollHeight-100) {
+                    loadcustomer();
+                } 
+            });
+
+            $('.bidhistory_info').click(function(){
+                $('#customerlist').hide();
+                $('.customerlist').css({"background":"#fff","color":"#000"});
+                $('#bidhistory_info').show();
+                $('.bidhistory_info').css({"background":"#0089ff","color":"#fff"});
+            })
+
+            // 删除历史订单
+            $('#history_order_contents').on("click",'.history_order_delete',function(){
+                var hidden = $(this);
+                var orderid = hidden.parents('.history_order_content').data('orderid');
+                var edit = confirm('你确定要删除吗?');
+                if(edit == true){
+                    $.get('/com/order_delete.php',{orderid:orderid},function(json){
+                        if(json){
+                            hidden.parents('.history_order_content').remove();
+                        }
+                    });
+                }
+            });
+
+            // 另存历史订单
+            $('#history_order_contents').on("click",'.history_order_copy',function(){
+                var orderid = $(this).parents('.history_order_content').data('orderid');
+                $('.alertordername').show();
+                $('#order_name_button').attr('data-orderid',orderid);
+                $('#order_name').focus();
+            });
+
+            // 搜索
+            $('#key_name').change(function(){
+                isEndhistory_order = false;
+                $('#history_order_contents').html('');
+                loadHistoryOrder();
+            });
+            $('#key_area').change(function(){
+                isEndhistory_order = false;
+                $('#history_order_contents').html('');
+                loadHistoryOrder();
+            });
+            $('#key_time1').change(function(){
+                var key_time1 = $('#key_time1').val();
+                var key_time2 = $('#key_time2').val();
+                if(key_time1 && key_time2){
+                    isEndhistory_order = false;
+                    loadHistoryOrder();
+                }
+            });
+            $('#key_time2').change(function(){
+                var key_time1 = $('#key_time1').val();
+                var key_time2 = $('#key_time2').val();
+                if(key_time1 && key_time2){
+                    isEndhistory_order = false;
+                    loadHistoryOrder();
+                }
+            });
+            // 清除
+            $('#search_reset').click(function(){
+                $('#history input').val('');
+                isEndhistory_order = false;
+                $('#history_order_contents').html('');
+                loadHistoryOrder();
+            })
+
+            // 显示投标照片
+            $('#screenlist').on('click','.image',function(){
+                var imagestring = $(this).data('image');
+                if(imagestring){
+                    if(imagestring.length > 15){
+                        imagestring = imagestring.split(',');
+                        for (var i = 0; i < imagestring.length; i++) {
+                            $('<img>').addClass('bigimage').attr('src','./bidimage/'+imagestring[i]+'.jpg').appendTo('#bigimages');
+                        }
+                    }else{
+                        $('<img>').addClass('bigimage').attr('src','./bidimage/'+imagestring+'.jpg').appendTo('#bigimages');
+                    }
+                    $('#bigimages').show();
+                }
+            })
+
+            // 隐藏投标照片
+            $('#bigimages').click(function(){
+                $('#bigimages').hide();
+                $('#bigimages').html('');
+            })
+
+            // 选择供应商 下定金
+            $('#screenlist').on('click','.supplier',function(){
+                var that = $(this);
+                var state = that.attr('state');
+                var supplierid = that.parents('.bids').data('userid');
+                var id = that.parents('.showone').attr('id');
+                var orderid = that.parents('.order').attr('id');
+
+                if(state == 1){
+                    $.getJSON('/com/bid_order_deal.php',{id:id,orderid:orderid,supplierid:supplierid},function(data){
+                        if(data){
+                            var name = that.parents('.bids').find('.bidinfo_name').html();
+                            var phone = that.parents('.bids').find('.bidinfo_phone').html();
+                            that.html('已中标');
+                            // that.html('付定金');
+                            // that.attr('state','2');
+                            that.next().remove();
+                        }
+                    })
+                }else if(state == 2){
+                    // // 付定金
+                    // $.getJSON('/com/pay_deposit.php',{userid:user.userid,orderid:orderid,supplierid:supplierid,id:id},function(data){
+                    //     if(data){
+                    //         that.html('已付定金');
+                    //         that.attr('state','3');
+                    //     }
+                    // })
+
+                }else{
+                    $.getJSON('/com/tobe_mysupplier.php',{userid:user.userid,supplierid:supplierid,state:state},function(data){
+                        if(data){
+                            $('.bids').each(function() {
+                                if($(this).data('userid') == supplierid){
+                                    $(this).find('.supplier').html('中标');
+                                    $(this).find('.supplier').attr('state','1');
+                                }
+                            });
+                        }
+                    })
+                }
+            })
+
+            // 删除本条投标信息
+            $('#screenlist').on('click','.delete',function(){
+                var that = $(this);
+                var deleteid = that.parents('.bids').data('userid');
+                var id = that.parents('.showone').attr('id');
+                var orderid = that.parents('.order').attr('id');
+                $.getJSON('/com/bid_order_delete.php',{userid:deleteid,id:id,orderid:orderid},function(data){
+                    if(data){
+                        var bidorder = that.parents('.row4').find('.bids').length-1;
+                        var parentheight = that.parents('.allorder').find('.showone').length*55;
+                        if(bidorder){
+                            that.parents('.allorder').animate({'height':(parentheight+bidorder*100+11)});
+                            that.parents('.row4').animate({'height':bidorder*100});
+                        }else{
+                            that.parents('.allorder').animate({'height':(parentheight)});
+                            that.parents('.row4').remove();
+                        } 
+                        that.parents('.bids').remove();
+                    }
+                })
+            })
+
+
+            $('#screenlist').on('click','.check .order_state',function(e){
+                var statethis = $(this);
+                var name = statethis.html();
+                var orderid = statethis.parents('.order').attr('id');
+                var state = statethis.attr('state');
+                if(state == 6){
+                    var tendering = 2;
+                    $.getJSON('/com/deal_tenderingorder.php',{orderid:orderid,tendering:tendering},function(result){
+                        statethis.parents('.order').remove();
+                    })
+                }
+            })
+
+            $('#order_time_button').click(function(){
+                var time = $('#order_time').val();
+                var orderid = $(this).data('orderid');
+                $.getJSON('/com/deal_tenderingorder.php',{orderid:orderid,time:time},function(result){
+                    $('.alerttime').hide();
+                    window.location = '/tenders.html?orderid='+orderid;
+                })
+            });
+
+            $('.order_time_button_reset').click(function(){
+                $('#order_time_button').attr('data-orderid','');
+                $('#order_time').val('');
+                $('.alerttime').hide();
+            })
+
+            $('.sendmessage').click(function(){
+                if($('.sendmessage').attr('orderid')){
+                    $('.alerttime').show();
+                    var orderid = $('.sendmessage').attr('orderid');
+                    $('#order_time_button').attr('data-orderid',orderid);
+                }else{
+                    alert('每个订单只能发送一次消息');
+                }
+            })
+
+            $('.getphoto').click(function(){
+                var orderid = $('.getphoto').attr('orderid');
+                $.getJSON('/com/getqrcodeimage.php',{orderid:orderid},function(result){
+
+                })
+               
+                
+            })
+
+        }
+
+        loadunfinishedorder();
+        loaddictionary();
+        bindInputEvent();
+        bindButtonEvent();
+        loadprovincesaddress();
+
+    </script>
+
+</body>
+</html>

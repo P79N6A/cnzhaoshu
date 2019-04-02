@@ -1,0 +1,18 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Mrwang
+ * Date: 2018/11/7
+ * Time: 11:11
+ * 调取用户版本号
+ */
+
+include "../com/db.php";
+
+$userid=isset($_GET['userid'])?$_GET['userid']:"";
+
+$user_version_sql="select now_version from usser where userid = userid ";
+
+$user_version=$db->query($user_version_sql)[0];
+
+echo json_encode($user_version);

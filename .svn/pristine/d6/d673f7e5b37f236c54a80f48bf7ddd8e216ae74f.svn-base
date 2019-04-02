@@ -1,0 +1,1413 @@
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>投标</title>
+    <link rel="stylesheet" href="css/we_ui_spa/weui.css">
+    <link rel="stylesheet" href="css/we_ui_spa/jq-weui.css">
+    <link rel="stylesheet" href="css/we_ui_spa/bid_list.css">
+    <script src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/we_ui_spa/jwexin.js"></script>
+    <script src="js/we_ui_spa/weui.min.js"></script>
+    <script src="//cdn.bootcss.com/jquery-weui/0.8.3/js/swiper.min.js"></script>
+    <script src="js/city-picker.js"></script>
+    <script src="./js/we_ui_spa/weui_router.js"></script>
+</head>
+<body>
+<div class="container" id="container">
+</div>
+<template type="text/template" id="tpl_bidinfo">
+    <div>
+        <div class="weui-row" style="border-bottom: 1px solid rgb(217, 217, 217);">
+            <div class="bid-one" style="border: none">
+                <div class="weui-row weui-no-gutter">
+                    <div class="weui-col-100">
+                        <p class="bid-tittle"></p>
+                    </div>
+                </div>
+                <div class="weui-row  weui-no-gutter bid-info-bottom" id="dbh">
+                    <div class="weui-col-30">
+                        <div class="content-left">
+                            胸径
+                        </div>
+                    </div>
+                    <div class="weui-col-70">
+                        <div class="content-right">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-row  weui-no-gutter bid-info-bottom" id="plant_height">
+                    <div class="weui-col-30">
+                        <div class="content-left">
+                            株高
+                        </div>
+                    </div>
+                    <div class="weui-col-70">
+                        <div class="content-right">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-row  weui-no-gutter bid-info-bottom" id="crown">
+                    <div class="weui-col-30">
+                        <div class="content-left">
+                            冠幅
+                        </div>
+                    </div>
+                    <div class="weui-col-70">
+                        <div class="content-right">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-row  weui-no-gutter bid-info-bottom" id="address">
+                    <div class="weui-col-30">
+                        <div class="content-left">
+                            用苗地
+                        </div>
+                    </div>
+                    <div class="weui-col-70">
+                        <div class="content-right">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-row  weui-no-gutter bid-info-bottom" id="pertya_company_name">
+                    <div class="weui-col-30">
+                        <div class="content-left">
+                            企业
+                        </div>
+                    </div>
+                    <div class="weui-col-70">
+                        <div class="content-right">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-row  weui-no-gutter bid-info-bottom" id="remarks">
+                    <div class="weui-col-30">
+                        <div class="content-left">
+                            备注
+                        </div>
+                    </div>
+                    <div class="weui-col-70">
+                        <div class="content-right">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-row  weui-no-gutter bid-info-bottom" id="time">
+                    <div class="weui-col-30">
+                        <div class="content-left">
+                            截止日期
+                        </div>
+                    </div>
+                    <div class="weui-col-70">
+                        <div class="content-right">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-row  weui-no-gutter bid-info-bottom" id="tel">
+                    <div class="weui-col-30">
+                        <div class="content-left">
+                            联系电话
+                        </div>
+                    </div>
+                    <div class="weui-col-70">
+                        <div class="content-right">
+                            <a href="tel:18613804747"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bid-info-need">
+            <div class="weui-row  weui-no-gutter">
+                <div class="weui-col-50">
+                    <div class="bid-price">
+                        <div class="weui-col-70">
+                            <div class="bid-price-input">
+                                单价(元)<input type="number">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-col-50">
+                    <div class="bid-num">
+                        <div class="weui-col-30">
+
+                        </div>
+                        <div class="weui-col-70">
+                            <div class="bid-num-input">
+                                数量(株)<input type="number">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bid-info-imgwarp">
+                <div class="bid-info-imgs clearfix">
+                   <!-- <div class="bid-info-img-one" data-src="img/timg.jpg">
+                        <img src="img/timg.jpg" alt="">
+                        <div class="bid-info-img-close">×</div>
+                    </div>-->
+                    <div class="bid-info-img" data-src="">
+                        <label for="file" class="bid-info-img">
+                            <img src="img/timg.jpg" alt="">
+                        </label>
+                        <input style="display: none ;" class="uploadImg" type="file" name="file" id="file">
+                    </div>
+                </div>
+            </div>
+            <div class="weui-row weui-row-left  weui-no-gutter" style="padding: 15px 15px 0 15px">
+                <div class="weui-col-30">
+                    <div class="bid-price">
+                        苗源地
+                    </div>
+                </div>
+                <div class="weui-col-70" style="margin-left: 15px">
+                    <div class="bid-num">
+                        <input type="text" id='city-picker' placeholder="请选择发货地址" value="河北省 保定市 正定县"/>
+                    </div>
+                </div>
+            </div>
+            <div class="weui-row weui-row-left  weui-no-gutter">
+                <button class="bid-info-sub">投标</button>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        initservice();
+        removeImg();
+        addImg();
+        previewImg();
+        initClick();
+        function getTreeInfo(id) {
+            $.post(localhost + "tree_info.php", {
+                tree_id: tree_id,
+                tree_name:tree_name
+            }, function (res) {
+                res = JSON.parse(res)
+                let tree_info = res.data
+                let tittle = getName(tree_info);
+                $(".bid-tittle").text(tittle)
+                let dbh = tree_info.dbh;
+                $("#dbh .content-right").text(dbh)
+                let plant_height = tree_info.plant_height;
+                $("#plant_height .content-right").text(plant_height)
+                let crown = tree_info.crown;
+                $("#crown .content-right").text(crown)
+                let address = tree_info.hcity + tree_info.hproper+tree_info.harea;
+                $("#address .content-right").text(address)
+                let pertya_company_name = tree_info.project_info.company_name;
+                $("#pertya_company_name .content-right").text(pertya_company_name)
+                let remarks = tree_info.remarks;
+                $("#remarks .content-right").text(remarks)
+                let tel = tree_info.project_info.tel;
+                $("#tel a").attr("href", "tel:" + tel).text(tel)
+                let time = getlLastTime(tree_info.Up_time);
+                $("#time .content-right").text(time);
+                if(tree_info.province){
+                    $("#city-picker").val(tree_info.province);
+                }
+
+            })
+        }
+        function getPrames() {
+            var bid_info ={}
+            bid_info.tree_price =   $(".bid-price-input input").val();
+            bid_info.tree_num =   $(".bid-num-input input").val();
+            bid_info.tree_imgs = getImgArray();
+            bid_info.tree_id = tree_id;
+            bid_info.tree_address = $("#city-picker").val();
+            return bid_info
+        }
+        function initClick() {
+            $(".bid-info-sub").on("click",function () {
+                var bid_info = getPrames();
+                if(bid_info.price == ""){
+                    $.toast("价格必填","text");
+                }else if(bid_info.num == ""){
+                    $.toast("数量必填","text");
+                }else if(bid_info.address == ""){
+                    $.toast("苗源地必填","text");
+                }else {
+                    $.post(localhost+"tender_order.php", bid_info, function (res) {
+                        res = JSON.parse(res);
+                        if (res.status == 0) {
+                            $.toast("操作成功");
+                            pageManager.to("#tpl_home")
+                        } else {
+                            $.toast("服务器繁忙，稍后重试", "forbidden");
+                        }
+                    })
+                }
+            })
+        }
+
+        function getlLastTime(Up_time) {
+            var time = new Date().getTime();
+            var endtime = new Date(Up_time).getTime()
+            var timenum = (endtime - time) / 1000 / 60 / 60;
+            var timestr = "";
+            if (time <= 0) {
+                timestr = "已经截止投标"
+            } else {
+                if (parseInt(timenum) < 1) {
+                    timestr = "剩余1小时"
+
+                } else if (1 < parseInt(timenum) && parseInt(timenum) < 24) {
+                    timestr = "剩余" + parseInt(timenum) + "小时"
+
+                } else {
+                    timestr = "剩余" + parseInt(parseInt(timenum) / 24) + "天"
+                }
+            }
+            return timestr
+        }
+
+        function removeImg() {
+            $(".bid-info-imgs").on("click", ".bid-info-img-close", function (e) {
+                $(this).parent().remove();
+            })
+        }
+
+        function addImg() {
+            $("#file").on("change", function (e) {
+                var formData = new FormData();
+                formData.append('img', this.files[0], this.files[0].name)
+                   $.ajax({
+                        url: localhost+'bidpicture_upload.php',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (res) {
+                            res = JSON.parse(res);
+                            $('.bid-info-imgs').prepend(`<div class="bid-info-img-one" data-src="${res.data}">
+                                              <img src="${res.data}" alt="">
+                                              <div class="bid-info-img-close" >×</div>
+                                              </div>`)
+                        },
+                        error: function () {
+
+                        }
+                    })
+            })
+        }
+
+        function getImgArray() {
+            var imgArray = [];
+            $info_imgs = $(".bid-info-img-one");
+            for (var i = 0; i < $info_imgs.length; i++) {
+                imgArray.push($info_imgs.eq(i).attr("data-src"))
+            }
+            return imgArray
+        }
+
+        function previewImg() {
+            $(".bid-info-imgs ").on("click",".bid-info-img-one img", function () {
+                var imgArray = getImgArray();
+                let index = $(this.parentNode).index();
+                $.photoBrowser({
+                    initIndex: index,
+                    items: imgArray
+                }).open();
+            })
+        }
+
+        function getName(treeInfo) {
+            var title = "";
+            if (treeInfo.dbh) {
+                title = treeInfo.dbh + "公分";
+            } else if (treeInfo.plant_height) {
+                title = treeInfo.plant_height + "米"
+            } else if (treeInfo.crown) {
+                title = treeInfo.crown + "公分"
+            }
+            title +=`${treeInfo.tree_name}`
+            title += `（${treeInfo.tree_num}${treeInfo.company}）`
+            return title;
+        }
+        function initservice() {
+            $("#city-picker").cityPicker({
+                title: "请选择发货地址"
+            });
+            if (tree_id) {
+                getTreeInfo(tree_id)
+            } else {
+                $("#container").html("")
+                $.toast("扫码错误", "forbidden",function () {
+                    pageManager.to("#tpl_home")
+                });
+
+            }
+
+        }
+
+    </script>
+</template>
+<template type="text/template" id="tpl_home">
+    <div>
+        <div class="head_warp">
+            <div class="weui-row" id="search_one">
+                <div class="weui-col-75">
+                    <div class="weui_search_bar" id="search_bar" style="height: 44px">
+                        <form class="weui_search_outer">
+                            <div class="weui_search_inner">
+                                <input type="search" class="weui_search_input" id="search_input" placeholder="搜索" required/>
+                                <a href="javascript:" class="weui_icon_clear" id="search_clear"></a>
+                            </div>
+                            <label for="search_input" class="weui_search_text" id="search_text">
+                                <i class="weui_icon_search"></i>
+                                <span>搜索</span>
+                            </label>
+                        </form>
+                        <a href="javascript:" class="weui_search_cancel" id="search_cancel">搜索</a>
+                    </div>
+                </div>
+                <div class="weui-col-25">
+                    <a href="javascript:;" class="weui_btn weui_btn_mini weui_btn_primary"
+                       style="margin-top: 22px;transform: translateY(-50%);height: 30px;line-height: 30px;"
+                       id="mytree">我有的树</a>
+                </div>
+            </div>
+            <div class="weui-row bottom-line" style="position: relative" id="search_two">
+                <div class="weui-col-20 left-height-middle" style="color: #04be02">
+                    用苗地
+                </div>
+                <div class="weui-col-60" style="margin: 0 auto">
+                    <div class="weui-row weui-row-left" id="citywarp">
+                        <div style="color: #FF7D40">选择地区筛选</div>
+                    </div>
+                </div>
+                <div class="weui-col-20 right-height-middle">
+                    <a id="chooseCity" href="javascript:;" class="weui_btn weui_btn_mini weui_btn_primary"> 更多</a>
+                </div>
+
+            </div>
+        </div>
+        <div class="bid-list">
+            <!--<div class="bid-one" data-id="woaiwojia">-->
+                <!--<div class="weui-row weui-no-gutter">-->
+                    <!--<div class="weui-col-100">-->
+                        <!--<p class="bid-tittle">五十公分大柏树（10株）</p>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="weui-row weui-no-gutter">-->
+                    <!--<div class="weui-col-100">-->
+                        <!--<p class="bid-info">-->
+                            <!--<span>胸径：100公分</span>-->
+                            <!--<span>胸径：100公分</span>-->
+                            <!--<span>胸径：100公分</span>-->
+                            <!--<span>胸径：100公分</span>-->
+                            <!--<span>胸径：100公分</span>-->
+                        <!--</p>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="weui-row weui-row-left weui-no-gutter">-->
+                    <!--<div class="weui-col-30">-->
+                        <!--<div class="content-left">-->
+                            <!--用苗地-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="weui-col-70">-->
+                        <!--<div class="content-right">-->
+                            <!--山东清远山东-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="weui-row weui-row-left weui-no-gutter">-->
+                    <!--<div class="weui-col-30">-->
+                        <!--<div class="content-left">-->
+                            <!--备注-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="weui-col-70">-->
+                        <!--<div class="content-right">-->
+                            <!--山东清远山东-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="weui-row weui-row-left weui-no-gutter">-->
+                    <!--<div class="weui-col-30">-->
+                        <!--<div class="content-left">-->
+                            <!--截止日期-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="weui-col-70">-->
+                        <!--<div class="content-right">-->
+                            <!--剩余5天-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        </div>
+        <div class="weui-infinite-scroll" style="display: none">
+            <div class="infinite-preloader"></div><!-- 菊花 -->
+            正在加载... <!-- 文案，可以自行修改 -->
+        </div>
+
+    </div>
+
+    <script>
+        var citysArray = [
+            {
+                "title": "北京",
+                "value": "110000"
+            },
+            {
+                "title": "天津",
+                "value": "120000"
+            },
+            {
+                "title": "河北省",
+                "value": "130000"
+            },
+            {
+                "title": "山西省",
+                "value": "140000"
+            },
+            {
+                "title": "内蒙古自治区",
+                "value": "150000"
+            },
+            {
+                "title": "辽宁省",
+                "value": "210000"
+            },
+            {
+                "title": "吉林省",
+                "value": "220000"
+            },
+            {
+                "title": "黑龙江省",
+                "value": "230000"
+            },
+            {
+                "title": "上海",
+                "value": "310000"
+            },
+            {
+                "title": "江苏省",
+                "value": "320000"
+            },
+            {
+                "title": "浙江省",
+                "value": "330000"
+            },
+            {
+                "title": "安徽省",
+                "value": "340000"
+            },
+            {
+                "title": "福建省",
+                "value": "350000"
+            },
+            {
+                "title": "江西省",
+                "value": "360000"
+            },
+            {
+                "title": "山东省",
+                "value": "370000"
+            },
+            {
+                "title": "河南省",
+                "value": "410000"
+            },
+            {
+                "title": "湖北省",
+                "value": "420000"
+            },
+            {
+                "title": "湖南省",
+                "value": "430000"
+            },
+            {
+                "title": "广东省",
+                "value": "440000"
+            },
+            {
+                "title": "广西壮族自治区",
+                "value": "450000"
+            },
+            {
+                "title": "海南省",
+                "value": "460000"
+            },
+            {
+                "title": "重庆",
+                "value": "500000"
+            },
+            {
+                "title": "四川省",
+                "value": "510000"
+            },
+            {
+                "title": "贵州省",
+                "value": "520000"
+            },
+            {
+                "title": "云南省",
+                "value": "530000"
+            },
+            {
+                "title": "西藏自治区",
+                "value": "540000"
+            },
+            {
+                "title": "陕西省",
+                "value": "610000"
+            },
+            {
+                "title": "甘肃省",
+                "value": "620000"
+            },
+            {
+                "title": "青海省",
+                "value": "630000"
+            },
+            {
+                "title": "宁夏回族自治区",
+                "value": "640000"
+            },
+            {
+                "title": "新疆维吾尔自治区",
+                "value": "650000"
+            },
+            {
+                "title": "台湾省",
+                "value": "710000"
+            },
+            {
+                "title": "香港特别行政区",
+                "value": "香港特别行政区"
+            },
+            {
+                "title": "澳门特别行政区",
+                "value": "澳门特别行政区"
+            }
+
+        ];
+        var citysearch = [];
+        var loading = false;
+        var myTree = [];
+        var urlObject = {}
+        var p = 1;
+        var treeArray = "";
+        var nameArray = "";
+        showcitys();
+        getProjectIdList();
+        infiniteal();
+        getMyTree();
+        initGet();
+        initlocation();
+
+        function getProjectIdList() {
+
+            if (project_id) {
+                $("#search_one").hide();
+                $("#search_two").hide();
+                getFirstList();
+            } else {
+                getList()
+            }
+        }
+
+        function initlocation() {
+            $(".bid-list").on("click", ".bid-one", function () {
+                window.tree_id = $(this).attr("data-id")
+                window.tree_name = $(this).attr("data-name")
+                pageManager.to("#tpl_bidinfo")
+            })
+        }
+
+        /*function getParameter() {
+            var url = window.location.href
+            var urlArray = url.split("?")[1].split("&")
+            var urlObject = {};
+            for (a in urlArray) {
+                urlArrayOne = urlArray[a].split("=")
+                urlObject[urlArrayOne[0]] = urlArrayOne[1]
+            }
+           window.urlObject = urlObject;
+
+        }*/
+        function showList(data) {
+            var allhtml = "";
+            for (var i = 0; i < data.length; i++) {
+                allhtml += shouTitle(data[i]);
+                allhtml += showOther(data[i]);
+            }
+
+            if (p == 1) {
+                $(".bid-list").html(allhtml);
+            } else {
+                $(".bid-list").append(allhtml);
+            }
+
+        }
+
+        function shouTitle(treeInfo) {
+            var html = "";
+            var title = "";
+            if (treeInfo.dbh) {
+                title = treeInfo.dbh + "公分";
+            } else if (treeInfo.plant_height) {
+                title = treeInfo.plant_height + "米"
+            } else if (treeInfo.crown) {
+                title = treeInfo.crown + "公分"
+            }
+            html += `<div class="bid-one" data-id="${treeInfo.tree_order_id}" data-name="${treeInfo.tree_name}">
+                <div class="weui-row weui-no-gutter">
+                    <div class="weui-col-100">
+                        <p class="bid-tittle">${title}${treeInfo.tree_name}（${treeInfo.tree_num}${treeInfo.company}）</p>
+                    </div>
+                </div>`
+            return html
+        }
+
+        function showOther(treeInfo) {
+
+            var html = "";
+            html += `<div class="weui-row weui-no-gutter">
+                    <div class="weui-col-100">
+                        <p class="bid-info">
+                            ${treeInfo.dbh ? '<span>胸径：' + treeInfo.dbh + '公分</span>' : ''}
+                            ${treeInfo.plant_height ? '<span>株高：' + treeInfo.plant_height + '米</span>' : ''}
+                            ${treeInfo.crown ? '<span>冠幅：' + treeInfo.crown + '公分</span>' : ''}
+                            ${treeInfo.ground_diameter ? '<span>地径：' + treeInfo.ground_diameter + '公分</span>' : ''}
+                        </p>
+                    </div>
+                </div>`
+            html += `<div class="weui-row weui-row-left weui-no-gutter">
+                    <div class="weui-col-30">
+                        <div class="content-left">
+                            用苗地
+                        </div>
+                    </div>
+                    <div class="weui-col-70">
+                        <div class="content-right">
+                            ${treeInfo.project_info.harea}${treeInfo.project_info.hcity}${treeInfo.project_info.hproper?treeInfo.project_info.hproper:""}
+                        </div>
+                    </div>
+                </div>`
+            if (treeInfo.remarks) {
+                html += `<div class="weui-row weui-row-left weui-no-gutter">
+                    <div class="weui-col-30">
+                        <div class="content-left">
+                            备注
+                        </div>
+                    </div>
+                    <div class="weui-col-70">
+                        <div class="content-right">
+                            ${treeInfo.remarks}
+                        </div>
+                    </div>
+                </div>`
+            }
+            html += `<div class="weui-row weui-row-left weui-no-gutter">
+                    <div class="weui-col-30">
+                        <div class="content-left">
+                            截止日期
+                        </div>
+                    </div>
+                    <div class="weui-col-70">
+                        <div class="content-right">
+                            ${getlLastTime(treeInfo.project_info.Up_time)}
+                        </div>
+                    </div>
+                </div>
+            </div>`
+            return html;
+        };
+
+        function getlLastTime(Up_time) {
+            var time = new Date().getTime();
+            var endtime = new Date(Up_time).getTime()
+            var timenum = (endtime - time) / 1000 / 60 / 60;
+            var timestr = "";
+            if (time <= 0) {
+                timestr = "已经截止投标"
+            } else {
+                if (parseInt(timenum) < 1) {
+                    timestr = "剩余1小时"
+
+                } else if (1 < parseInt(timenum) && parseInt(timenum) < 24) {
+                    timestr = "剩余" + parseInt(timenum) + "小时"
+
+                } else {
+                    timestr = "剩余" + parseInt(parseInt(timenum) / 24) + "天"
+                }
+            }
+            return timestr
+        }
+
+        function getMyTree() {
+            $.post(localhost + "nursery_name.php", function (res) {
+                res = JSON.parse(res)
+                myTree = [];
+                for (tree in res.data) {
+                    myTree.push(res.data[tree].name)
+                }
+                nameArray = myTree;
+
+            })
+
+        }
+
+        //获取name,adress匹配数据
+        function initGet() {
+            $("#mytree").on("click", function () {
+                p = 1
+                treeArray = nameArray
+                getList();
+            })
+            $("#search_cancel").on("click", function () {
+                p = 1
+                treeArray = $("#search_input").val()
+                getList();
+            })
+        }
+
+        function getFirstList() {
+            $(".weui-infinite-scroll").show()
+            $.post(
+                "/bidding_list.php",
+                {
+                    project_id: project_id,
+                    p: p,
+                    address: citysearch,
+                    name: treeArray
+                },
+                function (res) {
+                    res = JSON.parse(res);
+                    if (res.data.length) {
+                        loading = false;
+                        $(".weui-infinite-scroll").hide()
+                        showList(res.data);
+                        $(".bid-list").css("padding-top",10)
+                    } else {
+                        $(".weui-infinite-scroll").show();
+                        $(".weui-infinite-scroll").html("全部加载")
+                    }
+                })
+        }
+
+        function getList() {
+            $(".weui-infinite-scroll").show()
+            $.post(
+                localhost + "bidding_list.php",
+                {
+                    p: p,
+                    address: citysearch,
+                    name: treeArray
+                },
+                function (res) {
+                    res = JSON.parse(res)
+                    if (res.data.length) {
+                        loading = false;
+                        $(".weui-infinite-scroll").hide()
+                        showList(res.data);
+                    } else {
+                        $(".weui-infinite-scroll").show();
+                        $(".weui-infinite-scroll").html("全部加载")
+                    }
+                })
+        }
+
+        function infiniteal(callback) {
+            $(window).scroll(function () {
+                //判断是否滑动到页面底部
+                if ($(window).scrollTop() > $(document).height() - window.innerHeight - 10) {
+                    if (loading || project_id) return;
+                    p++;
+                    loading = true;
+                    getList();
+                }
+            });
+        }
+
+        $("#chooseCity").select({
+            title: "用苗地",
+            multi: true,
+            closeText: "确定",
+            items: citysArray,
+            onClose: function (res) {
+                citysearch = res.data.titles.split(",")
+                localStorage.setItem("citys", JSON.stringify(citysearch));
+                showcitys();
+                p = 1;
+                getList();
+            }
+        });
+
+        function showcitys() {
+            if(!localStorage.getItem("citys")){return}
+            var citys = JSON.parse(localStorage.getItem("citys"));
+            citysearch = citys;
+            if(!citys)return
+            var citystr = "";
+            if (citys[0]) {
+                for (var i = 0; i < citys.length; i++) {
+                    citystr += `<div style="color: #FF7D40;margin-left: .2rem">${citys[i]}</div>`
+                }
+            } else {
+                citystr += `<div style="color: #FF7D40">选择省份进行筛选</div>`
+            }
+            $("#citywarp").html(citystr);
+
+        }
+
+
+    </script>
+
+</template>
+<template type="text/template" id="tpl_choose">
+    <div class="choosewarp">
+        <div class="project-list">
+            <!--<div class="project-one">
+                <div class="weui_panel_bd">
+                    <div class="weui_media_box weui_media_small_appmsg">
+                        <div class="weui_cells weui_cells_access">
+                            <a class="weui_cell" href="javascript:;">
+                                <div class="weui_cell_bd weui_cell_primary">
+                                    <div class="weui-row weui-no-gutter">
+                                        <div class="weui-col-70">
+                                            <div class="project-one-name">
+                                                WEB测试单项目(李峰)
+                                            </div>
+                                        </div>
+                                        <div class="weui-col-30">
+                                            <div class="project-one-address">
+                                                河北正定
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <span class="weui_cell_ft"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-one-content">
+                    <div class="tree-list">
+                        <div class="tree-one">
+                            <div class="dabiao">
+                                达标
+                            </div>
+                            <div class="tree-one-header" data-id="22222">
+                                <div class="weui_media_box weui_media_small_appmsg">
+                                    <div class="weui_cells weui_cells_access">
+                                        <a class="weui_cell" href="javascript:;">
+                                            <div class="weui_cell_bd weui_cell_primary">
+                                                <div class="weui-row weui-no-gutter">
+                                                    <div class="weui-col-60">
+                                                        <div class="tree-one-name">
+                                                            七公分杨树（19株）
+                                                        </div>
+                                                    </div>
+                                                    <div class="weui-col-40">
+                                                        <div class="tree-one-address">
+                                                            已采19株
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="weui-row weui-no-gutter">
+                                                    <div class="weui-col-70">
+                                                        <div class="tree-one-guige">
+                                                            胸径：20公分 株高：7-8米 冠幅：5.0-6.0公分
+                                                        </div>
+                                                    </div>
+                                                    <div class="weui-col-30">
+
+                                                    </div>
+                                                </div>
+                                                <div class="weui-row weui-no-gutter">
+                                                    <div class="weui-col-70">
+                                                        <div class="tree-one-guige">
+                                                            全冠，树形饱满，树形均称，分枝点2.6-2.8m全冠，树形饱满，树形均称，分枝点2.6-2.8m
+                                                        </div>
+                                                    </div>
+                                                    <div class="weui-col-30">
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <span class="weui_cell_ft"></span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tree-one-content">
+                                <div class="choose-bid-header">
+                                    <div class="weui-row">
+                                        <div class="weui-col-33">
+                                            <a href="javascript:;" class="weui_navbar_item weui_bar_item_on">
+                                                推荐
+                                            </a>
+                                        </div>
+                                        <div class="weui-col-33">
+                                            <a href="javascript:;" class="weui_navbar_item">
+                                                不推荐
+                                            </a>
+                                        </div>
+                                        <div class="weui-col-33">
+                                            <a href="javascript:;" class="weui_navbar_item">
+                                                已采用
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="choose-bid-list">
+                                    <div class="choose-bidone-warp">
+                                        &lt;!&ndash;<div class="choose-bidone-none">没有推荐信息！</div>&ndash;&gt;
+                                        <div class="choose-bidone-inner">
+                                            <div class="weui-row">
+                                                <div class="weui-col-60" style="width: 70%">
+                                                    <div class="weui-row">
+                                                        <div class="weui-col-33">￥300</div>
+                                                        <div class="weui-col-33">300株</div>
+                                                        <div class="weui-col-33">河北正定</div>
+                                                    </div>
+                                                    <div class="weui-row">
+                                                        <div class="weui-col-100" style="padding-left: 20px">李克强<a
+                                                                href="tel:19321212121">19321212121</a></div>
+                                                    </div>
+                                                    <div class="weui-row">
+                                                        <div class="weui-col-100" style="padding-left: 20px">符合标准，请您定夺</div>
+                                                    </div>
+                                                </div>
+                                                <div class="weui-col-40" style="width: 30%">
+                                                    <div>
+                                                        <img class="choose-bidone-inner-img" src="/admin/img/sm-img-1.jpg" alt="">
+                                                        <div class="choose-bidone-inner-btn" tender_status="2">采用</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="choose-bidone-inner">
+                                            <div class="weui-row">
+                                                <div class="weui-col-60" style="width: 70%">
+                                                    <div class="weui-row">
+                                                        <div class="weui-col-33">￥300</div>
+                                                        <div class="weui-col-33">300株</div>
+                                                        <div class="weui-col-33">河北正定</div>
+                                                    </div>
+                                                    <div class="weui-row">
+                                                        <div class="weui-col-100" style="padding-left: 20px">李克强<a
+                                                                href="tel:19321212121">19321212121</a></div>
+                                                    </div>
+                                                    <div class="weui-row">
+                                                        <div class="weui-col-100" style="padding-left: 20px">符合标准，请您定夺</div>
+                                                    </div>
+                                                </div>
+                                                <div class="weui-col-40" style="width: 30%">
+                                                    <div>
+                                                        <img class="choose-bidone-inner-img" src="/admin/img/sm-img-1.jpg" alt="">
+                                                        <div class="choose-bidone-inner-btn" tender_status="2">采用</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="choose-bidone-warp">
+                                        &lt;!&ndash;<div class="choose-bidone-none">没有不推荐信息！</div>&ndash;&gt;
+                                        <div class="choose-bidone-inner">
+                                            <div class="weui-row">
+                                                <div class="weui-col-60" style="width: 70%">
+                                                    <div class="weui-row">
+                                                        <div class="weui-col-33">￥300</div>
+                                                        <div class="weui-col-33">300株</div>
+                                                        <div class="weui-col-33">河北正定</div>
+                                                    </div>
+                                                    <div class="weui-row">
+                                                        <div class="weui-col-100" style="padding-left: 20px">李克强<a
+                                                                href="tel:19321212121">19321212121</a></div>
+                                                    </div>
+                                                    <div class="weui-row">
+                                                        <div class="weui-col-100" style="padding-left: 20px">符合标准，请您定夺</div>
+                                                    </div>
+                                                </div>
+                                                <div class="weui-col-40" style="width: 30%">
+                                                    <div>
+                                                        <img class="choose-bidone-inner-img" src="/admin/img/sm-img-1.jpg" alt="">
+                                                        <div class="choose-bidone-inner-btn" tender_status="3">采用</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="choose-bidone-warp">
+                                        &lt;!&ndash;<div class="choose-bidone-none">没有采用信息！</div>&ndash;&gt;
+                                        <div class="choose-bidone-inner">
+                                            <div class="weui-row">
+                                                <div class="weui-col-60" style="width: 70%">
+                                                    <div class="weui-row">
+                                                        <div class="weui-col-33">￥300</div>
+                                                        <div class="weui-col-33">300株</div>
+                                                        <div class="weui-col-33">河北正定</div>
+                                                    </div>
+                                                    <div class="weui-row">
+                                                        <div class="weui-col-100" style="padding-left: 20px">李克强<a
+                                                                href="tel:19321212121">19321212121</a></div>
+                                                    </div>
+                                                    <div class="weui-row">
+                                                        <div class="weui-col-100" style="padding-left: 20px">符合标准，请您定夺</div>
+                                                    </div>
+                                                </div>
+                                                <div class="weui-col-40" style="width: 30%">
+                                                    <div>
+                                                        <img class="choose-bidone-inner-img" src="/admin/img/sm-img-1.jpg" alt="">
+                                                        <div class="choose-bidone-inner-btn" tender_status="2">删除</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+        </div>
+    </div>
+    <script>
+        /*var html = $(".tree-list").html()
+        $(".tree-list").html(html+html+html+html)*/
+        showProjectList();
+        let treeObject = {};
+        /*查看大图*/
+        $('.choosewarp').on("click",".choose-bidone-inner-img",function () {
+            let id = $(this).parents(".tree-one").find(".tree-one-header").attr("data-id");
+            let index = $(this).attr("data-index");
+            if(!treeObject[id][index].tree_imgs)return
+            $.photoBrowser({
+                items: treeObject[id][index].tree_imgs
+            }).open();
+        })
+        /*tab切换*/
+        $('.choosewarp').on("click",".weui_panel_bd",function () {
+            $(this.parentNode).siblings().find('.project-one-content').hide();
+            $(this.parentNode).find('.project-one-content').toggle();
+            $(this.parentNode).siblings().find('.weui_panel_bd .weui_cell_ft').removeClass('point-down');
+            $(this.parentNode).find('.weui_panel_bd .weui_cell_ft').toggleClass('point-down');
+        })
+        /*投标数据*/
+        $('.choosewarp').on("click",".tree-one-header",function () {
+            $(this.parentNode).siblings().find('.tree-one-content').hide();
+            $(this.parentNode).find('.tree-one-content').toggle();
+            $(this.parentNode).siblings().find('.tree-one-header .weui_cell_ft').removeClass('point-down');
+            $(this.parentNode).find('.tree-one-header .weui_cell_ft').toggleClass('point-down');
+            let id = $(this).attr('data-id');
+            let that = this;
+            if($(that.parentNode).find(".choose-bid-list .choose-bidone-warp").length !=0) return
+            $.showLoading("加载中");
+            $.post("tree_tender_info.php",{tree_id:id},res =>{
+                let bidList = JSON.parse(res)
+                treeObject[id] = bidList
+                showBidList(that,bidList);
+            })
+        })
+        /*tab切换*/
+        $('.choosewarp').on("click",".choose-bid-header .weui_navbar_item",function () {
+            let index = $(this.parentNode).index();
+            $(this.parentNode).siblings().find("a").removeClass("weui_bar_item_on");
+            $(this).addClass("weui_bar_item_on")
+            $(this).parents('.tree-one-content').find(".choose-bidone-warp").siblings().hide().eq(index).show()
+        })
+        /*按钮操作*/
+        $('.choosewarp').on("click",".choose-bidone-warp .choose-bidone-inner-btn",function () {
+            let id = $(this).attr('data-id');
+            let index = $(this).parents('.choose-bidone-warp').index();
+            let tree_num = parseInt($(this).parents('.choose-bidone-warp').find(".weui-col-60 .weui-col-20").eq(1).text());
+            let btnname = $(this).text();
+            let tender_status = $(this).attr("tender_status");
+            let adoption_status = btnname == "采用"? 1 : 0;
+            let addresnum = $(this).parents(".tree-one").find(".tree-one-address");
+            $.showLoading("加载中");
+            $.post("adoption_status.php",{tender_order_id:id,adoption_status:adoption_status},res =>{
+                changgeStatus(this,btnname,tender_status)
+                let allnum = parseInt(addresnum.text().slice(2))
+                if(btnname == "采用"){
+                    allnum += tree_num
+                }else{
+                    allnum -= tree_num
+                }
+                if(allnum < 0){
+                    allnum = 0
+                }
+                addresnum.text("已采"+allnum+"株");
+            })
+        })
+        function changgeStatus(that,btnname,tender_status) {
+            let faterElement = $(that).parents(".choose-bidone-inner");
+            faterElement.find(".choose-bidone-inner-btn").text(btnname == "采用"? "删除":"采用")
+            let faterElementClone = faterElement.clone();
+            let warpIndex = tender_status == 2?0:1
+            warpIndex = btnname == "删除"? warpIndex:2;
+            $(that).parents(".choose-bid-list").find(".choose-bidone-warp").eq(warpIndex).append(faterElementClone);
+            $(that).parents(".choose-bid-list").find(".choose-bidone-warp").eq(warpIndex).find(".choose-bidone-none").hide()
+            faterElement.remove();
+            $.hideLoading();
+        }
+        function showProjectList() {
+            $.showLoading("加载中");
+            $.post("user_project_company.php",res =>{
+
+                let ProjectList =JSON.parse(res);
+                let ptojectListHtml = ""
+                for (p in ProjectList) {
+                     ptojectListHtml += `<div class="project-one">
+                <div class="weui_panel_bd">
+                    <div class="weui_media_box weui_media_small_appmsg">
+                        <div class="weui_cells weui_cells_access">
+                            <a class="weui_cell" href="javascript:;">
+                                <div class="weui_cell_bd weui_cell_primary">
+                                    <div class="weui-row weui-no-gutter">
+                                        <div class="weui-col-70">
+                                            <div class="project-one-name">
+                                                ${ProjectList[p].project_name}(${ProjectList[p].contacts.contacts})
+                                            </div>
+                                        </div>
+                                        <div class="weui-col-30">
+                                            <div class="project-one-address">
+                                                ${ProjectList[p].hcity} ${ProjectList[p].hproper}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <span class="weui_cell_ft"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-one-content">
+                    <div class="tree-list">`;
+                    for(bid in ProjectList[p].tree_info){
+                        ptojectListHtml += ` <div class="tree-one">`
+                                if(ProjectList[p].tree_info[bid].tree_oked_audits >= ProjectList[p].tree_info[bid].tree_num){
+                                    ptojectListHtml += `<div class="dabiao">
+                                达标
+                            </div>`
+                                }
+
+                        ptojectListHtml +=  `<div class="tree-one-header" data-id="${ProjectList[p].tree_info[bid].tree_order_id}">
+                                <div class="weui_media_box weui_media_small_appmsg">
+                                    <div class="weui_cells weui_cells_access">
+                                        <a class="weui_cell" href="javascript:;">
+                                            <div class="weui_cell_bd weui_cell_primary">
+                                                <div class="weui-row weui-no-gutter">
+                                                    <div class="weui-col-60">
+                                                        <div class="tree-one-name">
+                                                            ${shouTitle(ProjectList[p].tree_info[bid])}（${ProjectList[p].tree_info[bid].tree_num}株）
+                                                        </div>
+                                                    </div>
+                                                    <div class="weui-col-40">
+                                                        <div class="tree-one-address">已采${ProjectList[p].tree_info[bid].adoption_num?ProjectList[p].tree_info[bid].adoption_num:"0"}株</div>
+                                                    </div>
+                                                </div>
+                                                <div class="weui-row weui-no-gutter">
+                                                    <div class="weui-col-70">
+                                                        <div class="tree-one-guige">
+                                                         ${ProjectList[p].tree_info[bid].dbh ? '<span>胸径：' + ProjectList[p].tree_info[bid].dbh + '公分</span>' : ''}
+                                                        ${ProjectList[p].tree_info[bid].plant_height ? '<span>株高：' + ProjectList[p].tree_info[bid].plant_height + '米</span>' : ''}
+                                                        ${ProjectList[p].tree_info[bid].crown ? '<span>冠幅：' + ProjectList[p].tree_info[bid].crown + '公分</span>' : ''}
+                                                        ${ProjectList[p].tree_info[bid].ground_diameter ? '<span>地径：' + ProjectList[p].tree_info[bid].ground_diameter + '公分</span>' : ''}
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="weui-col-30">
+
+                                                    </div>
+                                                </div>
+                                                <div class="weui-row weui-no-gutter">
+                                                    <div class="weui-col-70">
+                                                        <div class="tree-one-guige">
+                                                        ${ProjectList[p].tree_info[bid].remarks}
+                                                       </div>
+                                                    </div>
+                                                    <div class="weui-col-30">
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <span class="weui_cell_ft"></span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tree-one-content">
+                                <div class="choose-bid-header">
+                                    <div class="weui-row">
+                                        <div class="weui-col-33">
+                                            <a href="javascript:;" class="weui_navbar_item weui_bar_item_on">
+                                                推荐
+                                            </a>
+                                        </div>
+                                        <div class="weui-col-33">
+                                            <a href="javascript:;" class="weui_navbar_item">
+                                                不推荐
+                                            </a>
+                                        </div>
+                                        <div class="weui-col-33">
+                                            <a href="javascript:;" class="weui_navbar_item">
+                                                已采用
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="choose-bid-list">
+
+                                </div>
+                            </div>
+                        </div>`
+                    }
+                    ptojectListHtml +=`</div>
+                    </div>
+                </div>`
+
+                }
+
+                $(".choosewarp .project-list").html(ptojectListHtml);
+                $.hideLoading();
+            })
+        }
+        function showBidList(that,bidList) {
+            var tuijian = [];
+            var buhuijian = [];
+            var caiyong = [];
+            var bidwarpone =``;
+            var bidwarptwo =``;
+            var bidwarpthr =``;
+            bidwarpone +=`<div class="choose-bidone-warp">`;
+            bidwarptwo +=`<div class="choose-bidone-warp">`;
+            bidwarpthr +=`<div class="choose-bidone-warp">`;
+            for(bid in bidList){
+               if(bidList[bid].adoption_status == 1){
+                   caiyong.push(bidList[bid]);
+                   bidwarpthr +=`<div class="choose-bidone-inner">
+                                            <div class="weui-row">
+                                                <div class="weui-col-60" style="width: 70%">
+                                                    <div class="weui-row">
+                                                        <div class="weui-col-20">￥${bidList[bid].tree_price}</div>
+                                                        <div class="weui-col-20">${bidList[bid].tree_num}株</div>
+                                                        <div class="weui-col-60">${bidList[bid].tree_address}</div>
+                                                    </div>
+                                                    <div class="weui-row">
+                                                        <div class="weui-col-100" style="padding-left: 20px">${bidList[bid].user_info[0].name}<a
+                                                                href="tel:${bidList[bid].user_info.phone}">${bidList[bid].user_info[0].phone}</a></div>
+                                                    </div>
+                                                    <div class="weui-row">
+                                                        <div class="weui-col-100" style="padding-left: 20px">${bidList[bid].user_info.remarks?bidList[bid].user_info.remarks:"推荐，请您定夺"}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="weui-col-40" style="width: 30%">
+                                                    <div>
+                                                        <img class="choose-bidone-inner-img" data-index="${bid}" src="${bidList[bid].tree_imgs?bidList[bid].tree_imgs[0]:''}" alt="" style="${bidList[bid].tree_imgs?'':'display: none'}">
+                                                        <div class="choose-bidone-inner-btn" data-id="${bidList[bid].tender_order_id}" tender_status="${bidList[bid].user_info.tender_status}">删除</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>`
+               }else {
+                   if(bidList[bid].tender_status == 2){
+                       tuijian.push(bidList[bid]);
+                       bidwarpone +=`<div class="choose-bidone-inner">
+                                            <div class="weui-row">
+                                                <div class="weui-col-60" style="width: 70%">
+                                                    <div class="weui-row">
+                                                        <div class="weui-col-20">￥${bidList[bid].tree_price}</div>
+                                                        <div class="weui-col-20">${bidList[bid].tree_num}株</div>
+                                                        <div class="weui-col-60">${bidList[bid].tree_address}</div>
+                                                    </div>
+                                                    <div class="weui-row">
+                                                        <div class="weui-col-100" style="padding-left: 20px">${bidList[bid].user_info[0].name}<a
+                                                                href="tel:${bidList[bid].user_info.phone}">${bidList[bid].user_info[0].phone}</a></div>
+                                                    </div>
+                                                    <div class="weui-row">
+                                                        <div class="weui-col-100" style="padding-left: 20px">${bidList[bid].user_info.remarks?bidList[bid].user_info.remarks:"推荐，请您定夺"}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="weui-col-40" style="width: 30%">
+                                                    <div>
+                                                        <img class="choose-bidone-inner-img" data-index="${bid}" src="${bidList[bid].tree_imgs?bidList[bid].tree_imgs[0]:''}" style="${bidList[bid].tree_imgs?'':'display: none'} alt="">
+                                                        <div class="choose-bidone-inner-btn" data-id="${bidList[bid].tender_order_id}" tender_status="${bidList[bid].user_info.tender_status}">采用</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>`
+                   }else {
+                       buhuijian.push(bidList[bid]);
+                       bidwarptwo +=`<div class="choose-bidone-inner">
+                                            <div class="weui-row">
+                                                <div class="weui-col-60" style="width: 70%">
+                                                    <div class="weui-row">
+                                                        <div class="weui-col-20">￥${bidList[bid].tree_price}</div>
+                                                        <div class="weui-col-20">${bidList[bid].tree_num}株</div>
+                                                        <div class="weui-col-60">${bidList[bid].tree_address}</div>
+                                                    </div>
+                                                    <div class="weui-row">
+                                                        <div class="weui-col-100" style="padding-left: 20px">${bidList[bid].user_info[0].name}<a
+                                                                href="tel:${bidList[bid].user_info.phone}">${bidList[bid].user_info[0].phone}</a></div>
+                                                    </div>
+                                                    <div class="weui-row">
+                                                        <div class="weui-col-100" style="padding-left: 20px">${bidList[bid].user_info.remarks?bidList[bid].user_info.remarks:"推荐"}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="weui-col-40" style="width: 30%">
+                                                    <div>
+                                                        <img class="choose-bidone-inner-img" data-index="${bid}" src="${bidList[bid].tree_imgs?bidList[bid].tree_imgs[0]:''}" style="${bidList[bid].tree_imgs?'':'display: none'} alt="">
+                                                        <div class="choose-bidone-inner-btn" data-id="${bidList[bid].tender_order_id}" tender_status="${bidList[bid].user_info.tender_status}">采用</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>`
+                   }
+               }
+            }
+            bidwarpone +=`</div>`;
+            bidwarptwo +=`</div>`;
+            bidwarpthr +=`</div>`;
+            if(tuijian.length == 0){
+                bidwarpone = `<div class="choose-bidone-warp"><div class="choose-bidone-none">没有推荐信息！</div></div>`
+            }
+            if(buhuijian.length == 0){
+                bidwarptwo = `<div class="choose-bidone-warp"><div class="choose-bidone-none">没有不推荐信息！</div></div>`
+            }
+            if(caiyong.length == 0){
+                bidwarpthr = `<div class="choose-bidone-warp"><div class="choose-bidone-none">没有采用信息！</div></div>`
+            }
+            $(that.parentNode).find(".choose-bid-list").html(bidwarpone+bidwarptwo+bidwarpthr);
+            $.hideLoading();
+        }
+        function shouTitle(treeInfo) {
+            var title = "";
+            if (treeInfo.dbh) {
+                title = treeInfo.dbh + "公分";
+            } else if (treeInfo.plant_height) {
+                title = treeInfo.plant_height + "米"
+            } else if (treeInfo.crown) {
+                title = treeInfo.crown + "公分"
+            }
+            title += treeInfo.tree_name
+            return title
+        }
+    </script>
+</template>
+</body>
+</html>

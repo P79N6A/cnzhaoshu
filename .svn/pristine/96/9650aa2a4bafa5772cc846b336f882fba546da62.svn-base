@@ -1,0 +1,15 @@
+<?php
+// 属性字典 删除
+// if ( empty($_SERVER['HTTP_REFERER']) || strtolower($_SERVER['SERVER_NAME'])!='cnzhaoshu.com') exit; 
+
+require 'db.php';
+
+$name = $_REQUEST['name'];	
+
+$sql = 'delete from dictionary_attribute where name=?';
+
+$db = new db();
+$db->prepare_exec( $sql, array( $name ) );
+unset($db);
+
+?>

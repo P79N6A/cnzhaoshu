@@ -1,0 +1,29 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Mrwang
+ * Date: 2018/9/27
+ * Time: 14:47
+ * USED: 创建当前用户 所在公司得 所有项目信息
+ */
+
+include  "../com/db.php";
+//$user=json_decode($_COOKIE['user2'],true);
+//$user=$user['userid'];
+$db=new db();
+$user=125398;
+$contract_info_sql="select company_name from contract_info where userid='".$user."' ";
+$contract_info=$db->query($contract_info_sql)[0]['company_name'];
+//var_dump($contract_info);die;
+$company_project_sql="select * from order_project where partya_company_name='".$contract_info."'and status=2";
+$company_project=$db->query($company_project_sql);
+//var_dump($company_project);die;
+$company_count=count($company_project);
+//var_dump($company_count);die;
+for($i=0;$i<$company_count;$i++){
+    $tree_info_sql="select * from new_tree_order where project='".$company_project[$i]['project_id']."'";
+    $company_project[$i]['tree_info']=$db->query($tree_info_sql);
+}
+unset($db);
+echo json_encode($company_project);
+

@@ -1,0 +1,50 @@
+<?php
+// 更新企业执照
+include 'basic.php';
+include 'db2.php';
+include 'user2.php';
+require '../wechat/message.audit.php';
+
+$userid = $_GET['userid'];
+$shopid = $_GET['shopid'];
+
+
+$imgRawData = file_get_contents('php://input');
+$image = imagecreatefromstring($imgRawData);
+unset($imgRawData);
+
+$image1 = basic::resizeImage($image, 600, 600);
+$filename = '../licenseimg/b/'.$userid.'.jpg';
+imagejpeg($image1, $filename, 80);
+
+
+$image1280 = basic::resizeImage($image, 1280, 1280);
+$filename = '../licenseimg/o/'.$userid.'.jpg';
+imagejpeg($image1280, $filename, 80);
+
+imagedestroy($image);
+imagedestroy($image1);
+imagedestroy($image1280);
+
+$db = new db();
+
+if (!$shopid) {
+	$sql = 'select shopid from user where userid=?';
+	$shopid = $db->prepare_query($sql,array($userid))[0]['shopid'];
+}
+
+$sql = 'update user set invoice=2,version=version+1 where shopid=?';
+$result = $db->prepare_exec($sql,array($shopid));
+if($result){
+
+	$user = user::getUserByUserId(1);
+	$title = '发票资格审核提醒消息';
+	$remark = '找树网';
+	$url = 'admin/invoice.html';
+	$keyword = '您有新的发票需要审核!';
+	sendMessage($user['wechatid'], $title, $keyword, $remark, $url);
+}
+
+unset($db);
+
+

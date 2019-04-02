@@ -1,0 +1,156 @@
+<?php
+class db 
+{
+	private static $dsn = 'mysql:host=127.0.0.1;dbname=';
+//	private static $username = 'zhaoshu';
+//	private static $password = 'a5c1a5b8c8l3a';
+	private $pdo = null; 
+
+	public function __construct($type='utf8mb4', $database='zhaoshu',$username='zhaoshu',$password='a5c1a5b8c8l3a')
+	{
+//	    $username = empty($username)? self::$username:$username;
+//      $password = empty($password)? self::$password:$password;
+		$this->pdo = new PDO(self::$dsn.$database,$username,$password);
+		$this->pdo->query('SET NAMES '.$type);  // 设置数据库编码 utf8mb4 存微信名称特殊字符
+		$this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+//        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	}
+
+	public function __destruct() 
+	{
+		$this->pdo = null;
+	}
+
+	public function query($sql) 
+	{
+		$result = $this->pdo->query($sql);		
+		$result->setFetchMode(PDO::FETCH_ASSOC);
+
+		if ($result->rowCount()==0) {
+			return null;
+		}else {
+			return $result->fetchAll();
+		}
+	}
+	
+	public function query_try($sql) 
+	{
+        $this->pdo->setAttribute(PDO::ATTR_ERRMODE,  PDO::ERRMODE_EXCEPTION);//开启异常处理 
+		try{
+			$result = $this->pdo->query($sql);		
+			$result->setFetchMode(PDO::FETCH_ASSOC);
+
+			if ($result->rowCount()==0) {
+				return null;
+			}else {
+				return $result->fetchAll();
+			}
+		}catch(Exception $e){
+			return null;
+		}	
+	}
+
+	public function exec($sql) 
+	{
+		return $this->pdo->exec($sql);		
+	}
+
+	public function prepare_query($sql,$array)
+	{
+		$result = $this->pdo->prepare($sql);
+		$result->execute($array);
+
+		$result->setFetchMode(PDO::FETCH_ASSOC);
+		
+		if ($result->rowCount()==0) {
+			return null;
+		}else {
+			return $result->fetchAll();
+		}
+	}
+
+	public function prepare_exec($sql,$array) 
+	{
+		$result = $this->pdo->prepare($sql);
+		return $result->execute($array);
+	}
+
+	/**
+	* 执行插入语句，返回插入id
+	*/
+	public function insert($sql) 
+	{
+		$this->pdo->exec($sql);
+		return $this->pdo->lastinsertid();
+	}
+	public function prepare_insert($sql,$array) 
+	{
+		$result = $this->pdo->prepare($sql);
+		$result->execute($array);
+		return $this->pdo->lastinsertid();
+	}
+
+	public function transaction($sqls) 
+	{
+		$pdo = $this->pdo;
+		$pdo->setAttribute(PDO::ATTR_AUTOCOMMIT, 0);//这个是通过设置属性方法进行关闭自动提交和上面的功能一样 
+        $pdo->setAttribute(PDO::ATTR_ERRMODE,  PDO::ERRMODE_EXCEPTION);//开启异常处理 
+		try{
+			$pdo->beginTransaction();
+
+			foreach ($sqls as $sql) {
+				$pdo->exec( $sql );
+			}
+
+			$pdo->commit();
+			return true;
+		}catch(Exception $e){
+			$pdo->rollBack();
+			return false;
+		}		
+	}
+	public function prepare_transaction($list) 
+	{
+		$pdo = $this->pdo;
+		$pdo->setAttribute(PDO::ATTR_AUTOCOMMIT, 0);//这个是通过设置属性方法进行关闭自动提交和上面的功能一样 
+        $pdo->setAttribute(PDO::ATTR_ERRMODE,  PDO::ERRMODE_EXCEPTION);//开启异常处理 
+		try{
+			$pdo->beginTransaction();
+
+			foreach ($list as $sql) {
+				$pdo->prepare($sql['sql'])->execute($sql['parameter']);
+			}
+
+			$pdo->commit();
+			return true;
+		}catch(Exception $e){
+			$pdo->rollBack();
+			return false;
+		}		
+	}
+
+	/**************** 树 ********************/
+	/**
+	* 根据treeid更新树信息
+	*/
+	public function updateTree($treeid, $value) 
+	{
+		$this->pdo->exec('update tree set '.$value.' where treeid='.$treeid);
+	}
+
+	/**
+	* 根据treeid删除树，用事物
+	*/
+	public function deleteTree($treeid) 
+	{
+		$sqls = array(
+			'delete from tree where treeid='.$treeid,
+			'delete from mytree where treeid='.$treeid
+		);
+
+		return self::transaction( $sqls );
+	}
+
+
+}
+?>

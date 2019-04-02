@@ -1,0 +1,327 @@
+<template>
+  <div>
+    <div style="padding-bottom: 10px">
+      <div>
+        <Input v-model="partya_company_name" placeholder="甲方" clearable style="width: 170px;margin-right: 10px"/>
+        <Input v-model="project_name" placeholder="项目" clearable style="width: 170px;margin-right: 10px"/>
+        <Input v-model="tel" placeholder="手机" clearable style="width: 170px;margin-right: 10px"/>
+        <Button @click="getList(true)" style="margin-left: 20px" type="primary">
+          <Icon type="search"/>
+          搜索
+        </Button>
+        <div style="float: right;padding-right: 20px">
+          <Select v-model="status" @on-change="getList(true)" style="width:100px">
+            <Option :value="2">招标中</Option>
+            <Option :value="3">招标终止</Option>
+            <Option :value="4">招标结束</Option>
+          </Select>
+          <Select v-model="audit_status" @on-change="getList(true)" style="width:100px;margin-left: 20px">
+            <Option :value="2">待审核</Option>
+            <Option :value="1">已审核</Option>
+          </Select>
+        </div>
+
+      </div>
+    </div>
+    <Table border :columns="columns" :data="bidList" @on-row-click="linkInfo"
+           :class="isflex?'flextree_list':''"></Table>
+    <div style="padding: 20px 0;text-align: center;background: #fff">
+      <Page :total="totol_num" :page-size="20" :current="p" @on-change="changePage" show-elevator/>
+    </div>
+
+  </div>
+</template>
+<script>
+  import {getBidList,changeProjectStatus} from '@/api/data'
+  import {getRemoveagsNav} from '@/libs/util'
+  import {mapMutations} from 'vuex'
+  import {remainingTime} from "@/libs/tools"
+
+  export default {
+    data () {
+      return {
+        isflex: false,
+        status: 2,
+        audit_status: 2,
+        partya_company_name: '',
+        project_name: '',
+        tel: '',
+        totol_num: 1,
+        columns: [
+          {
+            title: '序号',
+            key: 'name',
+            render: (h, params) => {
+              return h('div', [
+                h('Icon', {
+                  props: {
+                    type: 'person'
+                  }
+                }),
+                h('strong', params.index + 1)
+              ])
+            }
+          },
+          {
+            title: '订单编号',
+            key: 'order_num',
+            render: (h, params) => {
+              return h('div', [
+                h('Icon', {
+                  props: {
+                    type: 'person'
+                  }
+                }),
+                h('strong', params.row.project_info.order_num)
+              ])
+            }
+          },
+          {
+            title: '项目名称',
+            key: 'name',
+            render: (h, params) => {
+              return h('div', [
+                h('Icon', {
+                  props: {
+                    type: 'person'
+                  }
+                }),
+                h('strong', params.row.project_info.project_name)
+              ])
+            }
+          },
+          {
+            title: '招标进度',
+            key: 'jindu',
+            render: (h, params) => {
+              return h('div', [
+                h('Icon', {
+                  props: {
+                    type: 'person'
+                  }
+                }),
+                h('strong', params.row.project_info.project_progress+"%")
+              ])
+            }
+          },
+          {
+            title: '剩余时间',
+            key: 'shijian',
+            render: (h, params) => {
+              return h('div', [
+                h('Icon', {
+                  props: {
+                    type: 'person'
+                  }
+                }),
+                h('strong', remainingTime(params.row.project_info.Up_time))
+              ])
+            }
+          },
+          {
+            title: '用苗地',
+            key: 'address',
+            render: (h, params) => {
+              return h('div', [
+                h('Icon', {
+                  props: {
+                    type: 'person'
+                  }
+                }),
+                h('strong', params.row.project_info.hcity+params.row.project_info.hproper)
+              ])
+            }
+          },
+          {
+            title: '甲方',
+            key: 'partya',
+            render: (h, params) => {
+              return h('div', [
+                h('Icon', {
+                  props: {
+                    type: 'person'
+                  }
+                }),
+                h('strong', params.row.company_info.company_name)
+              ])
+            }
+          },
+          {
+            title: '联系人',
+            key: 'lianxi',
+            render: (h, params) => {
+              return h('div', [
+                h('Icon', {
+                  props: {
+                    type: 'person'
+                  }
+                }),
+                h('strong', params.row.company_info.contacts)
+              ])
+            }
+          },
+          {
+            title: '联系电话',
+            key: 'tel',
+            render: (h, params) => {
+              return h('div', [
+                h('Icon', {
+                  props: {
+                    type: 'person'
+                  }
+                }),
+                h('strong', params.row.company_info.tel)
+              ])
+            }
+          },
+          {
+            title: '待审核数',
+            key: 'daishenhe',
+            render: (h, params) => {
+              return h('div', [
+                h('Icon', {
+                  props: {
+                    type: 'person'
+                  }
+                }),
+                h('strong', params.row.project_info.audits_num)
+              ])
+            },
+            sortable: true
+          },
+          {
+            title: 'Action',
+            key: 'action',
+            width: 150,
+            align: 'center',
+            render: (h, params) => {
+              console.log(params.index)
+              if (params.row.project_info.status == 3) {
+                return h('div', [
+                  h('Button', {
+                    props: {
+                      type: 'primary',
+                      size: 'small'
+                    },
+                    style: {
+                      marginRight: '5px'
+                    },
+                    on: {
+                      click: (e) => {
+                        e.stopPropagation()
+                        window.event.cancelBubble = true;
+                        this.changeStatus(params.index,true)
+                      }
+                    }
+                  }, '启用')])
+              } else if(params.row.project_info.status == 2){
+                return h('div', [
+                  h('Button', {
+                    props: {
+                      type: 'error',
+                      size: 'small'
+                    },
+                    on: {
+                      click: (e) => {
+                        e.stopPropagation()
+                        window.event.cancelBubble = true;
+                        this.changeStatus(params.index,false)
+                      }
+                    }
+                  }, '禁用')
+                ])
+              }
+
+            }
+          }
+        ],
+        bidList: [],
+        p: 1
+      }
+    },
+    methods: {
+      ...mapMutations([
+        'setBreadCrumb',
+        'setTagNavList',
+        'addTag',
+        'setLocal',
+        'removeTag',
+      ]),
+      linkInfo (row, index) {
+        this.$router.push({
+          name: 'projectInfo',
+          params: {
+            projectInfo: row
+          }
+        })
+      },
+      getList (first) {
+        if (first) {
+          this.p = 1
+        }
+        let res = {
+          p: this.p,
+          status: this.status,
+          audit_status: this.audit_status,
+          partya_company_name: this.partya_company_name,
+          project_name: this.project_name,
+          tel: this.tel,
+        }
+        this.$Message.loading({
+          content: '加载中',
+          duration: 0
+        })
+        getBidList(res).then(res => {
+          /*res = JSON.parse(res);*/
+          this.$Message.destroy()
+          this.bidList = res.data.data
+          if(res.data.status == 1){
+            this.bidList = [];
+          }
+          this.totol_num = res.data.totol_num
+        })
+      },
+      changePage (p) {
+        this.p = p
+        this.getList()
+      },
+      handleScroll (e) {
+        var scrollTop = e.target.scrollTop
+        var topHeight = document.getElementsByClassName('ivu-table-wrapper')[0].offsetTop - 64
+        if (scrollTop > topHeight) {
+          this.isflex = true
+        } else {
+          this.isflex = false
+        }
+      },
+      changeStatus (index, is) {
+        let bidOne = this.bidList[index];
+        console.log(bidOne,index,this.bidList[index])
+        let data = {
+          project_id: bidOne.project_info.project_id,
+          status: is ? 2 : 3
+        }
+        changeProjectStatus(data).then(res => {
+          if (res.data.status == 0) {
+            this.$Message.success({
+              content: '操作成功',
+            })
+            this.$set(this.bidList[index].project_info, 'status', is ? 2 : 3)
+          } else {
+            this.$Message.warning({
+              content: '服务器繁忙'
+            })
+          }
+        })
+      }
+    },
+    mounted () {
+      this.getList(true)
+      /*this.removeTag("projectList");*/
+      document.getElementsByClassName('content-wrapper')[0].addEventListener('scroll', this.handleScroll)
+    },
+    beforeDestroy () {
+      document.getElementsByClassName('content-wrapper')[0].removeEventListener('scroll', this.handleScroll)
+    }
+  }
+</script>

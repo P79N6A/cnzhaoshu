@@ -1,0 +1,17 @@
+
+<?php
+$http_referer = $_SERVER['HTTP_REFERER'];
+if (empty($http_referer) || !strpos($http_referer,'cnzhaoshu.com')) exit(); 
+
+require('db2.php');
+
+$key = $_GET["key"];
+$key = str_replace("蜡","腊",$key);
+
+$db = new db();
+$result = $db->query("select * from keycount where word='$key'");
+$db = null;
+
+echo json_encode($result[0]); 
+
+?>

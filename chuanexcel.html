@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+<body>
+	<div id="uploadForm" style="float: left;position: relative;width:100px;height:30px;">
+        <div id="upload" style="width:100px;height:30px;background:#428bca;color:#fff;border-radius: 4px;line-height: 30px;text-align: center;position: absolute;">上传</div>
+        <input id="file" type="file" multiple="multiple" accept="aplication/zip" style="position: absolute;top: 0;left: 0;width: 100px;height: 30px;opacity: 0;">
+    </div> 
+	<script src="../js/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript">
+        $('#file').change(function(){
+            var formData = new FormData();
+            formData.append('file', $('#file')[0].files[0]);
+            $.ajax({
+                    url: '/com/zipexcel.php',
+                    type: 'POST',
+                    cache: false,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success:function(err){
+                        if(err != 1){
+                            alert(err);
+                        }else{
+                            alert('上传成功');
+                        }
+                    }
+            }); 
+        })
+
+        
+    </script>
+</body>

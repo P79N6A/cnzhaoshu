@@ -1,0 +1,21 @@
+<?php
+$http_referer = $_SERVER['HTTP_REFERER'];
+if (empty($http_referer) || !strpos($http_referer,'cnzhaoshu.com')) exit(); 
+
+require('db2.php');
+
+$where = $_GET["where"];
+
+$db = new db();
+$result = $db->countProvince2($where);
+
+if ($result==null && strpos($where,'"key"')>=0 ) {
+   $where = str_replace('"key"','"name"',$where);
+   $result = $db->countProvince2($where);
+}
+
+$db = null;
+
+echo json_encode($result); 
+
+?>

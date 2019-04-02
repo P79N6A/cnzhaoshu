@@ -1,0 +1,35 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Mrwang
+ * Date: 2018/9/29
+ * Time: 11:44
+ */
+include "../com/db.php";
+$db=new db();
+$tender_tree_id=isset($_POST['tender_order_id'])?$_POST['tender_order_id']:"";
+$adoption_status=isset($_POST['adoption_status'])?$_POST['adoption_status']:"";
+
+$update_adoption_sql="update tender_order set adoption_status='".$adoption_status."' where tender_order_id ='".$tender_tree_id."' ";
+//var_dump($update_adoption_sql);die;
+$res=$db->exec($update_adoption_sql);
+
+$tender_tree_id_sql="select tender_tree_id from tender_order where tender_order_id='".$tender_tree_id."'";
+//var_dump($tender_tree_id_sql);die;
+$tender_tree_id=$db->query($tender_tree_id_sql)[0]['tender_tree_id'];
+//var_dump($tender_tree_id);
+$shop_tree_num_sql="select sum(tree_num) as shop_tree_sum from tender_order where tender_tree_id ='".$tender_tree_id."' and adoption_status='1'";
+
+$shop_tree_num=$db->query($shop_tree_num_sql)[0]['shop_tree_sum'];
+$update_tree_sum_sql="update new_tree_order set adoption_num='".$shop_tree_num."' where tree_order_id ='".$tender_tree_id."'";
+$carry=$db->exec($update_tree_sum_sql);
+//var_dump($shop_tree_num[0]['shop_tree_sum']);die;
+if($carry){
+    $content=[
+        "status"=>0
+    ];
+}else{
+    $content=[
+        "status"=>1
+    ];
+}

@@ -1,0 +1,205 @@
+
+  <head>
+      <meta charset="utf-8">
+      <link rel="stylesheet" href="layui-v2.4.2/css/layui.css" />
+      <style>
+        #search{
+          margin: -10px 0 !important;
+        }
+      </style>
+  </head>
+  <body>
+  <div class="layui-tab layui-tab-brief">
+    <ul class="layui-tab-title">
+      <li class="layui-this">已合并的店铺</li>
+      <li>待合并的店铺</li>
+    </ul>
+    <div class="layui-tab-content">
+      <div class="layui-tab-item layui-show">
+          <table class="table table-striped border-top" id="management" lay-filter="management"></table>
+      </div>
+      <div class="layui-tab-item">
+          <form class="layui-form">
+            <div class="layui-form-item">
+              <div class="layui-inline">
+                  <div class="layui-input-inline">
+                      <input type="text" name="shopname" class="layui-input" placeholder="请输入主店名称" >
+                  </div>
+                  <div class="layui-input-inline">
+                      <input type="text" name="phone" class="layui-input" placeholder="请输入店铺电话" >
+                  </div>
+                  <div class="layui-input-inline">
+                       <button class="layui-btn" lay-submit lay-filter="formDemo">搜索</button>
+                  </div>
+              </div>
+            </div>
+          </form>
+          <table class="table table-striped border-top" id="search" lay-filter="search"></table>
+      </div>
+    </div>
+  </div>
+  </body>
+<!--main content end-->
+<script src="./js/jquery-1.8.3.min.js"></script>
+<script src="./layui-v2.4.2/layui.all.js"></script>
+  <script src="js/common-scripts.js"></script>
+<script src="./js/login.js?t=20170307"></script>
+<script>
+</script>
+<script>
+var table = layui.table;
+var form = layui.form;
+var layer = layui.layer;
+var laypage  = layui.laypage;
+//数据列表----例子
+$(function (){
+  var shopid = GetQueryString("shopid");
+  reload(shopid);//初始化加载
+})
+// console.log(table)
+function reload(shopid){
+    table.render({
+        elem:'#management'
+        ,height: 490,width:600
+        ,where:{shopid:shopid}
+        ,method: 'post'
+        ,url: 'store_management/store_manage_info.php' //数据接口
+        ,page:{ //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+          layout: [ 'prev', 'page', 'next','count', 'skip'] //自定义分页布局 //自定义分页布局
+          ,curr: 1 //设定初始在第 5 页
+          ,groups: 10 //只显示 1 个连续页码
+          ,first: true //不显示首页
+          ,limit:10
+          ,last: true //不显示尾页
+        } //开启分页
+        ,cols: [[ //表头
+          {field: 'shopname', title: '店铺名称',width:'50%',templet: function(a){
+                return '<a   style="border-style:none" onclick="management('+a.shopid+')" id="shopname">'+a.shopname+'</a>';
+            }}
+          ,{field: 'phone', title: '联系电话', width:'30%'}
+          ,{title: '操作', width: '20%' ,templet: function(d){
+          var html='<a style="color:#009688" onclick="delmanagement('+d.shopid+','+d.userid+')" >移除</a>';
+          return html;
+        },fixed: 'right'}
+        ]]
+        ,done: function(res, curr, count){
+                if(count==0){
+                    $('.layui-none').html('没有查找到相关信息');
+                }
+                laypage.render({
+                    cont: 'demo',
+                    layout:['count', 'prev', 'page', 'next'],
+                    pages: count,
+                    curr: function(){
+                        var page = location.search.match(/page=(\d+)/);
+                        return page ? page[1] : 1;
+                    }(),
+                    jump: function(e, first){ //触发分页后的回调
+                        if(!first){ //一定要加此判断，否则初始时会无限刷新
+                            location.href=setParam("page",e.curr);
+                        }
+                    }
+                });
+            }
+    });
+}
+
+// 搜索
+layui.use(['form','table'], function(){
+  var form = layui.form;
+  var table = layui.table;
+  //监听提交
+  form.on('submit(formDemo)', function(data){
+    var jsonstr=JSON.stringify(data.field);
+    // console.log(jsonstr);
+    var obj = eval('(' + jsonstr + ')');
+    var newstr={shopname: obj.shopname?obj.shopname:'', phone: obj.phone?obj.phone:''};
+    // alert(newstr);
+    reload2(newstr);
+    return false;
+  });
+});
+function reload2(where,shopid){
+   var shopid = GetQueryString("shopid");
+    where.shopid = shopid;
+    if(!where) where={phone: '', shop_name: ''};
+    if(!where.shopname) where.shopname='' ;
+    if(!where.phone) where.phone= '' ;
+    table.render({
+        elem:'#search'
+        ,height: '450',width:'620'
+        ,where:where
+        ,method: 'post'
+        ,url: 'store_management/store_joined_info.php' //数据接口
+        ,page:{ //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+          layout: [ 'prev', 'page', 'next','count', 'skip'] //自定义分页布局 //自定义分页布局
+          ,curr: 1 //设定初始在第 5 页
+          ,groups: 10 //只显示 1 个连续页码
+          ,first: false //不显示首页
+          ,limit:10
+          ,last: false //不显示尾页
+        } //开启分页
+        ,cols: [[ //表头
+          {field: 'shopname', title: '店铺名称',width:'50%',templet: function(a){
+                return '<a   style="border-style:none" onclick="management('+a.shopid+')" id="shopname">'+a.shopname+'</a>';
+            }}
+          ,{field: 'phone', title: '联系电话', width:'30%'}
+          ,{title: '操作', width: '20%' ,templet: function(d){
+          var html='<a style="color:#009688" onclick="addmanagement('+shopid+','+d.userid+')" >合并</a>';
+          return html;
+        },fixed: 'right'}
+        ]]
+        ,done: function(res, curr, count){
+                if(res.code==6){
+                    $('.layui-none').html(count);
+                }
+                if(count==0){
+                    $('.layui-none').html('没有查找到相关信息');
+                }
+            }
+    });
+}
+function delmanagement(shopid,userid){
+  layer.confirm('确认移除', function(index){
+        $.ajax({
+          type:'POST',
+          url:'store_management/store_relieve_joined.php',  //移除店铺接口地址
+          data:{shopid:shopid,userid:userid},
+          dataType:'JSON',
+          success:function(res){
+            layer.msg(res.count);
+            setTimeout("location.reload();",2000);
+          },
+          error:function (data) {
+          }
+        })
+        layer.close(index);
+      });
+}
+
+function addmanagement(shopid,userid){
+  layer.confirm('确认合并', function(index){
+        $.ajax({
+          url:'store_management/store_out_joined.php',  //合并店铺接口地址
+          type:'post',
+          data:{shopid:shopid,userid:userid},
+          dataType:'JSON',
+          success:function(res){
+            layer.msg(res.count);
+            // setTimeout("location.reload();",2000);
+          },
+          error:function (data) {
+          }
+        })
+        layer.close(index);
+      });
+}
+
+function GetQueryString(name)
+{
+     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+     var r = window.location.search.substr(1).match(reg);
+     if(r!=null)return  unescape(r[2]); return null;
+}
+</script>
+</html>

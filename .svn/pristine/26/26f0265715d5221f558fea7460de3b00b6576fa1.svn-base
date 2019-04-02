@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=utf-8>
+    <meta http-equiv=X-UA-Compatible content="IE=edge">
+    <meta name=viewport content="width=device-width,initial-scale=1">
+    <link rel=icon href=/admin/iview-admin/dist/favicon.ico>
+    <title>iview-admin</title>
+    <link href=/admin/iview-admin/dist/css/chunk-0eb1.1b23e29a.css rel=prefetch>
+    <link href=/admin/iview-admin/dist/css/chunk-2ebf.1b23e29a.css rel=prefetch>
+    <link href=/admin/iview-admin/dist/css/chunk-5689.3c700819.css rel=prefetch>
+    <link href=/admin/iview-admin/dist/css/chunk-83b7.9f97d241.css rel=prefetch>
+    <link href=/admin/iview-admin/dist/css/chunk-970b.f166ec11.css rel=prefetch>
+    <link href=/admin/iview-admin/dist/css/chunk-b031.1b23e29a.css rel=prefetch>
+    <link href=/admin/iview-admin/dist/css/chunk-d834.34f16c2d.css rel=prefetch>
+    <link href=/admin/iview-admin/dist/js/chunk-03a9.45c099fa.js rel=prefetch>
+    <link href=/admin/iview-admin/dist/js/chunk-0eb1.c2143fd0.js rel=prefetch>
+    <link href=/admin/iview-admin/dist/js/chunk-2ebf.e53092d1.js rel=prefetch>
+    <link href=/admin/iview-admin/dist/js/chunk-4677.a1268fc1.js rel=prefetch>
+    <link href=/admin/iview-admin/dist/js/chunk-5689.625b7341.js rel=prefetch>
+    <link href=/admin/iview-admin/dist/js/chunk-83b7.d9a68172.js rel=prefetch>
+    <link href=/admin/iview-admin/dist/js/chunk-970b.fae317b6.js rel=prefetch>
+    <link href=/admin/iview-admin/dist/js/chunk-b031.47b3faa6.js rel=prefetch>
+    <link href=/admin/iview-admin/dist/js/chunk-d834.b0164824.js rel=prefetch>
+    <link href=/admin/iview-admin/dist/css/app.21304840.css rel=preload as=style>
+    <link href=/admin/iview-admin/dist/css/chunk-vendors.6cf2aac7.css rel=preload as=style>
+    <link href=/admin/iview-admin/dist/js/app.b0bdf8e9.js rel=preload as=script>
+    <link href=/admin/iview-admin/dist/js/chunk-vendors.a52d0da4.js rel=preload as=script>
+    <link href=/admin/iview-admin/dist/css/chunk-vendors.6cf2aac7.css rel=stylesheet>
+    <link href=/admin/iview-admin/dist/css/app.21304840.css rel=stylesheet>
+</head>
+<body>
+<noscript><strong>We're sorry but iview-admin doesn't work properly without JavaScript enabled. Please enable it to
+    continue.</strong></noscript>
+<div id=app></div>
+<script src=/admin/iview-admin/dist/js/chunk-vendors.a52d0da4.js></script>
+<script src=/admin/iview-admin/dist/js/app.b0bdf8e9.js></script>
+</body>
+</html>

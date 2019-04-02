@@ -1,0 +1,47 @@
+import axios from '@/libs/api.request'
+import { getAxiosData } from '@/libs/util'
+export const getTableData = () => {
+  return axios.request({
+    url: 'bidList',
+    method: 'get'
+  })
+}
+
+export const getDragList = () => {
+  return axios.request({
+    url: 'get_drag_list',
+    method: 'get'
+  })
+}
+export const getBidList = (res) => {
+  let data = getAxiosData(res);
+  return axios.request({
+    url: 'Calculation.php',
+    data : data,
+    method: 'post'
+  })
+}
+export const getBidInfo = (res) => {
+  let data = getAxiosData(res);
+  return axios.request({
+    url: 'tree_operation.php',
+    data : data,
+    method: 'post'
+  })
+}
+export const changeBidStatus = (res) => {
+  let data = getAxiosData(res);
+  return axios.request({
+    url: 'update_tender_status.php',
+    data : data,
+    method: 'post'
+  })
+}
+export const changeProjectStatus = (res) => {
+  let data = getAxiosData(res);
+  return axios.request({
+    url: 'update_project_status.php',
+    data : data,
+    method: 'post'
+  })
+}

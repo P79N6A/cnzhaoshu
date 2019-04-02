@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>店铺管理-合并店铺</title>
+        <html lang="en">
+        <head>
+            <script>function getcookie(d) {
+                for (var b = document.cookie.split("; "), a = 0; a < b.length; a++) {
+                    var c = b[a].split("=");
+                    if (c[0] == d) return unescape(c[1])
+                }
+            }
+
+            getcookie("user2") || location.replace("login.html");</script>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>精品项目-找树网管理平台</title>
+            <link href="css/bootstrap.min.css" rel="stylesheet">
+            <link href="css/bootstrap-reset.css" rel="stylesheet">
+            <!--&lt;!&ndash;external css&ndash;&gt;-->
+            <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+            <!-- Custom styles for this template -->
+            <link href="css/style-responsive.css" rel="stylesheet" />
+            <link rel="stylesheet" href="layui-v2.4.2/css/layui.css" />
+            <!-- Custom styles for this template -->
+            <link href="css/style.css?t=20170308" rel="stylesheet">
+            <link href="../iconfont/iconfont.css?t=20170307" rel="stylesheet"/>
+            <link href="css/style.css?t=20170308" rel="stylesheet">
+            <link href="css/zhaoshu.css" rel="stylesheet">
+            <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
+            <!--[if lt IE 8]>
+            <script>window.location.replace('forie.html');</script><![endif]-->
+            <!--[if lt IE 9]>
+            <script src="js/html5shiv.min.js"></script>
+            <script src="js/respond.min.js"></script>
+            <![endif]-->
+            <style>
+                #tableshow {
+                    display: block;
+                }
+
+                .bottom-button {
+                    width: 100%;
+                    text-align: right;
+                    padding-top: 20px;
+                }
+
+                .bottom-button label {
+                    margin-right: 20px;
+                    margin-bottom: 20px;
+                }
+
+                #tableList input {
+                    outline: none;
+                    border: none;
+                    max-width: 300px;
+                    min-width: 0;
+                }
+
+                #tableList input:focus {
+                    border: 1px solid #e2e2e4;
+                    outline: 1px solid #e2e2e4;
+
+                }
+                td {
+                    white-space: nowrap;
+                }
+                .error-remind{
+                    font-size: 20px;
+                    color: red;
+                }
+                .error-remark{
+                    float: right;
+                    font-size: 14px;
+                    color: red;
+                }
+
+            </style>
+            <title>合并店铺列表</title>
+        </head>
+<body>
+<header id="header" class="header white-bg"></header>
+
+<aside>
+    <div id="sidebar" class="nav-collapse"></div>
+</aside>
+
+<!--main content start-->
+<section id="main-content">
+    <section class="wrapper">
+        <!-- page start-->
+        <div class="row">
+            <div class="col-lg-12">
+                <section class="panel">
+                    <header class="panel-heading">
+                        <i class="icon icon-woyaokaidian1"></i> 合并店铺
+                    </header>
+                    <form class="layui-form">
+                     <div class="layui-form-item">
+                        <div class="layui-inline" style="display: inline;">
+                            <div class="layui-input-inline">
+                                <input type="text" name="shopname" class="layui-input" placeholder="请输入主店名称" >
+                            </div>
+                            <div class="layui-input-inline">
+                                <input type="text" name="phone" class="layui-input" placeholder="请输入店铺电话" style="margin-left: 50px">
+                            </div>
+                            <div class="layui-input-inline">
+                                 <button class="layui-btn" lay-submit lay-filter="formDemo" style="margin-left: 50px">点我搜索</button>
+                            </div>
+                        </div>
+                      </div>
+                    </form>
+
+                    <table class="table table-striped border-top" id="userCertification" lay-filter="userCertification"></table>
+                </section>
+            </div>
+        </div>
+        <div>
+
+        </div>
+        <!-- page end-->
+    </section>
+    <!--main content end-->
+</section>
+</body>
+<!--main content end-->
+<script src="./js/jquery-1.8.3.min.js"></script>
+<script src="./layui-v2.4.2/layui.all.js"></script>
+<script src="./js/login.js?t=20170308"></script>
+<script src="js/common-scripts.js"></script>
+<script>
+</script>
+<script>
+var table = layui.table;
+var form = layui.form;
+var layer = layui.layer;
+var laypage = layui.laypage;
+//数据列表----例子
+$(function (){
+    reload();//初始化加载
+})
+// console.log(table)
+function reload(where){
+    table.render({
+        elem:'#userCertification'
+        ,height: '658px'
+        ,method: 'post'
+        ,where:where
+        ,url: 'store_management/store_management.php' //数据接口
+        ,page:{ //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+          layout: [ 'prev', 'page', 'next','count', 'skip'] //自定义分页布局
+          ,curr: 1 //设定初始在第 5 页
+          ,groups: 5 //只显示 1 个连续页码
+          ,first: false //不显示首页
+          ,limit:10
+          ,last: false //不显示尾页
+        } //开启分页
+        ,cols: [[ //表头
+          {field: 'shopname', title: '店铺名称',width:'50%',templet: function(a){
+                return '<a style="border-style:none" onclick="management('+a.shopid+')" id="shopname">'+a.shopname+'</a>';
+            }}
+          ,{field: 'phone', title: '联系电话', width:'50%'}
+        ]]
+        ,done: function(res, curr, count){
+            if(count==0){
+              $('.layui-none').html('没有查找到相关信息');
+            }
+            laypage.render({
+              cont: 'demo',
+              pages: count,
+              curr: function(){
+              var page = location.search.match(/page=(\d+)/);
+                  return page ? page[1] : 1;
+              }(),
+              jump: function(e, first){ //触发分页后的回调
+                if(!first){ //一定要加此判断，否则初始时会无限刷新
+                  location.href=setParam("page",e.curr);
+                }
+              }
+            });
+          }
+    });
+}
+// 搜索
+layui.use(['form','table'], function(){
+  var form = layui.form;
+  var table = layui.table;
+  //监听提交
+  form.on('submit(formDemo)', function(data){
+    var jsonstr=JSON.stringify(data.field);
+    // console.log(jsonstr);
+    var obj = eval('(' + jsonstr + ')');
+    var newstr={shop_name: obj.shopname, shop_phone: obj.phone};
+    // alert(newstr);
+    reload(newstr);
+    return false;
+  });
+});
+// 弹出页面
+function management(shopid){
+     layer.open({
+        type: 2,
+        offset: 'auto',
+        area: ['50%', '600px'],
+        fix: false, //不固定
+        maxmin: false,
+        closeBtn: 1,
+        shadeClose:true,
+        scrollbar: true,
+        shade: 0,//不显示遮罩
+        title: '店铺信息',
+        content: ['management_list.html?shopid='+shopid,'no'],
+    });
+}
+</script>
+</html>

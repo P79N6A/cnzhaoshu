@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>苗木字典 等级表-找树网管理平台</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-reset.css" rel="stylesheet">
+
+    <link href="../iconfont/iconfont.css" rel="stylesheet" />
+
+    <!-- Custom styles for this template -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/style-responsive.css" rel="stylesheet" />
+
+    <link href="css/zhaoshu.css" rel="stylesheet"> 
+</head>
+<body>
+    <header id="header" class="header white-bg"></header>
+
+    <aside><div id="sidebar" class="nav-collapse"></div></aside>
+
+    <!--main content start-->
+    <section id="main-content">
+        <section class="wrapper">
+            <!-- page start-->
+            <div class="row">
+                <div class="col-lg-12">
+                    <!--breadcrumbs start -->
+                    <ul class="breadcrumb">
+                        <li><a href="#"><i class="icon icon-miaomuzidian"></i> 苗木字典 等级表</a></li>
+                    </ul>
+                    <!--breadcrumbs end -->
+                </div>
+            </div>
+
+            <div class="row">
+                <aside class="profile-nav col-lg-3">
+                    <section class="panel">
+                      <div class="input-group m-bot15">
+                          <input class="form-control" type="text" id="keyword" value="" placeholder="关键字: 如国槐">
+                          <span class="input-group-btn">
+                            <button class="btn btn-primary" id="find" type="button">搜索</button>
+                          </span>
+                      </div>
+                      <select multiple="" class="form-control" id="showname" style="height:510px"></select>
+                    </section>
+                </aside>
+                <aside class="profile-info col-lg-9">
+                    <section class="panel">
+                        <div class="panel-body">
+                            <div class=" form" style="height:530px">
+                                <form class="cmxform form-horizontal" id="commentForm">
+                                    <div class="form-group ">
+                                        <label for="dictionary" class="control-label col-lg-2">名称</label>
+                                        <div class="col-lg-4">
+                                            <input class="form-control" id="name" type="text" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group ">
+                                        <label for="dictionary" class="control-label col-lg-2">拉丁名称</label>
+                                        <div class="col-lg-4">
+                                            <input class="form-control" id="ldname" type="text" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group " id="type">
+                                        <label for="dictionary" class="control-label col-lg-2">分类</label>
+                                        <div class="col-lg-10">
+                                          <label class="option">
+                                            <input type="radio" name="type" id="luoyeqiaomu" value="1"><span> 落叶乔木</span>
+                                          </label>
+                                          <label class="option">
+                                            <input type="radio" name="type" id="changlvqiaomu" value="2"><span> 常绿乔木</span>
+                                          </label>
+                                          <label class="option">
+                                            <input type="radio" name="type" id="luoyeguanmu" value="3"><span> 落叶灌木</span>
+                                          </label>
+                                          <label class="option">
+                                            <input type="radio" name="type" id="changlvguanmu" value="4"><span> 常绿灌木</span>
+                                          </label>
+                                          <label class="option">
+                                            <input type="radio" name="type" id="tengmu" value="5"><span> 藤木</span>
+                                          </label>
+                                          <label class="option">
+                                            <input type="radio" name="type" id="zhulei" value="6"><span> 竹类</span>
+                                          </label>
+                                          <label class="option">
+                                            <input type="radio" name="type" id="mubenhuahui" value="7"><span> 木本花卉</span>
+                                          </label>
+                                          <label class="option">
+                                            <input type="radio" name="type" id="sugenhuahui" value="8"><span> 宿根花卉</span>
+                                          </label>
+                                          <label class="option">
+                                            <input type="radio" name="type" id="shuishengzhiwu" value="9"><span> 水生植物</span>
+                                          </label>
+                                          <label class="option">
+                                            <input type="radio" name="type" id="dibeicaopi" value="10"><span> 地被草皮</span>
+                                          </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group " id="unit">
+                                        <label for="dictionary" class="control-label col-lg-2">单位</label>
+                                        <div class="col-lg-10">
+                                          <label class="option">
+                                            <input type="radio" name="unit" id="zhu" value="株"> 株
+                                          </label>
+                                          <label class="option">
+                                            <input type="radio" name="unit" id="pen" value="盆"> 盆
+                                          </label>
+                                          <label class="option">
+                                            <input type="radio" name="unit" id="pingmi" value="平米"> 平米
+                                          </label>
+                                          <label class="option">
+                                            <input type="radio" name="unit" id="luogen" value="裸根"> 裸根
+                                          </label>
+                                          <label class="option">
+                                            <input type="radio" name="unit" id="ya" value="芽"> 芽
+                                          </label>
+                                          <label class="option">
+                                            <input type="radio" name="unit" id="dun" value="墩"> 墩
+                                          </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group group" id="attribute">
+                                        <label for="dictionary" class="control-label col-lg-2">规格</label>
+                                        <div class="col-lg-10">
+                                          <label class="option">
+                                            <input type="checkbox" id="trunk_diameter" value="5"> 胸径
+                                          </label>
+                                          <label class="option">
+                                            <input type="checkbox" id="ground_diameter" value="6"> 地经
+                                          </label>
+                                          <label class="option">
+                                            <input type="checkbox" id="pot_diameter" value="7"> 盆径
+                                          </label>
+                                          <label class="option">
+                                            <input type="checkbox" id="age" value="8"> 苗龄
+                                          </label>
+                                          <label class="option">
+                                            <input type="checkbox" id="crown" value="9"> 冠幅
+                                          </label>
+                                          <label class="option">
+                                            <input type="checkbox" id="plant_height" value="10"> 株高
+                                          </label>
+                                          <label class="option">
+                                            <input type="checkbox" id="branch_length" value="11"> 条长
+                                          </label>
+                                          <label class="option">
+                                            <input type="checkbox" id="bough_length" value="12"> 主蔓长
+                                          </label>
+                                          <label class="option">
+                                            <input type="checkbox" id="branch_point_height" value="13"> 分支点高
+                                          </label>
+                                          <label class="option">
+                                            <input type="checkbox" id="branch_number" value="14"> 分支数
+                                          </label>
+                                          <label class="option">
+                                            <input type="checkbox" id="bough_number" value="15"> 主枝数（每丛枝数）
+                                          </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-lg-offset-2 col-lg-10">
+                                            <button class="btn btn-info" id="add"  type="button">上传</button>
+                                            <button class="btn btn-info" type="reset">重置</button>
+                                            <button class="btn btn-info" id="delete" type="button">删除</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
+                </aside>
+            </div>
+           <!-- page end-->
+        </section>
+    </section>
+    <!--main content end-->
+
+    <!-- js placed at the end of the document so the pages load faster -->
+    <script src="/js/jquery-1.12.4.min.js"></script>
+    <script src="js/login.js?t=20170307"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.scrollTo.min.js"></script>
+    <script src="js/jquery.nicescroll.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/jquery.validate.min.js"></script>
+
+
+    <script src="js/common-scripts.js"></script>
+
+    <script type="text/javascript">
+        if (navigator.userAgent.indexOf('MicroMessenger')>0 
+            || window.screen.height<700 || window.screen.width<700){
+          $('#showname').attr('multiple', false).height('');
+        }
+
+        loadall('');
+        var data;
+      // 添加
+        $('#add').click(function(){
+          var name = $('#name').val();
+          var ldname = $('#ldname').val();
+          var type = $("#type input[name='type']:checked").val();
+          var typename = $("#type input[name='type']:checked").next().html();
+          typename = $.trim(typename);
+          var unit = $("#unit input[name='unit']:checked").val();
+          var attribute = '';
+          $('#attribute input:checkbox:checked').each(function() {
+            attribute += $(this).val()+',';
+          });
+          attribute = attribute.substring(0,attribute.length-1);
+          var datas = {"type":type,"typename":typename,"name":name,"ldname":ldname,"unit":unit,"attribute":attribute};
+          $.post('/com/dictionary_attribute_update.php',{data:JSON.stringify(datas)},function(){
+            alert('上传成功');
+          });
+        });
+
+
+      // 搜索
+        $('#find').click(function(){
+          var keyword = $('#keyword').val();
+          loadall(keyword);
+        });
+
+      // 加载显示框内容
+        function loadall(name){
+          $.getJSON('../com/dictionary_attribute_search.php',{name:name},function(json){
+              if(json){
+                data = json;
+                var html = '';
+                for (var i = 0; i < data.length; i++) {
+                  html += '<option value='+i+'>'+data[i].name+'</option>';
+                }
+                $('#showname').html(html);
+              }else{
+                data = '';
+                var html = '<option>未找到符合要求的数据 :(</option>';
+                $('#showname').html(html);
+              }
+          });
+        };
+
+        var dictionary_attributes = {
+          5:'trunk_diameter',
+          6:'ground_diameter',
+          7:'pot_diameter',
+          8:'age',
+          9:'crown',
+          10:'plant_height',
+          11:'branch_length',
+          12:'bough_length',
+          13:'branch_point_height',
+          14:'branch_number',
+          15:'bough_number'          
+        };
+
+      // 搜索所得数据显示
+        $('#showname').click(function(){
+
+          // 重置选框
+          reset();
+
+          // 重新填写选框
+          var i = $(this).find('option:selected').val();
+          var attribute = data[i];
+          $('#name').val(attribute.name);
+          $('#ldname').val(attribute.ldname);
+          $('#type input[name=type][value='+attribute.type+']').prop("checked",'checked');
+          $('#unit input[name=unit][value='+attribute.unit+']').prop("checked",'checked');
+          if (attribute.attribute){
+            var attributes = attribute.attribute.split(',');
+            for (var j = 0; j < attributes.length; j++) {
+              $('#'+dictionary_attributes[ attributes[j] ]).prop("checked",'checked');
+            }
+          }
+        });
+      // 重置选框
+        function reset(){
+          $('#name').val('');
+          $('#ldname').val('');
+          $("#attribute input[type='checkbox']").prop("checked",false);
+          $('#unit input[name=unit]').prop("checked",false);
+          $('#type input[name=type]').prop("checked",false);
+        }
+
+
+      // 删除
+        $('#delete').click(function(){
+          var name = $('#name').val();
+
+          $.post('/com/dictionary_attribute_delete.php',{name:name},function(){
+            alert('删除成功');
+            // 重置选框
+            reset();
+            loadall('');
+          });
+        })
+    </script>
+</body>
+</html>

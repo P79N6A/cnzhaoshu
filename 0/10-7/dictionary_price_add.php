@@ -1,0 +1,66 @@
+<?php
+// 从CSV批量导入造价字典
+// var data = [{"name":"国槐2","attribute":"trunk_diameter","min":1,"max":10,"price":100}]
+// $.post('/com/dictionary_price_add.php',{year:2016,month:5,data:JSON.stringify(data)},function(){})
+// SELECT name,ldname,type,unit,attribute FROM `dictionary_attribute` order by CONVERT(name USING gbk)
+
+require 'checkhost.php';
+require 'db2.php';
+
+$year = $_REQUEST['year'];	
+$month = $_REQUEST['month'];	
+$data = $_REQUEST['data'];	
+
+if (isset($data) && isset($year) && isset($month)) {
+	$data = json_decode($data, true);
+	$pricefield = '`'.$year.(strlen($month)==1 ? '0'.$month : $month).'`';
+
+	$db = new db();
+
+	// 添加价格字段
+	$sql = 'alter table dictionary_price add ? decimal(10,1) DEFAULT NULL';
+	echo $sql;
+	$result = $db->prepare_exec( $sql, array( getPinyin($pricefield)) );
+
+	foreach ($data as $row) {
+		// 逐行处理
+		if (!$row['id']) continue; //必须有id
+
+		// 检查等级表里是否已经存在相同的记录，如果有，则不追加
+		// $sql = 'select id from dictionary_price where '.join(' and ',$fields);
+		$sql = 'select id,? from dictionary_price where id=?';
+		// $result = $db->query($sql);
+		$result = $db->prepare_query($sql, array($pricefield , $row['id']));
+		// echo json_encode($result).', '.json_encode($sql_grade_array).', '.$sql.'<br><br>';
+		
+		if (!$result) {
+			// 逐列处理
+			$fields = array();
+			$sql_array = array();
+
+			foreach ($row as $key => $value) {
+				if ($value) {
+					// 逐列处理
+					if ($key=='price') {
+						array_push($fields, $pricefield.'=?');
+					} else {
+						array_push($fields, $key.'=?');
+					}
+					array_push($sql_array, $value);
+				}
+			}
+
+			$sql = 'insert into dictionary_price set '.join(',',$fields);
+			$db->prepare_exec( $sql, $sql_array );
+		} else if (empty($result[0][$pricefield])) {
+			$sql = 'update dictionary_price set ?=? where id=?';
+
+			$db->prepare_exec( $sql, array( $pricefield, $row['price'] , $row['id'] ) );
+			// $db->exec($sql);
+		} 
+	}
+
+	unset($db);
+}
+
+?>

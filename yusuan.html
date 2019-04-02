@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>预算&采购 找树网</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> -->
+    <link rel="stylesheet" href="css/basic.css?t=20170304" type="text/css" />
+    <link rel="stylesheet" href="css/yusuan.css?t=20170220" type="text/css" />
+    <link rel="stylesheet" href="css/jquery.autocomplete.min.css">
+</head>
+<body>
+    <div class="alertordername">
+        <div style="text-align:center;margin:6% 0px;"><h1>输入您的订单名称</h1></div>
+        <input type="text" id="order_name" class="form_control_alert">
+        <button type="button" id="order_name_button" class="alert_btn">提交</button>
+        <button type="button" id="order_name_button_reset" class="alert_btn">取消</button>
+    </div>
+    <div class="shortcut">
+        <div class="wrap">
+            <div class="fl">
+                <span id="welcome">亲,欢迎来找树</span>  
+                <a href="javascript:login()" id="login">请登录</a>
+                <a href="javascript:logout()" id="logout">退出</a>
+            </div>
+            <span class="phone">☎13810525928</span>
+            <a class="qq" href="http://wpa.qq.com/msgrd?v=3&amp;uin=31905376&amp;site=qq&amp;menu=yes" 
+                title="在线客服 QQ 31905376">在线客服</a>
+        </div>
+    </div>
+    <div class="nav">
+        <div class="wrap">
+            <a href=".">首页</a>
+            <a href="mytree.html">我的苗店</a>
+            <a href="findtree.html">我的找树车</a>
+            <a href="#" class="selected">预算</a>
+            <a href="open.html" class="fr">开放平台</a>
+            <a href="http://mp.weixin.qq.com/mp/homepage?__biz=MjM5MTQwMzA1OQ==&hid=1" class="fr">新闻中心</a>
+            <a href="about.html" class="fr">关于我们</a>
+            <a href="http://mp.weixin.qq.com/s?__biz=MjM5MTQwMzA1OQ==&mid=203858056&idx=1&sn=57d46cb9c073b21d7311c5e76248dcf8&scene=1&key=2e5b2e802b7041cf27bdb357cf32162b9f411c3a4237247b6e0ce9dde679aa69ed88ef1bd6246e172495e1341f759811&ascene=1&uin=MTMwMTQ4NTIwNA%3D%3D&devicetype=webwx&version=70000001&pass_ticket=5SzduPctzoCWysrY7mdIEXpNi3sU0kpjrPWn8YXW0UIb9Wyuqd8%2BXQ%2BqD9lVYNak" class="fr">手机版</a>
+            <a href="http://mp.weixin.qq.com/s?__biz=MjM5MTQwMzA1OQ==&mid=203617198&idx=1&sn=1a78a207b6ca1bdf0accac78745f548a&scene=1&key=2e5b2e802b7041cf3ef8f671071823b9fb4b20da6739ef5fb7a0f92dccf51b7b53ceb3517fe3f26a7238c80e3c8186f7&ascene=1&uin=MTMwMTQ4NTIwNA%3D%3D&devicetype=webwx&version=70000001&pass_ticket=5SzduPctzoCWysrY7mdIEXpNi3sU0kpjrPWn8YXW0UIb9Wyuqd8%2BXQ%2BqD9lVYNak" class="fr">帮助</a>
+        </div>
+    </div>
+    <div class="zhong">
+            <div id="left">
+                <div id="fatherresetinput" style="float:left;">
+                    <table id="attributeshow" style="border-collapse:collapse;margin-top:15px;" border="1">
+                    </table>
+                </div>
+                <label class="tree_arrive_address_lable">用苗地点:</label>
+                <div id="tree_arrive_address_name">
+                    <select class="province form-control cxselect"></select>
+                    <input type="text" name="province" class="hideform">
+                    <select class="city form-control cxselect"></select>
+                    <input type="text" name="city" class="hideform">
+                    <select class="area form-control cxselect"></select>
+                    <input type="text" name="area" class="hideform">
+                </div>
+                <div id="tree_arrive_aaddress">
+                    <label class="tree_arrive_address_lable">选定苗源地:</label>
+                    <div id="ads"></div>
+                </div>
+                <div id="tree_arrive_address_city">
+                </div>
+                <div id="submit_button">
+                    <button type="button" id="join_order" class="btn" style="margin-left:0px;">存入我的清单</button>
+                    <button type="button" id="deal" class="btn">预算用导出</button>
+                    <button type="button" id="myorder" class="btn">采购用导出</button>
+                </div>
+            </div>
+
+            <div id="right">
+                <div id="fatherresetinput">
+                <form>
+                    <div>
+                        <div id="label1">录入清单</div>
+                        <div id="label2">历史清单</div>
+                    </div>
+                    <div id="attributein">
+                        <div>
+                            <div class="cols1">苗木名称:</div>
+                            <div class="cols2"><input type="text" id="name" class="form-control"><input type="hidden" id="name-id" class="form-control"></div>
+                        </div>
+                        <div id="trunk_diameter1">
+                            <div class="cols1">胸 &nbsp;径(公分):</div>
+                            <div class="cols2"><input type="text" id="trunk_diameter" placeholder="10或10-20" onkeyup="value=value.replace(/[^\d\.\-\－\。]/g,'')" onpaste="return false"  class="form-control"></div>
+                        </div>
+                        <div id="ground_diameter1">
+                            <div class="cols1">地 &nbsp;径(公分):</div>
+                            <div class="cols2"><input type="text" id="ground_diameter" placeholder="10或10-20" onkeyup="value=value.replace(/[^\d\.\-\－\。]/g,'')" onpaste="return false" class="form-control"></div>
+                        </div>
+                        <div id="pot_diameter1">
+                            <div class="cols1">盆 &nbsp;径(公分):</div>
+                            <div class="cols2"><input type="text" id="pot_diameter" placeholder="10或10-20" onkeyup="value=value.replace(/[^\d\.\-\－\。]/g,'')" onpaste="return false" class="form-control"></div>
+                        </div>
+                        <div id="plant_height1">
+                            <div class="cols1">株 &nbsp;高(米):</div>
+                            <div class="cols2"><input type="text" id="plant_height" placeholder="10或10-20" onkeyup="value=value.replace(/[^\d\.\-\－\。]/g,'')" onpaste="return false" class="form-control"></div>
+                        </div>
+                        <div id="plant_height_cm1">
+                            <div class="cols1">株 &nbsp;高(公分):</div>
+                            <div class="cols2"><input type="text" id="plant_height_cm" placeholder="10或10-20" onkeyup="value=value.replace(/[^\d\.\-\－\。]/g,'')" onpaste="return false" class="form-control"></div>
+                        </div>
+                        <div id="crown1">
+                            <div class="cols1">冠 &nbsp;幅(米):</div>
+                            <div class="cols2"><input type="text" id="crown" placeholder="10或10-20" onkeyup="value=value.replace(/[^\d\.\-\－\。]/g,'')" onpaste="return false" class="form-control"></div>
+                        </div>
+                        <div id="crown_cm1">
+                            <div class="cols1">冠 &nbsp;幅(公分):</div>
+                            <div class="cols2"><input type="text" id="crown_cm" placeholder="10或10-20" onkeyup="value=value.replace(/[^\d\.\-\－\。]/g,'')" onpaste="return false" class="form-control"></div>
+                        </div>
+                        <div id="branch_number1">
+                            <div class="cols1">分&nbsp;枝&nbsp;数(个):</div>
+                            <div class="cols2"><input type="text" id="branch_number" placeholder="10" onkeyup="value=value.replace(/[^\d\.\-\－\。]/g,'')" onpaste="return false" class="form-control"></div>
+                        </div>
+                        <div id="bough_number1">
+                            <div class="cols1">主&nbsp;枝&nbsp;数(个):</div>
+                            <div class="cols2"><input type="text" id="bough_number" placeholder="10" onkeyup="value=value.replace(/[^\d\.\-\－\。]/g,'')" onpaste="return false" class="form-control"></div>
+                        </div>
+                        <div id="branch_length1">
+                            <div class="cols1">条 &nbsp;长(米):</div>
+                            <div class="cols2"><input type="text" id="branch_length" placeholder="10或10-20" onkeyup="value=value.replace(/[^\d\.\-\－\。]/g,'')" onpaste="return false" class="form-control"></div>
+                        </div>
+                        <div id="bough_length1">
+                            <div class="cols1">主蔓(枝)长(米):</div>
+                            <div class="cols2"><input type="text" id="bough_length" placeholder="10或10-20" onkeyup="value=value.replace(/[^\d\.\-\－\。]/g,'')" onpaste="return false" class="form-control"></div>
+                        </div>
+                        <div id="branch_point_height1">
+                            <div class="cols1">分枝点高(米):</div>
+                            <div class="cols2"><input type="text" id="branch_point_height" placeholder="10或10-20" onkeyup="value=value.replace(/[^\d\.\-\－\。]/g,'')" onpaste="return false" class="form-control"></div>
+                        </div>
+                        <div id="age1">
+                            <div class="cols1">苗 &nbsp;龄(年):</div>
+                            <div class="cols2"><input type="text" id="age" placeholder="10" onkeyup="value=value.replace(/[^\d\.\-\－\。]/g,'')" onpaste="return false" class="form-control"></div>
+                        </div>
+                        <div id="substrate1">
+                            <div class="cols1">基 &nbsp;质:</div>
+                            <div class="cols2"><input type="text" id="substrate" class="form-control"></div>
+                        </div>
+                        <div>
+                            <div class="cols1">数 &nbsp;量:</div>
+                            <div class="cols2"><input type="text" onkeyup='this.value=this.value.replace(/\D/gi,"")' id="count" class="form-control"></div>
+                        </div>
+                        <div>
+                            <div class="cols1"></div>
+                            <div class="cols2"><button type="button" id="add" class="btn">添加</button><span>&nbsp;</span><button type="button" id="reset" class="btn">清空</button><span>&nbsp;</span></div>
+                        </div>
+                    </div>
+                    <div id="history">
+                        <div class="name">名 称 :</div><input type="text" id="key_name" class="form_control">
+                        <div class="name">地 址 :</div><input type="text" id="key_area" class="form_control">
+                        <div class="name">时 间 :</div><input placeholder="输入日期" class="laydate-icon" id="demo" value=""><div style="float:left;margin-top:12px;width:8%;text-align:center">至</div><input placeholder="输入日期" id="key_time2" class="laydate-icon" onclick="laydate()">
+                        <button type="button" id="key_search" class="key_btn">查询</button>
+                        <button type="button" id="key_reset" class="key_btn">清空</button>
+                        <div id="history_contents">
+                        </div>
+                    </div>
+                </form> 
+                <div class="clear3"></div>
+                </div>
+            </div>
+    </div>
+    <div class="clear3"></div>
+    <div class="footer wrap">
+        <img src="/img/wx.jpg" alt="微信找树">
+        <p>
+            <a href="about.html">关于我们</a>｜
+            <a href="about.html">领导寄语</a>｜
+            <a href="about.html">联系我们</a>｜
+            <a href="about.html">合作伙伴</a>
+        </p>
+        <p>Copyright © 2014-2018 北京找树网科技股份有限公司 版权所有 京ICP证1403号</p>
+        <p>
+            <a href="http://www.itrust.org.cn/" target="_blank"><img src="/img/f1.jpg"></a>
+            <a href="http://www.bnia.cn/" target="_blank"><img src="/img/f2.jpg"></a>
+            <a href="http://net.china.com.cn/" target="_blank"><img src="/img/f3.jpg"></a>
+            <a href="http://www.bjjubao.org/" target="_blank"><img src="/img/f4.jpg"></a>
+            <a href="http://www.bj.cyberpolice.cn/" target="_blank"><img src="/img/f5.jpg"></a>
+        </p>
+    </div>
+<script src="js/jquery-1.12.4.min.js"></script>
+<script src="js/jquery.blockui.js"></script>
+<script src="js/basic.js?t=20170306"></script>
+<!--  省市县三级联动js -->
+<script src="js/jquery.cxselect.min.js"></script>
+<script src="js/yusuan.js?t=20170220"></script>
+<!-- input填写联想js -->
+<script src="js/jquery.autocomplete.min.js"></script>
+<!-- 时间js是js下的laydate文件夹 -->
+<script src="js/laydate/laydate.js"></script>
+
+</body>
+</html>
+

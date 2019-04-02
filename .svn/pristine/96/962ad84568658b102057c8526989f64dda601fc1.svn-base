@@ -1,0 +1,18 @@
+<?php
+// 统计关键词搜索频次
+require 'db.php';
+
+
+$id = $_POST['id'];	
+$name = $_POST['name'];	
+
+if ($id) {
+	
+	$db = new db();
+	$sql = 'update shop_honor set name=? where id=?';
+	$result = $db->prepare_exec($sql, array($name, $id));
+	unset($db);
+}
+	echo $result;
+
+?>

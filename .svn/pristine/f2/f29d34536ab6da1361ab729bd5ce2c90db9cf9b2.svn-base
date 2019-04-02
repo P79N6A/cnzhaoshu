@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<?php
+	include 'com2/wechat_login2.php';
+	wechatLogin();
+
+?>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<link rel="stylesheet" href="./css/weui.min.css"/>
+	<link rel="stylesheet" href="./css/example.css"/>
+	<link rel="stylesheet" href="./css/basics_m.css?t=20170907"/>
+	<title>认养树超级管理员</title>
+	<style type="text/css">
+		body{
+			margin: 0;
+			padding: 0;
+			border: 0;
+			font: inherit;
+			font-size: 100%;
+			vertical-align: baseline;
+		}
+        .listbox{
+            overflow-y: scroll;
+            -webkit-overflow-scrolling : touch;
+            margin-top: 0;
+        }
+        .greenfont{
+            margin-left: 10px;
+            line-height: 28px;
+            color: #09bb07;
+            white-space: nowrap;
+        }
+        .topmap{
+            width:100%;
+            z-index: 1400;
+            position: fixed;
+            top:0px;
+            left:0px;
+            display: none;
+            background-color: #eee;
+        }
+        .input_address{
+            width:100%;
+            z-index: 500;
+            position: fixed;
+            height:50px;
+            background-color: #fff;
+        }
+        .input_address_box{
+            width: 65%;
+            float: left;
+            border: 1px solid #aaa;
+            margin-left: 3%;
+            border-radius: 20px;
+            line-height: 35px;
+            height: 35px;
+            margin-top: 5px;
+        }
+        #input_address{
+            width: 70%;
+            height: 34px;
+            border: 0;
+            border-radius: 21px;
+            float: left;
+            padding: 0 5%;
+            overflow: hidden;
+            font-size: 15px;
+        }
+        .input_addresss{
+            float: left;
+            color:#3CC51F;
+        }
+        .input_address_submit{
+            width: 20%;
+            float: left;
+            margin-left: 5%;
+            margin-top: 5px;
+            border-radius: 17px;
+            line-height: 35px;
+            height: 35px;
+            border: 1px solid #aaa;
+            text-align: center;
+            color: #999;
+        }
+        #address_map{
+            width:100%;
+            position: relative;
+        }
+        .now_address{
+            width:100%;
+            height:25px;
+            color:red;
+            background-color: #fff;
+        }
+        .middleControl{
+            position: relative;
+            left: 50%;
+            top: 50%;
+            margin: -16px 0 0 -16px;
+            width:32px;
+            height:32px;
+            z-index:500;
+        }
+        .btn_min{
+            display: inline-block;
+            padding: 0 1.32em;
+            line-height: 2.3;
+            font-size: 13px;
+        }
+        .btn{
+            position: relative;
+            margin-right: 2%;
+            min-width: 25%;
+            max-width: 30%;
+            box-sizing: border-box;
+            text-align: center;
+            text-decoration: none;
+            color: #fff;
+            border-radius: 5px;
+            -webkit-tap-highlight-color: rgba(0,0,0,0);
+            overflow: hidden;
+        }
+        .buttonbox{
+            width: 100%;
+            padding: 0 15px;
+        }
+        .bigimage{
+            position: absolute;
+            bottom: 50px;
+            width: 100%;
+        }
+	</style>
+</head>
+<body>
+<div class="alert none">
+	<div class="weui-mask" style="z-index: 1010;"></div>
+	<div class="weui-dialog">
+	    <div class="weui-dialog__hd"><strong class="weui-dialog__title">提示信息</strong></div>
+	    <div class="weui-dialog__bd" id="message"></div>
+	    <div class="weui-dialog__ft">
+	        <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary">确定</a>
+	    </div>
+	</div>
+</div>
+<div class="container" id="container">        
+</div>
+<div id="tabbar" class="tabbar">
+    <a data-id="home" class="on">
+        <i class="iconfont icon-mingdanshuju"></i>
+        <p>列表</p>
+    </a>
+    <a data-id="create" class="">
+        <i class="iconfont icon-shezhi"></i>
+        <p>新建</p>
+    </a>
+    <a data-id="back" class="">
+        <i class="iconfont icon-home"></i>
+        <p>主页</p>
+    </a>
+</div>
+
+<script id="dot_project" type="text/x-dot-template">
+    {{ for(var i in it) { }}
+    <form>
+        <a class="weui-cell weui-cell_access projectid" href="javascript:;">
+            <p>{{=it[i].projectname}}</p>
+        </a>
+        <div class="buttonbox" data-id="{{=it[i].id}}">
+            <span class="btn btn_min weui-btn_warn delete">删除</span>
+            <span data-qrcode="{{=it[i].qrcode}}" class="btn btn_min weui-btn_primary getqrcode">二维码</span>
+            <span class="btn btn_min weui-btn_primary getexcel">导出</span>
+        </div>
+    </form>
+    {{ } }}
+</script>
+
+
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
+<script src="./js/doT.min.js"></script>
+<script src="./js/zepto.min.js"></script>
+<script type="text/javascript" src="./js/jweixin-1.0.0.js"></script>
+<script>
+    var dot_project = doT.template($('#dot_project').text());
+    var height = $(window).height();
+    var width = $(window).width();
+    var projectlist=[];
+    function urlRequest(name) {
+        var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);  
+        return match && decodeURIComponent(match[1].replace(/\+/g, ' ')); 
+    }
+
+    function getcookie(name){
+        var arrStr = document.cookie.split("; ");
+        for(var i = 0;i < arrStr.length;i ++){
+            var temp = arrStr[i].split("=");
+            if(temp[0] == name) return unescape(temp[1]);
+        } 
+    }
+
+    var user = getcookie('user');
+    user = user ? JSON.parse(user) : null;
+
+    // 加载项目
+    function loadproject(isload){
+        $.getJSON('/com2/adopt_searchproject.php',function(result){
+            if(result.return_code == 200){
+                $('#showproject').html(dot_project(result.return_data));
+                projectlist = result.return_data;
+            }else if(result.return_code == 201){
+                $('#showproject').html(result.return_msg);
+            }
+            if(isload){
+                window.pageManager.go('home');
+            }
+        })
+    }
+
+    // 取消弹框
+    $('.alert').click(function(){
+        $(this).addClass('none');
+    })
+
+    function removeMapVersion(mapid) {
+            var map = $('#'+mapid).children().children();
+            if (map.length>1) {
+                for (var i = map.length - 1; i >= 0; i--) {
+                    var $dom = $(map[i]);
+                    if ( parseInt($dom.css('z-index'))>100000 ) 
+                        $dom.hide();
+                }
+            } else {
+                setTimeout(function(){
+                    removeMapVersion(mapid)
+                }, 50);
+            }
+        }
+</script>
+<script type="text/html" id="tpl_home">
+    <div class="page" id="home">
+    	<div class="weui-search-bar weui-search-bar_focusing" id="searchBar">
+            <form class="weui-search-bar__form">
+                <div class="weui-search-bar__box">
+                    <i class="weui-icon-search"></i>
+                    <input type="search" class="weui-search-bar__input" id="searchInput" placeholder="搜索项目名称、管理员名、手机" required="">
+                </div>
+            </form>
+            <a href="javascript:" class="greenfont searchCancel">搜索</a>
+            <a href="javascript:" class="greenfont searchClear none">清除</a>
+        </div>
+        <div class="weui-cells listbox" id="showproject">
+        </div>
+        <div id="qrcodeimage" class="topmap">
+        </div>
+    </div>
+    <script type="text/javascript">
+        $('.listbox').css('height',height-94+'px');
+        $('#qrcodeimage').css('height',(height-50)+'px');
+        // 展示项目
+        loadproject();
+        // 搜索查询
+        $('.searchCancel').click(function(){
+            var keyword = $('#searchInput').val();
+            keyword = $.trim(keyword);
+            if(!keyword) return;
+
+            var searchdata = [];
+            for (var i = 0; i < projectlist.length; i++) {
+                var data = projectlist[i];
+                var projectname = data.projectname;
+                var phone = data.phone;
+                var username = data.username;
+                var address = data.address;
+                if((projectname !== projectname.replace(keyword,'')) || (phone !== phone.replace(keyword,'')) || (username !== username.replace(keyword,'')) || (address !== address.replace(keyword,''))){
+                    searchdata[searchdata.length] = data;
+                    continue;
+                }
+            }
+            $('.searchCancel').addClass('none');
+            $('.searchClear').removeClass('none');
+            $('#showproject').html(dot_project(searchdata));
+        })
+        // 清除搜索框展示所有项目
+        $('.searchClear').click(function(){
+            $('#searchInput').val('');
+            $('.searchClear').addClass('none');
+            $('.searchCancel').removeClass('none');
+            $('#showproject').html(dot_project(projectlist));
+        })
+
+        $('#searchInput').focus(function(){
+            $('.searchClear').addClass('none');
+            $('.searchCancel').removeClass('none');
+        })
+        
+        // 每个项目的详细信息
+        $('#showproject').on('click','.projectid',function(){
+            alert($(this).data('id'));
+        })
+
+        $('#showproject').on('click','.getqrcode',function(){
+            var qrcode = $(this).data('qrcode');
+            $('<img>').addClass('bigimage')
+                      .attr('src','./projectimages/'+qrcode+'.jpg')
+                      .appendTo('#qrcodeimage'); 
+            $('.topmap').show();
+        })
+
+        $('#showproject').on('click','.delete',function(){
+            var that = $(this);
+            var id = that.parent().data('id');
+            var edit = confirm('确定要删除此项目？');
+            if(!edit) return;
+            $.post('./com2/adopt_deleteproject.php',{id:id},function(result){
+                result = JSON.parse(result);
+                if(result.return_code == 200){
+                    that.parents('form').remove();
+                }else{
+                    $('.alert').removeClass('none');
+                    $('#message').html(result.return_msg);
+                }
+            })
+        })
+
+        $('#showproject').on('click','.getexcel',function(){
+            var id = $(this).parent().data('id');
+            location.href = "./com2/adopt_getexcel.php?projectid="+id;
+        })
+        
+            
+        $('#qrcodeimage').click(function(){
+            $('.topmap').hide();
+        })
+    </script>
+</script>
+
+<script type="text/html" id="tpl_create">
+    <div class="page" id="create">
+        <form action="" id="project">
+    		<div class="weui-cells__title"><h3 class="center">新建认建认养单位</h3></div>
+        	<div class="weui-cells__title">单位名称</div>
+        	<div class="weui-cells">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <input class="weui-input" name="projectname" id="projectname" type="text" placeholder="请输入单位名称">
+                    </div>
+                </div>
+            </div>
+        	<div class="weui-cells__title">联系电话</div>
+        	<div class="weui-cells">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <input class="weui-input" name="phone" id="phone" type="number" pattern="[0-9]*" placeholder="请输入号码">
+                    </div>
+                </div>
+            </div>
+        	<div class="weui-cells__title">养护网站 ( 不填写则不关联养护网 )</div>
+        	<div class="weui-cells">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <input class="weui-input" name="url" type="text" placeholder="请输入链接">
+                    </div>
+                </div>
+            </div>
+            <div class="weui-cells__title">添加认建认养地址</div>
+            <div class="weui-cell weui-cell_vcode weui-cells">
+                <div class="weui-cell__bd">
+                    <input class="weui-input" id="address" name="address" type="text" placeholder="地址">
+                    <input class="none" name="gps" id="gps" value="">
+                </div>
+                <div class="weui-cell__rt getlocation">
+                    <div class="weui-vcode-btn">定位</div>
+                </div>
+            </div>
+            <div class="weui-btn-area">
+                <a class="weui-btn weui-btn_primary" href="javascript:" id="showTooltips">确定</a>
+            </div>
+        </form>
+        <div id="map_address" class="topmap">
+            <div class="input_address">
+                <div class="input_address_box">
+                    <input id="input_address" type="" name="">
+                    <span class="input_addresss">搜索</span>
+                </div>
+                <div class="input_address_submit">确定</div>
+            </div>
+            <div id="address_map"></div>
+            <div class="now_address"></div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        // 提交数据
+        $('#showTooltips').click(function() {
+            var data = {};
+            var form = $('#project').serializeArray();
+            var hasvalue = true;
+            $.each(form, function() {
+                if(($.trim(this.value) == '') && ($.trim(this.name) != 'url')){
+                    $('.alert').removeClass('none');
+                    $('#message').html('除了链接其他都为必填项');
+                    hasvalue = false;
+                    return;
+                }
+                if(this.name == 'phone'){
+                    if(!$("#phone").val().match(/^0?1[3|4|5|8][0-9]\d{8}$/)){
+                        $('.alert').removeClass('none');
+                        $('#message').html('除了链接其他都为必填项');
+                        hasvalue = false;
+                        return;
+                    }
+                }
+
+                data[this.name] = $.trim(this.value);
+            });
+            if(!hasvalue) return;
+            $.post('/com2/adopt_createproject.php',{data:JSON.stringify(data)},function(result){
+                result = JSON.parse(result);
+                if(result.return_code == 200){
+                    data = result.return_data;
+                    $('#project input').val('');
+                    projectlist = data.concat(projectlist);
+                    changeover('home');
+                }else{
+                    $('.alert').removeClass('none');
+                    $('#message').html(result.return_msg);
+                }
+            })
+        });
+        var topmap,nowlat,nowlag,addressdeteil; 
+        $('.create_newproject_title').css('height',(height-50)+'px');
+        $('#map_address').css('height',(height-90)+'px');
+        $('#address_map').css('height',(height-75)+'px');
+
+        $('.input_addresss').click(function () {
+            var keyword = $('#input_address').val();
+            keyword = $.trim(keyword);
+            if (keyword=='') return;
+            searchaddresss(keyword);
+        });
+        
+        // 搜索地址
+        function searchaddresss(address){
+            var url = 'http://apis.map.qq.com/ws/place/v1/suggestion/?'
+            var data={
+                keyword: address,
+                key: 'ABUBZ-Q4TW6-ZX5SU-EHN52-5XVY7-FCBPG',
+                output: "jsonp"
+            };
+            $.ajax({
+                    type:'get',
+                    dataType:'jsonp',
+                    data:data,
+                    url:url,
+                    success:function(json){
+                        if (json.status==0 && json.count>0) {
+                            // 移动中心点, 不要重新创建地图
+                            var location = json.data[0].location;
+                            nowlat = location.lat;
+                            nowlag = location.lng;
+                            topmap.panTo(new qq.maps.LatLng( location.lat, location.lng ));
+                            $('.now_address').html(address);
+                        } else {
+                            alert('没找到，您可以拖动地图定位');
+                        }
+                    },
+                    error : function(err){alert("服务端错误，请刷新浏览器后重试")}
+            }); 
+        }
+        // 加载地图
+        function openmap(){
+            if(!topmap){
+                var center = new qq.maps.LatLng(39.916527,116.397128);
+                topmap = new qq.maps.Map($('#address_map')[0], {
+                    disableDefaultUI: true,
+                    center: center,
+                    zoom: 13
+                });
+                removeMapVersion('address_map');  
+                //创建自定义控件
+                $('<img>').addClass('middleControl')
+                          .attr('src','http://www.yangshuwang.com/img/poi.png')
+                          .appendTo('#address_map'); 
+
+                var keyword = $('#address').val();
+                keyword = $.trim(keyword);
+                if (keyword) searchaddresss(keyword); 
+            }
+            
+              //当地图中心属性更改时触发事件
+            qq.maps.event.addListener(topmap, 'center_changed', function() {
+                nowlat = topmap.getCenter().lat;
+                nowlag = topmap.getCenter().lng;
+                var location = nowlat+','+nowlag;
+                var url = 'http://apis.map.qq.com/ws/geocoder/v1/?';
+                var data={
+                        location: location,
+                        key: 'ABUBZ-Q4TW6-ZX5SU-EHN52-5XVY7-FCBPG',
+                        output: "jsonp"
+                    };
+                $.ajax({
+                    type:'get',
+                    dataType:'jsonp',
+                    data:data,
+                    url:url,
+                    success:function(json){
+                        if(json.status == 0){
+                            var address = '位置：'+json.result.address;
+                            $('.now_address').html(address);
+                        }
+                    },
+                    error : function(err){alert("服务端错误，请刷新浏览器后重试")}
+                }); 
+            });
+        }
+        // 点击选择地图
+        $('.getlocation').click(function(){
+            $('#map_address').show();
+            openmap();
+            var keyword = $('#projectname').val();
+            keyword = $.trim(keyword);
+            if (keyword=='') return;
+            searchaddresss(keyword);
+        })
+        $('.input_address_submit').click(function(){
+            var location = nowlat+','+nowlag;
+            var url = 'http://apis.map.qq.com/ws/geocoder/v1/?';
+            var data={
+                    location: location,
+                    key: 'QXTBZ-QVTWP-LFADO-LBM67-HA4RH-VRFWT',
+                    output: "jsonp"
+                };
+            $.ajax({
+                type:'get',
+                dataType:'jsonp',
+                data:data,
+                url:url,
+                success:function(json){
+                    if(json.status == 0){
+                        $('#map_address').hide();
+                        $('#address').val(json.result.address);
+                        $('#gps').val(location);
+                    }
+                },
+                error : function(err){alert("服务端错误，请刷新浏览器后重试")}
+            }); 
+        })
+
+    </script>
+</script>
+<!-- 框架js -->
+<script type="text/javascript">
+ 	var pageManager = {
+ 	    $container: $('#container'),
+ 	    _pageStack: [],
+ 	    _configs: [],
+ 	    _defaultPage: null,
+ 	    frontPage: null,
+ 	    setDefault: function (defaultPage) {
+ 	        this._defaultPage = this._find('name', defaultPage);
+ 	        return this;
+ 	    },
+ 	    init: function () {
+ 	        var self = this;
+
+ 	        $(window).on('hashchange', function () {
+ 	            var url = location.hash.indexOf('#') === 0 ? location.hash : '#';
+ 	            self.frontPage = url.replace('#','');
+
+ 	            var stack = self._findInStack(url);
+ 	            if (stack){
+ 	                $(stack.dom[0]).addClass('js_show').siblings('.js_show').removeClass('js_show');
+ 	            } else {
+ 	                var page = self._find('url', url) || self._defaultPage;
+ 	                self._go(page);
+ 	            }
+
+ 	            self._autoremove(self.frontPage);
+ 	            self._activeMenu(self.frontPage);
+ 	        });
+
+ 	        
+ 	        var url = location.hash.indexOf('#') === 0 ? location.hash : '#';
+ 	        self.frontPage = url.replace('#','');
+
+ 	        var page = self._find('url', url) || self._defaultPage;
+ 	        this._go(page);
+
+ 	        self._activeMenu(self.frontPage);
+
+ 	        return this;
+ 	    },
+ 	    _autoremove:function (name) {
+ 	        for(var i = 0, len = this._pageStack.length; i < len; i++){
+ 	            var stack = this._pageStack[i];
+ 	            if (stack && stack.config && stack.config.autoremove && stack.config.name != name) {
+ 	                stack.dom.remove();
+ 	                this._pageStack.splice(i,1);
+
+ 	                if (stack.config.js) $('#js_'+stack.config.name).remove();
+ 	            }
+ 	        }            
+ 	    },
+ 	    _activeMenu: function (id) {
+ 	        // 底部菜单项 响应
+ 	        $('#tabbar [data-id="' + (id||'home') + '"]').addClass('on').siblings('.on').removeClass('on');
+ 	        if (id=='member') {
+ 	            $('#header').addClass('member_search');
+ 	        } else {                        
+ 	            $('#header').removeClass('member_search');
+ 	        }
+ 	    },
+ 	    push: function (config) {
+ 	        this._configs.push(config);
+ 	        return this;
+ 	    },
+ 	    remove: function (name) {
+ 	        for(var i = 0, len = this._pageStack.length; i < len; i++){
+ 	            var stack = this._pageStack[i];
+ 	            if (stack.config.name === name) {
+ 	                stack.dom.remove();
+ 	                this._pageStack.splice(i,1);
+ 	                break;
+ 	            }
+ 	        }
+ 	    },
+ 	    find: function (name) {
+ 	        for(var i = 0, len = this._pageStack.length; i < len; i++){
+ 	            var stack = this._pageStack[i];
+ 	            if (stack.config.name === name) {
+ 	                return true;
+ 	            }
+ 	        }
+ 	        return false;
+ 	    },
+ 	    pop: function () {
+ 	        this.remove(this.frontPage);
+ 	        history.back();
+ 	    },
+ 	    go: function (to) {
+ 	        var config = this._find('name', to);
+ 	        if (!config) {
+ 	            return;
+ 	        }
+ 	        location.hash = config.url;
+ 	    },
+ 	    _go: function (config) {
+ 	        var html = $(config.template).html();
+ 	        var $html = $(html).addClass('slideIn');
+ 	        $html.on('animationend webkitAnimationEnd', function(){
+ 	            $html.removeClass('slideIn').addClass('js_show');
+ 	        });
+ 	        this.$container.append($html);
+ 	        this._pageStack.push({
+ 	            config: config,
+ 	            dom: $html
+ 	        });
+
+ 	        if (!config.isBind) {
+ 	            this._bind(config);
+ 	        }
+ 	        if (config.js) loadJS(config.js, 'js_'+config.name);
+
+ 	        return this;
+ 	    },
+ 	    back: function () {
+ 	        history.back();
+ 	    },
+ 	    _findInStack: function (url) {
+ 	        var found = null;
+ 	        for(var i = 0, len = this._pageStack.length; i < len; i++){
+ 	            var stack = this._pageStack[i];
+ 	            if (stack.config.url === url) {
+ 	                found = stack;
+ 	                break;
+ 	            }
+ 	        }
+ 	        return found;
+ 	    },
+ 	    _find: function (key, value) {
+ 	        var page = null;
+ 	        for (var i = 0, len = this._configs.length; i < len; i++) {
+ 	            if (this._configs[i][key] === value) {
+ 	                page = this._configs[i];
+ 	                break;
+ 	            }
+ 	        }
+ 	        return page;
+ 	    },
+ 	    _bind: function (page) {
+ 	        var events = page.events || {};
+ 	        for (var t in events) {
+ 	            for (var type in events[t]) {
+ 	                this.$container.on(type, t, events[t][type]);
+ 	            }
+ 	        }
+ 	        page.isBind = true;
+ 	    }
+ 	};
+
+ 	$('#tabbar a').on('click', function(){
+ 		$(this).siblings().removeClass('on');
+ 		$(this).addClass('on');
+	    var id = $(this).data('id');
+	    changeover(id);
+	    hasthisrecord = false;
+	});
+
+	function changeover(id){
+		switch (id)
+		{   
+            case 'home':
+                if(projectlist.length > 1){
+                    $('#showproject').html(dot_project(projectlist));
+                }else if(projectlist.length == 1){
+                    loadproject(true);
+                }
+                window.pageManager.go(id);
+                break;
+            case 'back':
+                location.href="./adopt.php";
+                break;
+		    default :
+		    	window.pageManager.go(id);
+		    	break;	
+		}
+	}
+
+	function setPageManager(){
+		var pages = {}, tpls = $('script[type="text/html"]');
+		for (var i = 0, len = tpls.length; i < len; ++i) {
+			var tpl = tpls[i], name = tpl.id.replace(/tpl_/, '');
+			pages[name] = {
+				name: name,
+				url: '#' + name,
+				template: '#' + tpl.id,
+				js: $(tpl).data('js'),
+				autoremove: $(tpl).data('id') ? true : false
+			};
+			pageManager.push(pages[name]);
+		}
+		pages.home.url = '#';
+		pageManager.setDefault('home').init();
+	}
+
+    function setWechatJSSDK(res){
+        wx.config({
+            debug: false,
+            appId: res.appId,
+            timestamp: res.timestamp,
+            nonceStr: res.nonceStr,
+            signature: res.signature,
+            jsApiList: [
+                'getLocation'
+            ]
+        });
+    }
+
+    function loadWechatJSSDK() {
+        $.getJSON('/com2/wechat.jssdk.php?url=' + encodeURIComponent(location.href.split('#')[0]), function (res) {
+            setWechatJSSDK(res);
+        });
+    }
+	setPageManager();
+    loadWechatJSSDK();
+</script>
+</body>

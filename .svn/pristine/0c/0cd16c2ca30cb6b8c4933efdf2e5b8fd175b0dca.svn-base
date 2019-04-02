@@ -1,0 +1,21 @@
+<?php
+header('Access-Control-Allow-Origin:*');
+include "../com/db.php";
+$project_id=isset($_POST['project_id'])?$_POST['project_id']:"1";
+$status=isset($_POST['status'])?$_POST['status']:"3";
+$db=new db();
+$sql="update order_project set status ='".$status."' where project_id='".$project_id."'";
+//var_dump($sql);die;
+$res=$db->exec($sql);
+if(!$res){
+    $content=[
+      'status'=>1,
+        'data'=>"修改失败"
+    ];
+}else{
+    $content=[
+        'status'=>0,
+        'data'=>"修改成功"
+    ];
+}
+echo json_encode($content);

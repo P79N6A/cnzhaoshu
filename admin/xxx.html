@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0072)http://www.zhangxinxu.com/study/201109/html5-file-image-ajax-upload.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link rel="stylesheet" href="./in/demo.css" type="text/css">
+</head>
+<script src="./zxxFile.js"></script>
+<body>
+<div id="main">
+    <div id="body" class="light">
+    	<div id="content" class="show">
+            <div class="demo">
+            	<form id="uploadForm" action="http://www.zhangxinxu.com/study/201109/upload.php" method="post" enctype="multipart/form-data">
+                    <div class="upload_box">
+                        <div class="upload_main">
+                            <div class="upload_choose">
+                                <input id="fileImage" type="file" size="30" name="fileselect[]" multiple="">
+                            </div>
+                            <div id="preview" class="upload_preview"></div>
+                        </div>
+                        <div class="upload_submit">
+                            <button type="button" id="fileSubmit" class="upload_submit_btn">确认上传图片</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>       
+    </div>
+</div>
+<script src="js/jquery.js"></script>
+
+<script>
+var params = {
+	fileInput: $("#fileImage").get(0),
+	dragDrop: $("#fileDragArea").get(0),
+	upButton: $("#fileSubmit").get(0),
+	url: $("#uploadForm").attr("action"),
+	filter: function(files) {
+		var arrFiles = [];
+		for (var i = 0, file; file = files[i]; i++) {
+			if (file.type.indexOf("image") == 0) {
+				arrFiles.push(file);	
+			} else {
+				alert('文件"' + file.name + '"不是图片。');	
+			}
+		}
+		return arrFiles;
+	},
+	onSelect: function(files) {
+		var html = '', i = 0;
+		$("#preview").html('<div class="upload_loading"></div>');
+		var funAppendImage = function() {
+			file = files[i];
+			if (file) {
+				var reader = new FileReader()
+				reader.onload = function(e) {
+					html = html + '<div id="uploadList" class="upload_append_list"><p>'+ 
+						'<img id="uploadImage" src="' + e.target.result + '" class="upload_image" /></p>'+ 
+					'</div>';
+					
+					i++;
+					funAppendImage();
+				}
+				reader.readAsDataURL(file);
+			} else {
+				$("#preview").html(html);
+				if (html) {
+					//删除方法
+					$(".upload_delete").click(function() {
+						ZXXFILE.funDeleteFile(files[parseInt($(this).attr("data-index"))]);
+						return false;	
+					});
+					//提交按钮显示
+					$("#fileSubmit").show();	
+				} else {
+					//提交按钮隐藏
+					$("#fileSubmit").hide();	
+				}
+			}
+		};
+		funAppendImage();		
+	},
+	onDelete: function(file) {
+		$("#uploadList").fadeOut();
+	},
+	onDragOver: function() {
+		$(this).addClass("upload_drag_hover");
+	},
+	onDragLeave: function() {
+		$(this).removeClass("upload_drag_hover");
+	},
+	onProgress: function(file, loaded, total) {
+		var eleProgress = $("#uploadProgress_" + file.index), percent = (loaded / total * 100).toFixed(2) + '%';
+		eleProgress.show().html(percent);
+	},
+	onComplete: function() {
+		//提交按钮隐藏
+		$("#fileSubmit").hide();
+		//file控件value置空
+		$("#fileImage").val("");
+	}
+};
+ZXXFILE = $.extend(ZXXFILE, params);
+ZXXFILE.init();
+</script>
+
+
+</body></html>

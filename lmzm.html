@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html><html><head>
+<title>北京林木种苗协会</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="description" content="最好的找树网站，奉献绿色，驱动和谐" />
+<meta name="keywords" content="找树,海棠" />
+<style type="text/css">
+body,html{
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	position: relative;
+	overflow: hidden;
+}	
+#list img{
+	width: 100%;
+}
+#list p{
+	text-align: center;
+	width: 100%;
+}
+</style>
+</head>
+<body>
+	<div style="position: absolute;left: 0; top: 0; padding: 5px 0 0 65px; font-size: 20px;">1 请扫码关注协会公众号 2 点击 “✌亲，先点我一下！”</div>
+	<img style="position: absolute;left: 0; top: 5%;height: 90%;" src="qrinvite/lmzm.jpg">
+	<div id="count" style="position: absolute;right: 0;top: 10px;width: 280px;text-align: center;" ></div>
+	<div id="list" style="position: absolute;right: 0;top:5%;height: 95%;width: 280px;overflow-x: hidden; overflow-y:scroll; "></div>
+
+
+<script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript">
+	var users = [];
+	function checkuser() {
+		$.getJSON('com/get.lmzm.php', function (json) {
+				for (var i in json) {
+					var user = json[i];
+					if ($.inArray(user.userid, users)==-1) {
+						users.push(user.userid);
+						$('#list').append('<img src="/headimg/0/'+user.userid+'.jpg" ><p>'+user.name+'</p>')
+						          .scrollTop( $('#list')[0].scrollHeight );
+					}
+				}
+
+				$('#count').html(users.length);
+		});
+	}
+	setInterval(checkuser, 3000);
+
+</script>
+</body>
+</html>

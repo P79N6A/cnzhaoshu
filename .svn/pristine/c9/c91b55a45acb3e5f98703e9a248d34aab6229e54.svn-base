@@ -1,0 +1,29 @@
+<?php
+// 更新旗舰店实景
+include 'basic.php';
+include 'db.php';
+include 'user2.php';
+
+$userid = $_GET['userid'];
+
+$imgRawData = file_get_contents('php://input');
+$image = imagecreatefromstring($imgRawData);
+
+$image = basic::resizeImage($image, 1280, 1280);
+$image0 = basic::squareImage($image);           
+
+$filename = '../shop/photo/o/'.$userid.'.jpg';
+file_put_contents($filename, $imgRawData);
+unset($imgRawData);
+
+$image96 = basic::resizeImage($image0, 340, 340);
+$filename = '../shop/photo/m/'.$userid.'.jpg';
+imagejpeg($image96, $filename, 80);
+
+imagedestroy($image);
+imagedestroy($image0);
+imagedestroy($image96);
+
+
+// 更新用户version
+user::update($userid, 'version=version+1');

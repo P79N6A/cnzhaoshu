@@ -1,0 +1,31 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Mrwang
+ * Date: 2018/9/14
+ * Time: 10:32
+ */
+header('Access-Control-Allow-Origin:*');
+include "../com/db.php";
+$db=new db();
+$tender_order_id=isset($_POST['tender_order_id'])?$_POST['tender_order_id']:"";
+$tender_status=isset($_POST['status'])?$_POST['status']:"";
+$remarks=isset($_POST['remarks'])?$_POST['remarks']:"";
+if($tender_status==3){
+    $sql="update tender_order set tender_status='".$tender_status."',remarks='".$remarks."' where tender_order_id='".$tender_order_id."'";
+}else{
+    $sql="update tender_order set tender_status='".$tender_status."' where tender_order_id='".$tender_order_id."'";
+}
+$res=$db->exec($sql);
+if($res){
+    $content=[
+        'status'=>0,
+        'data'=>"修改成功"
+    ];
+}else{
+    $content=[
+        'status'=>1,
+        'data'=>"修改失败"
+    ];
+}
+echo json_encode($content);

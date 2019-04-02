@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <script>function getcookie(d){for(var b=document.cookie.split("; "),a=0;a<b.length;a++){var c=b[a].split("=");if(c[0]==d)return unescape(c[1])}}getcookie("user2")||location.replace("login.html");</script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>苗店设置-找树网管理平台</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-reset.css" rel="stylesheet">
+
+    <link href="../iconfont/iconfont.css" rel="stylesheet"/>
+
+    <!-- Custom styles for this template -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/style-responsive.css" rel="stylesheet" />
+    <!-- <link href="/summernote/summernote.css" rel="stylesheet"> -->
+
+    <link href="css/zhaoshu.css" rel="stylesheet">
+    <style type="text/css">
+      .top{
+        position: fixed;
+        z-index: 1002;
+        top: 70px;
+        width:86%;
+        padding: 0 2% 0 1%;
+        height: 90px;
+        background: #fff;
+        border-radius: 5px;
+      }
+      .top1{
+        float: left;
+        width: 100%;
+        padding: 10px 0;
+      }
+      .top3{
+        float: left;
+        width: 100%;
+      }
+      .showorders{
+        position: absolute;
+        z-index: 100;
+        top: 170px;
+        width:86%;
+        background: #fff;
+        border-radius: 5px;
+        padding: 6px 1%;
+      }
+      #showorders{
+        width:100%;
+        float: left;
+        overflow-y: auto;
+      }
+      .top3 div{
+        height:35px;
+        line-height: 35px;
+        font-size: 16px;
+        font-weight: bold;
+        float: left;
+        padding: 0 1%;
+      }
+      .oneinfo div{
+        float: left;
+        padding: 6px 1%;
+      }
+      .low1{
+        width:10%;
+      }
+      .low2{
+        width:30%;
+      }
+      .low3{
+        width:15%;
+      }
+      .low4{
+        width:15%;
+      }
+      .low5{
+        width:20%;
+      }
+      .low6{
+        width:10%;
+      }
+      .oneinfo{
+        border-bottom: 1px solid #eee;
+        float: left;
+        width: 100%;
+        padding: 3px 0;
+      }
+      .oneinfo:hover{ 
+        background-color:#eee;
+      }
+      #tosearch{
+        width:70%;
+        margin-right: 2%;
+        float: left;
+      }
+      .clean,.find{
+        margin-right: 2%;
+      }
+      p{
+        text-align: center;
+        padding: 10px 0;
+        width:100%;
+        float: left;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <header class="header white-bg" id="header"></header>
+    <aside><div id="sidebar" class="nav-collapse"></div></aside>
+    <section id="main-content">
+      <section class="wrapper">
+      <div class="top">
+        <div class="top1">
+          <input type="text" class="form-control col-lg-6" placeholder="可搜索：用户名、电话号码、用途" id="tosearch">
+          <div class="btn btn-success find">搜索</div>
+          <div class="btn btn-success clean">重置</div>
+        </div>
+        <div class="top3">
+          <div class="low1">序号</div>
+          <div class="low2">用户名</div>
+          <div class="low3">电话</div>
+          <div class="low4">金额</div>
+          <div class="low5">时间</div>
+          <div class="low6">用途</div>
+        </div>
+      </div>
+        <div class="showorders">
+          <div id="showorders">
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <script id="dot_order" type="text/x-dot-template">
+      {{ for(var i in it) { }}
+        <div class="oneinfo">
+          <div class="low1">{{=number()}}</div>
+          <div class="low2">{{=it[i].name}}</div>
+          <div class="low3">{{=it[i].phone}}</div>
+          <div class="low4">{{=(it[i].money/100)+'元'}}</div>
+          <div class="low5">{{=it[i].time}}</div>
+          <div class="low6">{{=states(it[i].way)}}</div>
+        </div>
+      {{ } }}
+    </script>
+
+    <script src="../js/jquery-1.12.4.min.js"></script>
+    <script src="./js/login.js?t=20171017"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/jquery.scrollTo.min.js"></script>
+    <script src="./js/jquery.nicescroll.js" type="text/javascript"></script>
+    <script src="../js/doT.min.js"></script>
+    <script src="./js/common-scripts.js"></script>
+
+    <script type="text/javascript">
+        var dot_order = doT.template($("#dot_order").text());
+        var num = 1;
+        var isLoading = false;
+        var isEnd = false;
+        var searchisLoading = false;
+        var searchisEnd = false;
+        var mark = true;
+        var alldata = [];
+        var searchorders;
+        var windowheight = $(window).height();
+        $('#showorders').css('height',(windowheight-190)+'px');
+        
+        function number(){
+          return num++;
+        }
+        function states(way){
+          switch(way){
+            case 1:
+              return '充值';
+              break;
+            case 2:
+              return '定金';
+              break;
+            case 3:
+              return '全款';
+              break;
+            case 4:
+              return '取现';
+              break;
+            case 5:
+              return '认证';
+              break;
+          }
+        }
+        function way(way){
+          switch(way){
+            case '充值':
+                return 1;
+                break;
+            case '定金':
+                return 2;
+                break;
+            case '全款':
+                return 3;
+                break;
+            case '取现':
+                return 4;
+                break;
+            case '认证':
+                return 5;
+                break;
+            default:
+                return way;
+                break;
+          }
+        }
+        function loadall(){
+          if (isLoading) return;
+          isLoading = true;
+          var limit = $('#showorders .oneinfo').length + ',' + 20;
+          $.getJSON('/com/search_allrecharge.php',{limit:limit},function(json){
+            if(json){
+              $('#showorders').append(dot_order(json));
+              for (var i = 0; i < json.length; i++) {
+                alldata[alldata.length] = json[i];
+              }
+            }else{
+              isEnd = true;
+              $('#showorders').append('<p>加载完毕</p>');
+            }
+            isLoading = false;
+          })
+        }
+        function search_list(){
+          var tosearch = $('#tosearch').val();
+          tosearch = way(tosearch);
+          if(!tosearch) return;
+          if (searchisLoading) return;
+          searchisLoading = true;
+          var limit = $('#showorders .oneinfo').length + ',' + 20;
+          $.getJSON('/com/seach_onerechargebill.php', {name: tosearch,limit:limit}, function(json) {
+            if(json){
+              $('#showorders').append(dot_order(json));
+              for (var i = 0; i < json.length; i++) {
+                searchorders[searchorders.length] = json[i];
+              }
+            }else{
+              if(searchorders.length){
+                $('#showorders').append('<p>加载完毕</p>');
+              }else{
+                $('#showorders').append('<p>未找到结果</p>');
+              }
+              searchisEnd = true;
+            }
+            searchisLoading = false;
+          })
+        }
+        $('.find').click(function () {
+          var tosearch = $('#tosearch').val();
+          if(tosearch.length < 2){
+            alert('搜索内容不少于2个长度！');
+            return;
+          } 
+          $('#showorders').html('');
+          searchorders = [];
+          searchisLoading = false;
+          searchisEnd = false;
+          mark = false;
+          num = 1;
+          search_list();
+        })
+        $('.clean').click(function(){
+          $('#showorders').html('');
+          $('#tosearch').val('');
+          mark = true;
+          num = 1;
+          if(!alldata.length){
+            loadall();
+          }else{
+            $('#showorders').html(dot_order(alldata));
+          }
+        })
+        $('#showorders').scroll(function() {
+          var issearching = $('#tosearch').val();
+          if(issearching && !mark){
+            if (searchisEnd || searchisLoading) return;
+            var scrollHeight = $(this)[0].scrollHeight;
+            var scrollTop = $(this)[0].scrollTop;
+            var elementHight = $(this).height();
+            if(scrollTop + elementHight >= scrollHeight-100) {
+              search_list();
+            } 
+          }else{
+            if (isEnd || isLoading) return;
+            var scrollHeight = $(this)[0].scrollHeight;
+            var scrollTop = $(this)[0].scrollTop;
+            var elementHight = $(this).height();
+            if(scrollTop + elementHight >= scrollHeight-100) {
+              loadall();
+            }  
+          }
+        })
+        $('#tosearch').on('keydown', function (e) {
+          var key = e.which;
+          if (key == 13) {
+            e.preventDefault();
+            var tosearch = $('#tosearch').val();
+            if(tosearch.length < 2){
+              alert('搜索内容不少于2个长度！');
+              return;
+            } 
+            $('#showorders').html('');
+            searchorders = [];
+            searchisLoading = false;
+            searchisEnd = false;
+            mark = false;
+            num = 1;
+            search_list();
+          }
+        });
+
+        loadall();
+    </script>
+
+
+  </body>
+</html>

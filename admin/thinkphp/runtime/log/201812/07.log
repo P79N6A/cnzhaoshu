@@ -1,0 +1,57 @@
+[ 2018-12-07T09:28:44+08:00 ] 172.17.14.203 14.131.92.33 GET /admin/thinkphp/index.php
+[ log ] test.cnzhaoshu.com/admin/thinkphp/index.php [运行时间：0.037408s][吞吐率：26.73req/s] [内存消耗：466.05kb] [文件加载：44]
+[ info ] [ LANG ] /alidata/www/test/zhaoshu/admin/thinkphp/thinkphp/lang/zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => '',
+    1 => NULL,
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'host' => 'test.cnzhaoshu.com',
+  'connection' => 'keep-alive',
+  'upgrade-insecure-requests' => '1',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.10 Safari/537.36',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+  'accept-encoding' => 'gzip, deflate',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'cookie' => 'user2=%7B%22userid%22%3A1%2C%22shopid%22%3A1%2C%22name%22%3A%22%5Cu5317%5Cu4eac%5Cu627e%5Cu6811%5Cu7f51%5Cu79d1%5Cu6280%5Cu80a1%5Cu4efd%5Cu6709%5Cu9650%5Cu516c%5Cu53f8%22%2C%22shopname%22%3A%22%5Cu5317%5Cu4eac%5Cu627e%5Cu6811%5Cu7f51%5Cu79d1%5Cu6280%5Cu80a1%5Cu4efd%5Cu6709%5Cu9650%5Cu516c%5Cu53f8%22%2C%22phone%22%3A%2215301012818%22%2C%22role%22%3A9%2C%22state%22%3A0%2C%22istrader%22%3A1%2C%22isrenzheng%22%3A1%2C%22dianmi%22%3A2092%2C%22subscribe%22%3A1%2C%22nickname%22%3A%22%5Cu4e09%5Cu4eba%22%2C%22sex%22%3A1%2C%22city%22%3A%22%5Cu897f%5Cu57ce%22%2C%22province%22%3A%22%5Cu5317%5Cu4eac%22%2C%22version%22%3A7%2C%22invoice%22%3A1%2C%22headimg%22%3A1%7D; pgv_pvi=9867718656; token=admin',
+  'content-type' => '',
+  'content-length' => '',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ RUN ] app\index\controller\Index->index[ /alidata/www/test/zhaoshu/admin/thinkphp/application/index/controller/Index.php ]
+[ info ] [ LOG ] INIT File
+
+---------------------------------------------------------------
+[ 2018-12-07T09:29:44+08:00 ] 172.17.14.203 58.247.204.63 GET /admin/thinkphp/index.php
+[ log ] test.cnzhaoshu.com/admin/thinkphp/index.php [运行时间：0.003141s][吞吐率：318.35req/s] [内存消耗：464.87kb] [文件加载：44]
+[ info ] [ LANG ] /alidata/www/test/zhaoshu/admin/thinkphp/thinkphp/lang/zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => '',
+    1 => NULL,
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'user-agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_4) AppleWebKit/537.36 (KHTML, like Gecko) 			Chrome/55.0.2883.95 Safari/537.36',
+  'accept' => '*/*',
+  'accept-language' => 'zh-CN,zh;q=0.8,en-US;q=0.6,en;q=0.4',
+  'host' => 'test.cnzhaoshu.com',
+  'connection' => 'keep-alive',
+  'content-type' => '',
+  'content-length' => '',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ RUN ] app\index\controller\Index->index[ /alidata/www/test/zhaoshu/admin/thinkphp/application/index/controller/Index.php ]
+[ info ] [ LOG ] INIT File
+
+---------------------------------------------------------------

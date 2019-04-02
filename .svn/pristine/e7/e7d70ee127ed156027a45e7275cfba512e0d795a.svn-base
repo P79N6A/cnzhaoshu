@@ -1,0 +1,29 @@
+import axios from '@/libs/api.request'
+import { getAxiosData } from '@/libs/util'
+//请求商品合并接口
+export const  geTmangement= (res) => {
+    let data = getAxiosData(res);
+    return axios.request({
+        url: 'store_management/store_management.php',
+        data : data,
+        method: 'post'
+    })
+}
+//请求商品认证接口
+export const  getManagementList= (res) => {
+    let data = getAxiosData(res);
+    return axios.request({
+        url: 'store_management/store_certification.php',
+        data : data,
+        method: 'post'
+    })
+}
+//店铺下拉接口
+export const  getManageInfo= (res) => {
+    let data = getAxiosData(res);
+    return axios.request({
+        url: 'store_management/store_manageInfo.php',
+        data : data,
+        method: 'post'
+    })
+}

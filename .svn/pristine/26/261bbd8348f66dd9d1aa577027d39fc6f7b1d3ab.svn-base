@@ -1,0 +1,69 @@
+<?php
+// 拉取更新全部用户信息, 存数据库，保存头像
+// require '../com/checkhost.php'; checkhost();
+require '../com/db2.php';
+require '../wechat/wechat.class.php';
+
+
+
+$data = array( 'touser' => '',
+               'template_id' => 'DAKZ3tVDtYDaV_GnX3TR03HtB7S5I9wl4tXoEc8GWh4',
+               'url' => 'http://www.cnzhaoshu.com/shop.php',                 
+               'data'=>array(
+                       'first'=>array(
+                           'value' => '嗨！你已经1年没有更新你的数据了，再不更新，我们只能和你说再见了，点开我，再点苗木进入，直接可以改价格呦！'
+                       ),
+                       'keyword1' => array(
+                           'value' => '数据更新通知'
+                       ),
+                       'keyword2'=>array(
+                           'value'=>date('Y-m-d H:i:s')
+                       ),
+                       'remark'=>array(
+                           // 'value'=> ''
+                       )
+               )
+);
+
+
+echo json_encode($data);
+
+$db = new db();
+$sql = 'select u.userid,u.wechatid,u.name,u.phone,t.time from (SELECT userid,time FROM tree WHERE time<DATE_SUB(CURDATE(), INTERVAL 1 YEAR) group by userid ORDER BY time desc) t left join user u on t.userid=u.userid';
+$users = $db->query($sql);
+unset($db);
+
+echo 1;
+
+$weObj = new Wechat();
+
+// foreach ($users as $key => $user) {
+    // $data = array(
+    //     'touser' => 'oM-qJjma6Evlm74pACda0vmEW7g0',//三木
+    //     // 'touser' => 'oM-qJjrDS0xax5c0E86ZyoiUwlaU',// 三人
+    //     // 'touser' => 'oM-qJjio4gs_eEz7aya3Cg3Zjuv0',// 156
+    //     'msgtype' => 'news',
+    //     'news' => array('articles' => array($message))
+    // );
+	$data['touser'] = 'oM-qJjrDS0xax5c0E86ZyoiUwlaU';
+	echo $weObj->sendTemplateMessage($data);
+// }
+
+unset($weObj);
+
+echo 2;
+
+
+
+
+
+// function sendMessage($wechatid, $first, $keyword, $remark, $url){
+
+ 
+// 	$weObj = new Wechat();
+
+// 	if(!$weObj->sendTemplateMessage($data)){
+// 	    $weObj->deleteAccessToken();
+// 	    echo $weObj->sendTemplateMessage($data);
+// 	}
+// }

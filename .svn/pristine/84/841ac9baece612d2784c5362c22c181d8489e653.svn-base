@@ -1,0 +1,9 @@
+<?php
+include '../com/wechat_login.php';
+$user = wechatLogin();
+
+echo json_encode($user);
+
+// header('Location: index.html');
+
+?>

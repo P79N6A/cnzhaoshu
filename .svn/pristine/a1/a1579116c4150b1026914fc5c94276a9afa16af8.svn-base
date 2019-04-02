@@ -1,0 +1,38 @@
+<?php
+
+
+$upFile =$_FILES['img'];
+
+
+/**
+ * 创建文件夹函数,用于创建保存文件的文件夹
+ * @param str $dirPath 文件夹名称
+ * @return str $dirPath 文件夹名称
+ */
+function creaDir($dirPath){
+//    var_dump(__FILE__);die;
+    $curPath = dirname(__FILE__);
+//    var_dump($curPath);die;
+    $path = $curPath.'\\'.$dirPath;
+//    var_dump($path);die;
+    if (is_dir($path) || mkdir($path,0777,true)) {
+        return $dirPath;
+    }
+}
+
+//判断文件是否为空或者出错
+if ($upFile['error']==0 && !empty($upFile)) {
+    $dirpath = creaDir('upload');
+    $filename = $upFile['name'];
+    $queryPath = './'.$dirpath.'/'.$filename;
+    //move_uploaded_file将浏览器缓存file转移到服务器文件夹
+    if(move_uploaded_file($upFile['tmp_name'],$queryPath)){
+        $content=[
+            'status'=>0,
+            'data'=>$queryPath
+        ];
+        echo json_encode($content);
+    }
+}
+
+?>

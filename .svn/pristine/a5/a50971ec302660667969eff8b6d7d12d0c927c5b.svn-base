@@ -1,0 +1,31 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Mrwang
+ * Date: 2018/10/12
+ * Time: 16:59
+ */
+
+header('Access-Control-Allow-Origin:*');
+include "../com/db.php";
+$project_id=isset($_POST['project_id'])?$_POST['project_id']:"2";
+$db= new db();
+$contract_imgs_sql="select * from contract_imgs where project_id='".$project_id."'";
+$contract_imgs=$db->query($contract_imgs_sql);
+//var_dump($contract_imgs);die;
+$count_contract_imgs=count($contract_imgs);
+//var_dump($contract_imgs[0]['imgs']);die;
+for($i=0;$i<$count_contract_imgs;$i++){
+    if(strpos($contract_imgs[$i]['imgs'],',') !== false){
+            $contract_imgs[$i]['imgs']=implode(",",$contract_imgs[$i]['imgs']);
+    }else{
+        $contract_imgs[$i]['imgs']=$contract_imgs[$i]['imgs'];
+    }
+}
+$content=[
+    "status"=>0,
+    "data"=>$contract_imgs
+];
+echo json_encode($content);
+
+?>

@@ -1,0 +1,28 @@
+<?php
+// 查询 造价字典
+// $.getJSON('/com/dictionary_price_search.php',{name:"国槐",year:2016,month:5},function(json){...});
+require 'checkhost.php';
+require 'db2.php';
+
+$name = $_REQUEST['name'];	
+$year = $_REQUEST['year'];	
+$month = $_REQUEST['month'];
+
+$pricefield = $year&&$month ? '`'.$year.(strlen($month)==1 ? '0'.$month : $month).'`' : '';
+
+
+$sql = $pricefield ? 'select id,name,unit,attribute,min,max,'.$pricefield.' from dictionary_price'
+                   : 'select * from dictionary_price';
+if ($name) $sql .= ' where name like \'%'.$name.'%\'';
+
+$sql .= ' order by CONVERT(name USING gbk)';
+
+
+$db = new db();
+$result = $db->query_try($sql);
+unset($db);
+
+echo json_encode($result);	
+
+
+?>

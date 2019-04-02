@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <script>function getcookie(d){for(var b=document.cookie.split("; "),a=0;a<b.length;a++){var c=b[a].split("=");if(c[0]==d)return unescape(c[1])}}getcookie("user2")||location.replace("./login.html");
+  </script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>苗店设置-找树网管理平台</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-reset.css" rel="stylesheet">
+
+    <link href="../iconfont/iconfont.css" rel="stylesheet"/>
+
+    <!-- Custom styles for this template -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/style-responsive.css" rel="stylesheet" />
+    <link href="/summernote/summernote.css" rel="stylesheet">
+
+    <link href="css/zhaoshu.css" rel="stylesheet">
+    <style type="text/css">
+      .button{
+        width: 100%;
+        background-color: #39b2a9;
+        border-radius: 4px;
+        color: #FFFFFF;
+        height:30px;
+        text-align: center;
+        line-height: 30px;
+      }
+      #alert{
+        position: fixed;
+        z-index: 2000;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        background:rgba(0, 0, 0, 0.6);
+        display: none;
+      }
+      #alertinfos{
+          position: fixed;
+          width: 50%;
+          left:25%;
+          height:270px;
+          background-color: #fff;
+          padding:30px 3%;
+          text-align: left;
+          border-radius: 4px;
+          color:#000;
+          font-size: 17px;
+      }
+      .row1{
+        width:100%;
+        margin:5px 0;
+        float: left;
+        height:50px;
+      }
+      .row2{
+        width:100%;
+        margin:10px 0;
+        float: left;
+        height:50px;
+      }
+      #row0{
+        width:100%;
+        margin:2px 0;
+        float: left;
+        height:30px;
+        color:red;
+      }
+      #tender_name,#bid_name{
+        text-align: left;
+        width:40%;
+        float: left;
+        line-height: 50px;
+        overflow:hidden; 
+      }
+      #tender_mount,#bid_mount{
+        width:56%;
+        float: left;
+        margin: 4px 0;
+        line-height: 40px;
+        border: 1px solid #e2e2e4;
+        box-shadow: none;
+        border-radius: 4px;
+        padding:2px 2%;
+      }
+      .reset,.submit{
+        margin-left: 20%;
+        width:20%;
+      }
+      .tender,.danpin{
+        width:50%;
+        float: left;
+        height:30px;
+        text-align: center;
+        line-height: 30px;
+        font-size: 20px;
+      }
+      .action{
+        background: #ccc;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <header class="header white-bg"></header>
+    <aside><div id="sidebar" class="nav-collapse"></div></aside>
+    <div id="alert">
+      <div id="alertinfos">
+        <div id="row0"></div>
+        <div class="row1">
+          <div id="tender_name"></div>
+          <input type="number" id="tender_mount">
+        </div>
+        <div class="row1">
+          <div id="bid_name"></div>
+          <input type="number" id="bid_mount">
+        </div>
+        <div class="row2">
+          <button type="button" class="btn btn-shadow btn-success reset">取消</button>
+          <button type="button" class="btn btn-shadow btn-success submit">确认</button>
+        </div>
+      </div>
+    </div>
+    <section id="main-content">
+      <section class="wrapper">
+        <div class="row">
+          <div class="col-lg-12">
+            <ul class="breadcrumb">
+              <li><a href="#"><i class="icon icon-woyaokaidian1"></i> 交易协商</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="tender action">招标</div>
+            <div class="danpin">单品</div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-lg-12">
+            <section class="panel">
+              <table class="table table-striped table-advance table-hover">
+                <thead>
+                <tr>
+                  <th>交易编号</th>
+                  <th>时间</th>
+                  <th>买方</th>
+                  <th>卖方</th>
+                  <th>金额</th>
+                  <th>备注</th>
+                  <th style="text-align: center">操作</th>
+                </tr>
+                </thead>
+                <tbody id="showorders">
+                </tbody>
+              </table>
+            </section>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <script src="../js/jquery-1.12.4.min.js"></script>
+    <script src="./js/login.js?t=20170731"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/jquery.scrollTo.min.js"></script>
+    <script src="./js/jquery.nicescroll.js" type="text/javascript"></script>
+    <script src="../js/doT.min.js"></script>
+    <script src="./js/common-scripts.js"></script>
+    <script id="dot_order" type="text/x-dot-template">
+      {{ for(var i in it) { }}
+        <tr>
+          <td class="col-lg-2">{{=it[i].serial_number}}</td>
+          <td class="col-lg-1">{{=string2shortTime(it[i].negotiation_time)}}</td>
+          <td class="col-lg-2">{{=it[i].tender_name +' '+ it[i].tender_phone}}</td>
+          <td class="col-lg-2">{{=it[i].bid_name +' '+ it[i].bid_phone}}</td>
+          <td class="col-lg-1">{{=showmoney(it[i])/100}}元</td>
+          <td class="col-lg-3">{{=it[i].order_switch_remark}}</td>
+          <td class="col-lg-1"><div class="button" serial="{{=it[i].serial_number}}">分配</div></td>
+        </tr>
+      {{ } }}
+    </script>
+
+    <script id="dot_orderone" type="text/x-dot-template">
+      {{ for(var i in it) { }}
+        <tr>
+          <td class="col-lg-2">{{=it[i].serial_number}}</td>
+          <td class="col-lg-1">{{=string2shortTime(it[i].order_switch_time)}}</td>
+          <td class="col-lg-2">{{=it[i].userid_name +' '+ it[i].userid_phone}}</td>
+          <td class="col-lg-2">{{=it[i].treeuserid_name +' '+ it[i].treeuserid_phone}}</td>
+          <td class="col-lg-1">{{=showmoney(it[i])/100}}元</td>
+          <td class="col-lg-3">{{=it[i].order_switch_remark}}</td>
+          <td class="col-lg-1"><div class="button" serial="{{=it[i].serial_number}}">分配</div></td>
+        </tr>
+      {{ } }}
+    </script>
+
+    <script type="text/javascript">
+        var dot_order = doT.template($("#dot_order").text());
+        var dot_orderone = doT.template($("#dot_orderone").text());
+        var windowwidth = $(window).width();
+        var windowheight = $(window).height();
+        var allmoney = 0;
+        var serial_number;
+        $('#alertinfos').css({"top":0.2*windowheight+'px'});
+
+        var tenderdata = [];
+        var buydata = [];
+
+        loadorders();
+
+        function loadorders(){
+          $.getJSON('/com/orders_finddisputes.php', function(json) {
+            if(json){
+              $('#showorders').html(dot_order(json));
+              tenderdata = json;
+            }
+          });
+        }
+
+
+
+        function loadorder_one(){
+          $.getJSON('/com/order_one_findunfinshed.php', function(json) {
+            if(json){
+              $('#showorders').html(dot_orderone(json));
+              buydata = json;
+            }
+          });
+          
+        }
+
+        $('.tender').click(function(){
+          $('.action').removeClass('action');
+          $('.tender').addClass('action');
+          if(!tenderdata.length){
+            loadorders();
+          }else{
+            $('#showorders').html(dot_order(tenderdata));
+          }
+        })
+
+        $('.danpin').click(function(){
+          $('.action').removeClass('action');
+          $('.danpin').addClass('action');
+          if(!buydata.length){
+            loadorder_one();
+          }else{
+            $('#showorders').html(dot_orderone(buydata));
+          }
+        })
+
+        function ms2shortTime(ms) {
+          var now = new Date().getTime();
+          var t = now-ms;
+          if (t<3600000) {
+              t = Math.floor(t/60000);
+              return t==0 ? '刚刚' : t+'分钟前';
+          } else if (t<86400000) {
+              return Math.floor(t/3600000)+'小时前';
+          } else if (t<2592000000) {
+              return Math.floor(t/86400000)+'天前';
+          } else if (t<31104000000) {
+              return Math.floor(t/2592000000)+'月前';
+          } else {
+              return '1年前';
+          }
+        }
+
+        function string2shortTime(str) {
+          if (str) {
+              str = str.replace(/-/g,"/"); 
+              var time = new Date(str).getTime(); //ms   
+              return ms2shortTime(time);
+          }else{
+              return '刚刚';
+          }
+        } 
+
+        function showmoney(one){
+          if(one.state == 1){
+            return one.deposit;
+          }else{
+            return one.fullamount;
+          }
+        }
+
+        $('#showorders').on('click','.button',function(){
+          serial_number = $(this).attr('serial');
+          $(this).parents('tr').addClass('active');
+          if($('.action').hasClass('tender')){
+            for (var i = 0; i < tenderdata.length; i++) {
+              if(tenderdata[i].serial_number == serial_number){
+                allmoney = showmoney(tenderdata[i]);
+                $('#tender_name').html('买方：'+tenderdata[i].tender_name);
+                $('#bid_name').html('卖方：'+tenderdata[i].treeuserid_name);
+              }
+            }
+          }else{
+            for (var i = 0; i < buydata.length; i++) {
+              if(buydata[i].serial_number == serial_number){
+                allmoney = showmoney(buydata[i]);
+                $('#tender_name').html('买方：'+buydata[i].userid_name);
+                $('#bid_name').html('卖方：'+buydata[i].treeuserid_name);
+              }
+            }            
+          }
+          $('#row0').html('纠纷金额：'+allmoney/100+'元');
+          $('#alert').fadeIn();
+        })
+
+
+        $('#tender_mount').keyup(function() {
+          var tender_mount = $('#tender_mount').val()*100;
+          if(tender_mount <= allmoney){
+            $('#bid_mount').val((allmoney-tender_mount)/100);
+          }else{
+            $('#tender_mount').val(tender_mount/1000);
+            $('#bid_mount').val((allmoney-(tender_mount/10))/100);
+          }
+        });
+
+        $('#bid_mount').keyup(function() {
+          var bid_mount = $('#bid_mount').val()*100;
+          if(bid_mount <= allmoney){
+            $('#tender_mount').val((allmoney-bid_mount)/100);
+          }else{
+            $('#bid_mount').val(bid_mount/1000);
+            $('#tender_mount').val((allmoney-(bid_mount/10))/100);
+          }
+        });
+
+        $('.reset').click(function(){
+          $('#alert').fadeOut(100);
+          $('#tender_mount').val('');
+          $('#bid_mount').val('');
+          allmoney = 0;
+          serial_number = '';
+          $('.active').removeClass('active');
+        })
+
+        $('.submit').click(function(){
+          var tender_mount = 100*$('#tender_mount').val();
+          var bid_mount = 100*$('#bid_mount').val();
+          var money = parseInt(tender_mount)+parseInt(bid_mount);
+          if(money != allmoney){
+            alert('与总额不对称！');
+            return;
+          }
+          var edit = confirm('确定您已分配合理！');
+
+          if($('.action').hasClass('tender')){
+            for (var i = 0; i < tenderdata.length; i++) {
+              if(tenderdata[i].serial_number == serial_number){
+                var tender_userid = tenderdata[i].tender_userid;
+                var bid_userid = tenderdata[i].bid_userid;
+                var tree_order_id = tenderdata[i].tree_order_id;
+                var state = tenderdata[i].state;
+              }
+            }
+            var postinfo ={
+              "serial_number":serial_number,
+              "tree_order_id":tree_order_id,
+              "tender_userid":tender_userid,
+              "tender_mount":tender_mount,
+              "bid_userid":bid_userid,
+              "bid_mount":bid_mount,
+              "state":state
+            };
+            if(edit){
+              $.getJSON('/wxpay/example/orders_disputes.php', {info:JSON.stringify(postinfo)}, function(result) {
+                  if(result){
+                    $('.active').remove();
+                  }
+                  $('#alert').fadeOut(100);
+                  $('#tender_mount').val('');
+                  $('#bid_mount').val('');
+                  newdata = [];
+                  for (var i = 0; i < tenderdata.length; i++) {
+                    if(tenderdata[i].serial_number != serial_number){
+                      newdata[newdata.length] = tenderdata[i];
+                    }
+                  }
+                  tenderdata = newdata;
+                  allmoney = 0;
+                  serial_number = '';
+              });
+            }
+          }else{
+            for (var i = 0; i < buydata.length; i++) {
+              if(buydata[i].serial_number == serial_number){
+                var userid = buydata[i].userid;
+                var treeuserid = buydata[i].treeuserid;
+                var treeid = buydata[i].treeid;
+                var state = buydata[i].state;
+              }
+            }
+            var postinfo ={
+              "serial_number":serial_number,
+              "treeid":treeid,
+              "userid":userid,
+              "userid_mount":tender_mount,
+              "treeuserid":treeuserid,
+              "treeuserid_mount":bid_mount,
+              "state":state
+            };
+            if(edit){
+              $.getJSON('/wxpay/example/order_one_disputes.php', {info:JSON.stringify(postinfo)}, function(result) {
+                  if(result){
+                    $('.active').remove();
+                  }
+                  $('#alert').fadeOut(100);
+                  $('#tender_mount').val('');
+                  $('#bid_mount').val('');
+                  allmoney = 0;
+                  var newdata = [];
+                  for (var i = 0; i < buydata.length; i++) {
+                    if(buydata[i].serial_number != serial_number){
+                      newdata[newdata.length] = buydata[i];
+                    }
+                  }
+                  buydata = newdata;
+                  serial_number = '';
+              });
+            }
+          }
+        })
+    </script>
+
+
+  </body>
+</html>

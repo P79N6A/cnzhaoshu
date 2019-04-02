@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<?php
+    include 'com2/wechat_login2.php';
+    wechatLogin();
+?>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="./css/weui.min.css"/>
+    <link rel="stylesheet" href="./css/example.css"/>
+    <link rel="stylesheet" href="./css/basics_m.css?t=20170907"/>
+    <title>创建项目</title>
+    <style type="text/css">
+        body{
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font: inherit;
+            font-size: 100%;
+            vertical-align: baseline;
+        }
+        form{
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <form action="" id="project">
+        <div class="weui-cells__title"><h3 class="center">我要认养</h3></div>
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">联系方式</label></div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="number" id="phone" placeholder="请输入联系方式">
+                </div>
+            </div>
+        </div>
+        <div class="weui-btn-area">
+            <a class="weui-btn weui-btn_primary submit_create" href="javascript:">确定</a>
+        </div>
+    </form>
+    
+    <script src="./js/zepto.min.js"></script>
+    <script>
+        var qrcode = urlRequest('id');
+        var user = getcookie('user');
+        user = user ? JSON.parse(user) : null;
+
+        $('#phone').focus();
+        
+        function urlRequest(name) {
+            var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);  
+            return match && decodeURIComponent(match[1].replace(/\+/g, ' ')); 
+        }
+
+        function getcookie(name){
+            var arrStr = document.cookie.split("; ");
+            for(var i = 0;i < arrStr.length;i ++){
+                var temp = arrStr[i].split("=");
+                if(temp[0] == name) return unescape(temp[1]);
+            } 
+        }
+
+
+        // 创建新的认养信息
+        $('.submit_create').click(function(){
+            var phone = $.trim($('#phone').val());
+            if(phone){
+                $.post('./com2/adopt_creatproject.php',{phone:phone,qrcode:qrcode},function (result) {
+                    result = JSON.parse(result);
+                    if(result.return_code == 200){
+                        location.href="./adopt_manger.php";
+                    }else{
+                        alert(result.return_msg);
+                    }
+                });
+            }else{
+                alert('验证联系方式不能为空');
+            }
+                
+        })
+
+    </script>
+</body>

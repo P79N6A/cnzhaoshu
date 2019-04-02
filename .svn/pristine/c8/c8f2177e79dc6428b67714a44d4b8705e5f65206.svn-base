@@ -1,0 +1,23 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Mrwang
+ * Date: 2018/9/29
+ * Time: 11:44
+ */
+include "../com/db.php";
+$db=new db();
+$tender_tree_id=isset($_POST['tender_order_id'])?$_POST['tender_order_id']:"3";
+$adoption_status=isset($_POST['adoption_status'])?$_POST['adoption_status']:"1";
+$update_adoption_sql="update tender_order set adoption_status='".$adoption_status."' where tender_order_id ='".$tender_tree_id."' ";
+//var_dump($update_adoption_sql);die;
+$res=$db->exec($update_adoption_sql);
+if($res){
+    $content=[
+        "status"=>0
+    ];
+}else{
+    $content=[
+        "status"=>1
+    ];
+}

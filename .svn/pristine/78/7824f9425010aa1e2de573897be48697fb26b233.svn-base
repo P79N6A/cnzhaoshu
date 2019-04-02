@@ -1,0 +1,78 @@
+<?php
+// 拉取更新全部用户信息, 存数据库，保存头像
+require '../com/checkhost.php'; checkhost();
+require '../com/db2.php';
+require '../wechat/wechat.class.php';
+
+$begin = $_REQUEST['begin'];
+
+$db = new db();
+
+
+$sql = 'select wechatid as openid,userid,name from user order by userid limit ?,10';
+$users_db = $db->prepare_query($sql, array($begin));
+
+if ($users_db) {
+	$weObj = new Wechat();
+
+	$data = array('user_list' =>  $users_db);
+
+	$users_wechat = $weObj->getUserInfoBatch($data);
+
+	foreach ($users_wechat['user_info_list'] as $key => $user) 
+	{
+		$userid = $users_db[$key]['userid'];
+
+		if ($user['subscribe']==1) {
+			// 保存头像
+			if (!empty($imgurl=$user['headimgurl'])) {
+				if ( file_exists($_SERVER['DOCUMENT_ROOT'].'/headimg/0/'.$userid.'.jpg') ) {
+					$isGet = filesize($_SERVER['DOCUMENT_ROOT'].'/headimg/0/'.$userid.'.jpg') < 100 ? true : false;
+				} else {
+					$isGet = true;
+				}
+
+				if ($isGet) {
+					$img0 = $weObj->http_get( $imgurl );
+					if (!$img0) {
+						$weObj->deleteAccessToken();
+						$img0 = $weObj->http_get( $imgurl );//容错处理
+					}
+
+					file_put_contents($_SERVER['DOCUMENT_ROOT'].'/headimg/0/'.$userid.'.jpg', $img0);
+					unset($img0);	
+
+					$imgurl = substr($imgurl, 0, -1);
+					$img96 = $weObj->http_get( $imgurl.'96' );
+					if (!$img96) {
+						$weObj->deleteAccessToken();
+						$img96 = $weObj->http_get( $imgurl.'96' );
+					}
+					file_put_contents($_SERVER['DOCUMENT_ROOT'].'/headimg/96/'.$userid.'.jpg', $img96);
+					unset($img96);	
+				}
+			}
+			$set_user_name = $users_db[$key]['name'] ? '' : 'name=\''.mb_substr($user['nickname'], 0, 20, 'utf-8').'\',';
+			$sql = 'update user set '.$set_user_name.'subscribe=1,nickname=?,sex=?,city=?,province=? where userid=?';
+			$sql_array = array(
+				mb_substr($user['nickname'], 0, 30, 'utf-8'), 
+				$user['sex'], 
+				mb_substr($user['city'], 0, 20, 'utf-8'), 
+				mb_substr($user['province'], 0, 20, 'utf-8'), 
+				$userid );
+		}else{
+			$sql = 'update user set subscribe=0 where userid=?';
+			$sql_array = array( $userid );
+		}
+
+		// 存数据库
+		$db->prepare_exec($sql, $sql_array);
+	}
+
+	unset($weObj);
+} else {
+	echo 0;
+}
+
+
+unset($db);

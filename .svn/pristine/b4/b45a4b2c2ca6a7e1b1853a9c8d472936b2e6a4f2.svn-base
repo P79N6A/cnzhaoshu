@@ -1,0 +1,4 @@
+
+function alertwarp() {
+    window.alert(11111)
+}

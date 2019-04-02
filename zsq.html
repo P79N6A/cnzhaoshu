@@ -1,0 +1,538 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<title></title>
+<link href="style.css" type="text/css" rel="stylesheet" />
+<style type="text/css">
+	.modal-content-show{
+	    float:left;
+	    height:130px;
+	    width:25%;
+	    margin:10px 4%;
+	    text-align: center;
+	    overflow:hidden;
+	}
+	#collectshop,#shareshop,#visitshop,#messageshop,#mycollect{
+		max-height:250px;
+		overflow:auto;
+		border:2px solid #fff;
+		border-radius:2px;
+	}
+	.visitorimg{
+		border: 4px solid #eee;
+		border-radius: 50%;
+		overflow: hidden;
+	}
+	.treemeassageinfo{
+		/*border:2px solid #aaa;*/
+		margin-bottom:5px;
+	}
+	.messagecontent{
+		margin:10px 0 2px;
+		border-bottom:2px solid #fff;
+	}
+</style>
+</head>
+<body>
+<div class="zsq_box">
+    <div class="zsq_top">
+        <div class="zt_l" style="overflow:hidden;width:30%">
+            <img id="zt_lo" src="" width="100%"/>
+        </div>
+        <div class="zt_r" style="width:50%">
+            <div class="zt_name" id="zt_name">
+            </div>
+            <div class="zt_tel" id="zt_tel">
+            </div>
+        </div>
+    </div>
+    <div class="zsq_bottom sideMenu">
+    	<ul>
+    		<!-- <li class='slide_li'>
+				<div class="zb_item">
+		            <div class="zi_tet bg_1">留言评价</div>
+		            <em></em>
+		        </div>
+		        <div class="l_main1" id="messageshop">
+		        </div>
+	        </li> -->
+	        <li class='slide_li'>
+				<div class="zb_item">
+			        <div class="zi_tet bg_1">我的收藏</div>
+			        <div class="zi_num">
+			            <span id="mycollectnow"></span><span id="mycollectall"></span>
+			        </div>
+			        <em></em>
+			    </div>
+		        <div class="l_main1" id="mycollect">
+		        </div>
+	        </li>
+    		<li class='slide_li'>
+				<div class="zb_item">
+			        <div class="zi_tet bg_2">收藏我的</div>
+			        <div class="zi_num">
+			            <span id="collectnow"></span><span id="collectall"></span>
+			        </div>
+			        <em></em>
+			    </div>
+		        <div class="l_main1" id="collectshop">
+		        </div>
+	        </li>
+	        <li class='slide_li'>
+				<div class="zb_item">
+			        <div class="zi_tet bg_3">分享我的</div>
+			        <div class="zi_num">
+			            <span id="sharenow"></span><span id="shareall"></span>
+			        </div>
+			        <em></em>
+			    </div>
+		        <div class="l_main1" id="shareshop">
+		        </div>
+	        </li>
+	        <li class='slide_li'>
+				<div class="zb_item">
+			        <div class="zi_tet bg_4">访问我的</div>
+			        <div class="zi_num">
+			            <span id="visitnow"></span><span id="visitall"></span>
+			        </div>
+			        <em></em>
+			    </div>
+		        <div class="l_main1" id="visitshop">
+		        </div>
+	        </li>
+        </ul>
+    </div>
+	
+</div>
+<div class="pz_down">
+	<div class="h_0100_1">
+    	<ul>
+        	<li>
+            	<a href="#">
+                	<i class="nav_1"></i>
+                    <span>首页</span>
+                </a>
+            </li>
+            <li>
+            	<a href="#">
+                	<i class="nav_2"></i>
+                    <span>找树圈</span>
+                </a>
+            </li>
+            <li>
+            	<a href="#">
+                	<i class="nav_3"></i>
+                    <span>购树车</span>
+                </a>
+            </li>
+            <li>
+            	<a href="#">
+                	<i class="nav_4"></i>
+                    <span>自营商品</span>
+                </a>
+            </li>
+            <li>
+            	<a href="#">
+                	<i class="nav_5"></i>
+                    <span>我的</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!-- 加载模板 -->
+<script id="dot_visitor" type="text/x-dot-template">
+    {{ for(var i in it) { }}
+        <!-- {{? it[i].shopid}}
+        	<a href="/shop.php?userid={{=it[i].userid}}" class="modal-content-show">
+        {{??}}
+        	<a href="/" class="modal-content-show">
+        {{?}} -->
+        <a href="http://www.cnzhaoshu.com/shop.php?userid=3510" class="modal-content-show">
+            <img src="/headimg/96/{{=it[i].userid}}.jpg"  onerror="onerrorHeadimg()" class="visitorimg" width="70%"/>
+            <p>{{=it[i].name?it[i].name:'游客'}}</p>
+        </a>
+    {{ } }}
+</script>
+
+<script src="/js/jquery-3.1.0.min.js"></script>
+<script src="/js/doT.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript">
+	var dot_visitor = doT.template($("#dot_visitor").text());
+	// 一行有多高
+	var MEMBER_LI_HEIGHT = 70;
+	// 一行有几个
+	var MEMBER_COLUMN = 3;
+	// 访问.分享.收藏 标记
+	var isLoadingMember = false;
+	var isEndMember = false;
+	var isLoadingMember1 = false;
+	var isEndMember1 = false;
+	var isLoadingMember2 = false;
+	var isEndMember2 = false;
+	var isLoadingMember3 = false;
+	var isEndMember3 = false;
+	var shopname;
+	var visitcount;
+	var sharecount;
+	var collectcount;
+	var user = {};
+
+	var userid = getQueryString("userid");
+	if (userid) {
+		user.userid = userid;
+	} else {
+		user = getcookie('user2');
+        if (user) {
+            user = JSON.parse(user);
+        } else {
+        	window.location.replace('m.php');
+        }
+	}
+
+	// 加载一定数量的 访问.分享.收藏
+	loadMember('0,12');
+	loadMember1('0,12');
+	loadMember2('0,12');
+	loadMember3('0,12');
+
+	// 控制展开方式
+	$('.zsq_box').height($(window).height());	
+	$('.sideMenu ul .slide_li .zb_item').click(function(){
+		var iHei=$(this).parent().find('.l_main1').height()+54;
+		if($(this).hasClass('on')){
+			$(this).removeClass('on')
+			$('.sideMenu ul .slide_li').animate({'height':'54px'})
+			
+			$('.zsq_box').height($(window).height());
+		}else{
+			$('.sideMenu ul .slide_li .zb_item').removeClass('on')
+			$(this).addClass('on')
+			
+			$(this).parent().animate({'height':iHei})
+			$(this).parent().siblings().animate({'height':'54px'})
+			
+			$('.zsq_box').height('auto');
+		}
+	});
+
+	// 没有图片的
+	function onerrorHeadimg() {
+        var event = window.event || arguments.callee.caller.arguments[0]; // 获取event对象
+        var img = event.currentTarget || event.srcElement || event.target; // 获取触发事件的源对象
+        img.src = 'http://cnzhaoshu.com/headimg/96/1.jpg';
+    }
+
+	// 个人信息加载
+	$.getJSON('/com/search.myshopinfo.php', {userid: user.userid}, function(json) {
+		console.log(user);
+		console.log(json);
+
+		$('#zt_name').html(json.name);
+		$('#zt_tel').html('联系电话：'+json.phone);
+		$('#zt_lo').attr('src','/headimg/0/'+user.userid+'.jpg');
+		shopname = json.name;
+	});	
+	// 访问我的
+	$.getJSON('/com/search.visitcount.php', {userid: user.userid}, function(json) {
+		if(json){
+			$('#visitnow').html('今日访问'+json.now);
+			$('#visitall').html('总访问'+json.history);
+			visitcount = json.history;
+		}
+	});	
+	// 收藏我的
+	$.getJSON('/com/search.collectcount.php', {userid: user.userid}, function(json) {
+		if(json){
+			$('#collectnow').html('今日收藏'+json.now);
+			$('#collectall').html('总收藏'+json.history);
+			collectcount = json.history;
+		}
+	});	
+	// 分享我的
+	$.getJSON('/com/search.sharecount.php', {userid: user.userid}, function(json) {
+		if(json){
+			$('#sharenow').html('今日分享'+json.now);
+			$('#shareall').html('总分享'+json.history);
+			sharecount = json.history;
+		}
+	});	
+	// 我的收藏
+	$.getJSON('/com/search.mycollectcount.php', {userid: user.userid}, function(json) {
+		if(json){
+			$('#mycollectnow').html('今日收藏'+json.now);
+			$('#mycollectall').html('总收藏'+json.history);
+		}
+	});	
+
+
+
+	// 访问我的 绑定滚屏时间，瀑布流加载更多数据
+	$('#visitshop').scroll(function () {
+	    if (isLoadingMember || isEndMember) return;
+	    
+	    var scrollHeight = $(this)[0].scrollHeight;//滚动距离总长(注意不是滚动条的长度)
+	    var scrollTop = $(this)[0].scrollTop;//滚动到的当前位置
+	    var elementHight = $(this).height();//视窗高度
+	    // 到底了，除非加载
+	    if(scrollTop + elementHight >= scrollHeight-100) {
+	        loadMember();
+	    } 
+	});	
+
+	// 分享我的 绑定滚屏时间，瀑布流加载更多数据
+	$('#shareshop').scroll(function () {
+	    if (isLoadingMember1 || isEndMember1) return;
+	    
+	    var scrollHeight = $(this)[0].scrollHeight;//滚动距离总长(注意不是滚动条的长度)
+	    var scrollTop = $(this)[0].scrollTop;//滚动到的当前位置
+	    var elementHight = $(this).height();//视窗高度
+	    // 到底了，除非加载
+	    if(scrollTop + elementHight >= scrollHeight-100) {
+	        loadMember1();
+	    } 
+	});	
+
+	// 收藏我的 绑定滚屏时间，瀑布流加载更多数据
+	$('#collectshop').scroll(function () {
+	    if (isLoadingMember2 || isEndMember2) return;
+	    
+	    var scrollHeight = $(this)[0].scrollHeight;//滚动距离总长(注意不是滚动条的长度)
+	    var scrollTop = $(this)[0].scrollTop;//滚动到的当前位置
+	    var elementHight = $(this).height();//视窗高度
+	    // 到底了，除非加载
+	    if(scrollTop + elementHight >= scrollHeight-100) {
+	        loadMember2();
+	    } 
+	});
+
+	// 我的收藏 绑定滚屏时间，瀑布流加载更多数据
+	$('#mycollect').scroll(function () {
+	    if (isLoadingMember3 || isEndMember3) return;
+	    
+	    var scrollHeight = $(this)[0].scrollHeight;//滚动距离总长(注意不是滚动条的长度)
+	    var scrollTop = $(this)[0].scrollTop;//滚动到的当前位置
+	    var elementHight = $(this).height();//视窗高度
+	    // 到底了，除非加载
+	    if(scrollTop + elementHight >= scrollHeight-100) {
+	        loadMember3();
+	    } 
+	});
+
+	// 访问我的
+	function loadMember(where) {
+	  // 如果正在加载，退出
+	    if (isLoadingMember) return;
+
+	    isLoadingMember = true;
+
+	    // 一屏幕的个树
+	    var number = Math.ceil(210/MEMBER_LI_HEIGHT+1)*MEMBER_COLUMN;
+	    // limt 0,10
+	    if(where){
+	    	var limit = where;
+	    }else{
+	    	var limit = $('#visitshop a').length + ',' + number;
+	    }
+	    $.getJSON('/com/search.visitshop.php', {userid: user.userid,limit:limit}, function(data) {
+
+	        if (data) {
+	            $('#visitshop').append(dot_visitor(data));
+	        } else {
+	            // 瀑布流结束
+	            isEndMember = true;
+	        }
+	        // 标志完成加载 
+	        isLoadingMember = false;
+	    });
+	}
+
+	// 分享我的
+	function loadMember1(where) {
+	  // 如果正在加载，退出
+	    if (isLoadingMember1) return;
+
+	    isLoadingMember1 = true;
+
+	    // 一屏幕的个树
+	    var number = Math.ceil(210/MEMBER_LI_HEIGHT+1)*MEMBER_COLUMN;
+	    // limt 0,10
+	    if(where){
+	    	var limit = where;
+	    }else{
+	    	var limit = $('#shareshop a').length + ',' + number;
+	    }
+	    $.getJSON('/com/search.shareshop.php', {userid: user.userid,limit:limit}, function(data) {
+
+	        if (data) {
+	            $('#shareshop').append(dot_visitor(data));
+	        } else {
+	            // 瀑布流结束
+	            isEndMember1 = true;
+	        }
+	        // 标志完成加载 
+	        isLoadingMember1 = false;
+	    });
+	}
+
+	// 收藏我的
+	function loadMember2(where) {
+	  // 如果正在加载，退出
+	    if (isLoadingMember2) return;
+
+	    isLoadingMember2 = true;
+
+	    // 一屏幕的个树
+	    var number = Math.ceil(210/MEMBER_LI_HEIGHT+1)*MEMBER_COLUMN;
+	    // limt 0,10
+	    if(where){
+	    	var limit = where;
+	    }else{
+	    	var limit = $('#collectshop a').length + ',' + number;
+	    }
+	    $.getJSON('/com/search.collectshop.php', {userid: user.userid,limit:limit}, function(data) {
+
+	        if (data) {
+	            $('#collectshop').append(dot_visitor(data));
+	        } else {
+	            // 瀑布流结束
+	            isEndMember2 = true;
+	        }
+	        // 标志完成加载 
+	        isLoadingMember2 = false;
+	    });
+	}
+
+	// 我的收藏
+	function loadMember3(where) {
+	  // 如果正在加载，退出
+	    if (isLoadingMember3) return;
+
+	    isLoadingMember3 = true;
+
+	    // 一屏幕的个树
+	    var number = Math.ceil(210/MEMBER_LI_HEIGHT+1)*MEMBER_COLUMN;
+	    // limt 0,10
+	    if(where){
+	    	var limit = where;
+	    }else{
+	    	var limit = $('#mycollect a').length + ',' + number;
+	    }
+	    $.getJSON('/com/search.mycollectshop.php', {userid: user.userid,limit:limit}, function(data) {
+
+	        if (data) {
+	            $('#mycollect').append(dot_visitor(data));
+	        } else {
+	            // 瀑布流结束
+	            isEndMember3 = true;
+	        }
+	        // 标志完成加载 
+	        isLoadingMember3 = false;
+	    });
+	}
+
+	function getcookie(name){//获取指定名称的cookie的值
+	    var arrStr = document.cookie.split("; ");
+	    for(var i = 0;i < arrStr.length;i ++){
+	        var temp = arrStr[i].split("=");
+	        if(temp[0] == name) return unescape(temp[1]);
+	    } 
+	}   
+
+	function getQueryString(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+		var r = window.location.search.substr(1).match(reg);
+		if (r != null) return unescape(r[2]); return null;
+	} 
+
+	// 微信分享
+	
+
+    function getTitle () {
+        return shopname+'的找树圈';
+    }
+    function getImageUrl(){
+        return 'http://cnzhaoshu.com/headimg/96/' + user.userid + '.jpg';
+    }
+
+    function getLink(){
+        return window.location.href;
+    } 
+
+    function getDescription () {
+        return '数据统计共有'+collectcount+'人收藏 , '+visitcount+'人访问 , '+sharecount+'人分享！';
+    }
+
+    function prepareShare () {
+        // 在这里调用 API
+        wx.onMenuShareAppMessage({
+          title: getTitle(),
+          desc: getDescription(),
+          link: getLink(),
+          imgUrl: getImageUrl()
+        });
+
+        wx.onMenuShareTimeline({
+          title: getTitle() + "\n" +getDescription(),
+          link: getLink(),
+          imgUrl: getImageUrl()
+        });
+
+        wx.onMenuShareQQ({
+          title: getTitle(),
+          desc: getDescription(),
+          link: getLink(),
+          imgUrl: getImageUrl()
+        });
+
+        wx.onMenuShareWeibo({
+          title: getTitle(),
+          desc: getDescription(),
+          link: getLink(),
+          imgUrl: getImageUrl()
+        });
+    }
+
+    function setWechatJSSDK(res){
+        wx.config({
+            debug: false,
+            appId: res.appId,
+            timestamp: res.timestamp,
+            nonceStr: res.nonceStr,
+            signature: res.signature,
+            jsApiList: [
+                'onMenuShareTimeline',
+                'onMenuShareAppMessage',
+                'onMenuShareQQ',
+                'onMenuShareQZone',
+                'onMenuShareWeibo',
+                'hideMenuItems'
+            ]
+        });
+
+        wx.ready(function () {
+          wx.hideMenuItems({
+              menuList: ['menuItem:copyUrl'] // 要隐藏的菜单项，只能隐藏“传播类”和“保护类”按钮，所有menu项见附录3
+          });
+
+          prepareShare();
+        });
+    }
+
+    function loadWechatJSSDK() {
+        $.getJSON('/com/wechat.jssdk.php?url=' + encodeURIComponent(location.href.split('#')[0]), function (res) {
+          setWechatJSSDK(res);
+        });
+    }
+    setTimeout(loadWechatJSSDK, 500);
+
+</script>
+</body>
+</html>

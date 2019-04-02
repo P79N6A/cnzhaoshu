@@ -1,0 +1,113 @@
+<style scoped>
+  .img-warp {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(1, 1, 1, .5);
+    z-index: 10000;
+  }
+
+  .img-warp-inner {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    height: 667px;
+  }
+
+  .demo-carousel img {
+    width: 375px;
+  }
+
+  .dengpostition {
+    position: relative;
+    margin: 0 auto;
+    width: 375px;
+    margin-top: 50px;
+  }
+
+  .left-img-warp {
+    height: 60px;
+  }
+
+  .left-img-warp img {
+    height: 60px;
+    padding-left: 20px;
+    max-width: 35px;
+  }
+
+  .bind-one span {
+    margin-right: 20px;
+  }
+
+  .bind-one Card {
+    height: 65px;
+  }
+</style>
+<template>
+  <div>
+    <div class="bind-one">
+      <Tabs type="card" size="small">
+        <TabPane label="已合并店铺">
+          <div v-for="item in value">
+            <Button type="primary" v-text="item.name"></Button>
+            <Button type="dashed">{{item.tel}}</Button>
+          </div>
+
+        </TabPane>
+        <TabPane label="待加入店铺">
+          <Input  placeholder="请输入店铺名称" style="width: 150px" />
+          <Input  placeholder="请输入手机号码" style="width: 150px; margin-left:50px" />
+          <p ></p>
+        </TabPane>
+      </Tabs>
+    </div>
+  </div>
+
+</template>
+
+<script>
+  import {changeBidStatus} from '@/api/data'
+
+  export default {
+    props: {
+      params: Object
+    },
+    data() {
+      return {
+        value:[]
+
+      }
+    },
+    methods: {
+      getList(){
+        this.value =  [{
+          name:"jiagongsi",
+          tel:"15532322727"
+        },{
+          name:"jiagongsi",
+          tel:"15532322727"
+        },{
+          name:"jiagongsi",
+          tel:"15532322727"
+        },{
+          name:"jiagongsi",
+          tel:"15532322727"
+        }]
+
+      }
+    },
+    mounted() {
+      this.params = this.params
+      this.getList();
+    }
+
+  }
+</script>
+
+

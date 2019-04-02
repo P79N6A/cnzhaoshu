@@ -1,0 +1,98 @@
+<style scoped>
+  .bid-info span {
+    margin-right: 30px;
+  }
+
+  .bid-info div:last-of-type {
+    margin-top: 10px;
+  }
+</style>
+<template>
+  <div>
+    <div class="bid-info">
+      <Table :columns="columns" :data="shopList" :class="isflex?'flextree_list':''"></Table>
+    </div>
+  </div>
+</template>
+<script>
+  import {getBidInfo} from '@/api/data'
+  import {getRemoveagsNav} from '@/libs/util'
+  import {mapMutations} from 'vuex'
+  import expandRow from './store-extend'
+  export default {
+    components: {expandRow},
+    data () {
+      return {
+        shopList:[],
+        columns: [
+          {
+            type: 'expand',
+            width: 50,
+            render: (h, params) => {
+              console.log(params)
+              return h(expandRow, {
+                props: {
+                  params: params
+                }
+              })
+            }
+          },
+          {
+            title: '店铺',
+            key: 'hcity'
+          },
+          {
+            title: '电话',
+            key:"Up_time"
+          }
+        ],
+        treeList: [{
+          name:"jiagongsi",
+          tel:"15532322727"
+        },{
+          name:"jiagongsi",
+          tel:"15532322727"
+        },{
+          name:"jiagongsi",
+          tel:"15532322727"
+        },{
+          name:"jiagongsi",
+          tel:"15532322727"
+        }],
+        isflex: false,
+      }
+    },
+    methods: {
+      ...mapMutations([
+        'setBreadCrumb',
+        'setTagNavList',
+        'addTag',
+        'setLocal',
+        'removeTag',
+      ]),
+      getFirstAjax(){
+        let prames ={
+          a : 1,
+          p: 2
+        }
+        getBidInfo(prames).then(res=>{
+
+            console.log(res.data)
+            let shopList = res.data.data;
+            this.shopList = shopList
+
+        })
+      }
+    },
+    created(){
+      this.getFirstAjax()
+    },
+    mounted () {
+
+      document.getElementsByClassName('content-wrapper')[0].addEventListener('scroll', this.handleScroll)
+    },
+    beforeDestroy () {
+      document.getElementsByClassName('content-wrapper')[0].removeEventListener('scroll', this.handleScroll)
+    }
+  }
+</script>

@@ -1,0 +1,143 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<script>if (navigator.userAgent.indexOf('MicroMessenger')>0 || window.screen.height<700 || window.screen.width<700) location.replace("m.php")</script>
+<title>找树网 找放心树</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="description" content="最好的找树网站，奉献绿色，驱动和谐" />
+<meta name="keywords" content="找树,海棠" />
+<meta property="wb:webmaster" content="bbe9106db9c4c574" />
+<link rel="stylesheet" href="css/basic.css?t=20170425" type="text/css" />
+<link rel="stylesheet" href="css/rangeslider.css"/>
+</head>
+<body>
+	<div class="shortcut">
+		<div class="wrap">
+			<div class="fl">
+				<span id="welcome">亲，欢迎来找树</span>&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="javascript:login()" id="login">请登录</a>
+				<a href="javascript:logout()" id="logout">退出</a>
+			</div>
+			<span class="phone">☎19933553935</span>
+			<a class="qq" href="http://wpa.qq.com/msgrd?v=3&amp;uin=31905376&amp;site=qq&amp;menu=yes" 
+				title="在线客服 QQ 31905376">在线客服</a>
+			<a style="float: right;margin-right: 20px;color:#FF6600" href="./admin/" target="_blank" >[会员中心]</a>
+		</div>
+	</div>
+	<div class="bgheader">
+		<div class="header wrap">
+			<a href="." class="logo"><img style="width:228px;height:100px" src="img/logo.jpg"></a>
+			<img style="float:right;width:78px;height:78px;" src="/img/wx2.jpg">
+			<a id="cart" title="找树车">0</a>
+
+			<div class="search">
+				<input type="text" id="key" placeholder="15公分银杏" autocomplete="on" autofocus="true">
+				<button onclick="onSearch()">搜索</button>
+				<button class="btn2" onclick="onSearch(0,1)">精确搜索</button>
+			</div><br><br><br>
+
+			<div id="hotkey"></div>
+		</div>
+
+		<div class="nav">
+			<div class="wrap">
+				<a href="#" class="selected">首页</a>
+				<a href="mytree.html">我的苗店</a>
+				<a href="findtree.html">我的找树车</a>
+				<a href="yusuan.html">预算</a>
+				<a href="open.html" class="fr">开放平台</a>
+				<a href="http://mp.weixin.qq.com/mp/homepage?__biz=MjM5MTQwMzA1OQ==&hid=1" class="fr">新闻中心</a>
+				<a href="about.html" class="fr">关于我们</a>
+				<a href="http://mp.weixin.qq.com/s?__biz=MjM5MTQwMzA1OQ==&mid=203858056&idx=1&sn=57d46cb9c073b21d7311c5e76248dcf8&scene=1&key=2e5b2e802b7041cf27bdb357cf32162b9f411c3a4237247b6e0ce9dde679aa69ed88ef1bd6246e172495e1341f759811&ascene=1&uin=MTMwMTQ4NTIwNA%3D%3D&devicetype=webwx&version=70000001&pass_ticket=5SzduPctzoCWysrY7mdIEXpNi3sU0kpjrPWn8YXW0UIb9Wyuqd8%2BXQ%2BqD9lVYNak" class="fr">手机版</a>
+				<a href="http://mp.weixin.qq.com/s?__biz=MjM5MTQwMzA1OQ==&mid=203617198&idx=1&sn=1a78a207b6ca1bdf0accac78745f548a&scene=1&key=2e5b2e802b7041cf3ef8f671071823b9fb4b20da6739ef5fb7a0f92dccf51b7b53ceb3517fe3f26a7238c80e3c8186f7&ascene=1&uin=MTMwMTQ4NTIwNA%3D%3D&devicetype=webwx&version=70000001&pass_ticket=5SzduPctzoCWysrY7mdIEXpNi3sU0kpjrPWn8YXW0UIb9Wyuqd8%2BXQ%2BqD9lVYNak" class="fr">帮助</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="filter wrap">
+		<ul style="height:20px;">
+			<span style="float:left">筛选：<span id="where"></span></span>
+			<span class="fr">♧<span id="total"></span><span id="average"></span></span>
+		</ul>
+		
+		<ul>
+			<div class="fl" style="width:48%">
+ 				<div class="specification">
+ 					<span style="width:100px;display:inline-block;"><span>胸地径</span><span style="color:#ccc">公分</span>：</span>
+	 				<input type="text" id="spec_dbh"
+	  					placeholder="✎ 10-12"
+						onkeyup="value=value.replace(/[^\d\.\-\－\。]/g,'');if(event.keyCode==13)$('#spec_crownwidth').focus()"
+						onkeydown="event.keyCode=9;" 
+						onpaste="return false">
+					<span id="default_dbh"></span>
+				</div>
+ 				<div class="specification">
+ 					<span style="width:100px;display:inline-block;"><span>冠幅</span><span style="color:#ccc">米</span>：</span>
+	 				<input type="text" id="spec_crownwidth" 
+	  					placeholder="✎ 10-12"
+						onkeyup="value=value.replace(/[^\d\.\-\－\。]/g,'');if(event.keyCode==13)$('#spec_height').focus()"
+						onpaste="return false">
+					<span id="default_crownwidth"></span>
+				</div>
+ 				<div class="specification">
+ 					<span style="width:100px;display:inline-block;"><span>高度</span><span style="color:#ccc">米</span>：</span>
+	 				<input type="text" id="spec_height" 
+	  					placeholder="✎ 10-12"
+						onkeyup="value=value.replace(/[^\d\.\-\－\。]/g,'')"
+						onpaste="return false">
+					<span id="default_height"></span>
+				</div>
+				<div class="select">
+					<a href="javascript:orderByPrice()" id="btn_price" class="unselect">价格◇</a>
+					<a href="javascript:orderByTime()" id="btn_time" class="unselect">时间</a>
+					<a href="javascript:searchFilter('fapiao','有发票')" id="btn_fapiao" class="unselect">有发票</a>
+					<a href="javascript:searchFilter('qingdi','清地树')" id="btn_qingdi" class="unselect">清地树</a>
+					<a href="javascript:searchFilter('qijian','旗舰店')" id="btn_qijian" class="unselect">旗舰店</a>
+					<a href="javascript:searchFilter('renzheng','已认证')" id="btn_renzheng" class="unselect">已认证</a>
+					<a href="javascript:searchFilter('yuantu','原图认证')" id="btn_yuantu" class="unselect">原图认证</a>
+					<!-- <a href="javascript:searchFilter('shipin','视频认证')" id="btn_shipin" class="unselect">视频认证</a> -->
+					<a href="javascript:searchGroup(1000)" id="group1000" class="unselect">北京苗木</a>
+					<a href="javascript:searchGroup(1001)" id="group1001" class="unselect">北京行业协会</a>
+					<a href="javascript:searchGroup(1020)" id="group1020" class="unselect">北京种苗协会</a>
+					<a href="javascript:searchGroup(1022)" id="group1022" class="unselect">冀中苗讯</a>
+				</div>
+			</div>
+			<div class="price_range"><input type="text" id="range"/></div>
+		</ul>		
+		<ul id="province_ul"><span id="province"></span></ul>
+	</div>
+
+	<div id="treelist" class="home_treelist"></div>
+
+
+
+	<div class="footer wrap">
+		<img src="/img/wx.jpg" alt="微信找树">
+		<p>
+			<a href="about.html">关于我们</a>｜
+			<a href="about.html">领导寄语</a>｜
+			<a href="about.html">联系我们</a>｜
+			<a href="about.html">合作伙伴</a>
+		</p>
+		<p>Copyright © 2014-2018 北京找树网科技股份有限公司 版权所有 京ICP证1403号</p>
+		<p>
+			<a href="http://www.itrust.org.cn/" target="_blank"><img src="/img/f1.jpg"></a>
+			<a href="http://www.bnia.cn/" target="_blank"><img src="/img/f2.jpg"></a>
+			<a href="http://net.china.com.cn/" target="_blank"><img src="/img/f3.jpg"></a>
+			<a href="http://www.bjjubao.org/" target="_blank"><img src="/img/f4.jpg"></a>
+			<a href="http://www.bj.cyberpolice.cn/" target="_blank"><img src="/img/f5.jpg"></a>
+		</p>
+	</div>
+
+	<div id="searchmore">正在加载...</div>
+
+<script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
+<!--[if lt IE 9]><script type="text/javascript" src="js/json2.js"></script><![endif]-->
+<script type="text/javascript" src="js/rangeslider.js"></script>
+<script type="text/javascript" src="js/crypt.js?t=201811052"></script>
+<script type="text/javascript" src="js/basic.js?t=20170425"></script>
+<script type="text/javascript" src="js/index.js?t=20181013"></script>
+<script type="text/javascript" src="js/jquery.blockui.js"></script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Mrwang
+ * Date: 2018/8/13
+ * Time: 10:51
+ */
+
+include "../com/db.php";
+//合同甲乙双方信息 是否入库与修改页面
+
+$data=$_POST;
+$hcity=$data['postData']['hcity'];
+$hproper=$data['postData']['hproper'];
+$harea=$data['postData']['harea'];
+//var_dump($data);die;
+//var_dump($data['postData']['third_party_receivables']);die;
+$party_A=$data['postData']['partya']['data'];
+$party_A_status=$data['postData']['partya']['status'];
+//echo "$party_A_status,$party_B_status";die;
+$party_B_status=$data['postData']['partyb']['status'];
+//var_dump($party_A);die;
+$party_B=$data['postData']['partyb']['data'];
+$party_A_id=isset($party_A['contract_id'])?$party_A['contract_id']:"";
+$party_B_id=isset($party_B['contract_id'])?$party_B['contract_id']:"";
+//var_dump($party_B);die;
+$project_id=$data['postData']['project_id'];
+
+if(!empty($party_A['company_name'])&&empty($party_B['company_name'])){
+
+    update_project($project_id,$party_A['company_name'],$party_B['company_name'],$data['postData']['third_party_receivables'],$data['postData']['ring_price'],$data['postData']['begin_time'],$data['postData']['end_time'],$data['postData']['ring_num'],$hcity,$hproper,$harea);
+    //存入招标表
+    insert_tender($project_id,$party_A['company_name']);
+    insert_table($party_A['company_name'],$party_A['representative'],$party_A['open_bank'],$party_A['bank_num'],$party_A['duty_paragraph'],$party_A['address'],$party_A['tel'],$party_A['contacts']);
+//    var_dump(get_all($project_id));
+    //获得所推送的项目 id 用户id 树名 还有 openid
+//    $res=get_all($project_id);
+    //生成招标二维码的连接
+    $content=[
+        //需要修改的地方
+        'url'=>'http://zhaoshu.com/testjson2.php?project_id='.$project_id
+    ];
+//    var_dump($content);die;
+    echo json_encode($content);
+}else{
+    insert_table($party_A['company_name'],$party_A['representative'],$party_A['open_bank'],$party_A['bank_num'],$party_A['duty_paragraph'],$party_A['address'],$party_A['tel'],$party_A['contacts']);
+    insert_tab($party_B['company_name'],$party_B['representative'],$party_B['open_bank'],$party_B['bank_num'],$party_B['duty_paragraph'],$party_B['address'],$party_B['tel'],$party_B['contacts']);
+    update_project($project_id,$party_A['company_name'],$party_B['company_name'],$data['postData']['third_party_receivables'],$data['postData']['ring_price'],$data['postData']['begin_time'],$data['postData']['end_time'],$data['postData']['ring_num'],$hcity,$hproper,$harea);
+    $content=[
+        'status'=>0,
+        'url'=>'http://zhaoshu.com/create_contract.php?project_id='.$project_id
+    ];
+    echo json_encode($content,JSON_UNESCAPED_UNICODE);
+}
+//存入与修改项目表中的数据
+function insert_table($company_name="",$representative="",$open_bank="",$bank_num="",$duty_paragraph="",$address="",$tel="",$contacts=""){
+    //调用拼音接口
+    $db= new  db();
+    $select_company="select contract_id from  contract_info where company_name='".$company_name."'";
+    $res=$db->query($select_company);
+//var_dump($res);die;
+    if(empty($res)) {
+        include "../com/pinyin.php";
+        if(!empty($company_name)){
+            $name_spell=getPinyin($company_name);
+        }else{
+            $name_spell="";
+        }
+        $user_sql="select userid from user  where phone='".$tel."'";
+        $user_id=$db->query($user_sql);
+        if(!empty($user_id['0'])){
+                $user_id=$user_id['0']['userid'];
+        }else{
+                $user_id="";
+        }
+
+        $sql = "insert into contract_info(company_name,name_spell,representative,open_bank,bank_num,duty_paragraph,address,tel,userid,contacts) values ('" . $company_name . "','" . $name_spell . "','" . $representative . "','" . $open_bank . "','" . $bank_num . "','" . $duty_paragraph . "','" . $address . "','" . $tel . "','" . $user_id . "','".$contacts."')";
+//        var_dump($sql);die;
+    }else{
+        $user_sql="select userid from user  where phone='".$tel."'";
+        $user_id=$db->query($user_sql);
+        if(!empty($user_id['0'])){
+            $user_id=$user_id['0']['userid'];
+        }else{
+            $user_id="";
+        }
+        $contract_id=$res[0]['contract_id'];
+        $sql="update contract_info set company_name='".$company_name."' ,representative='".$representative."',open_bank='".$open_bank."',bank_num='".$bank_num."',duty_paragraph='".$duty_paragraph."',address='".$address."',tel='".$tel."',userid='".$user_id."',contacts='".$contacts."' where contract_id=$contract_id";
+//        var_dump($sql);die;
+    }
+    $db->exec($sql);
+}
+function insert_tab($company_name="",$representative="",$open_bank="",$bank_num="",$duty_paragraph="",$address="",$tel="",$contacts=""){
+    //调用拼音接口
+    $db= new  db();
+    $select_company="select contract_id from  contract_info where company_name='".$company_name."'";
+    $res=$db->query($select_company);
+    if(empty($res)) {
+        if(!empty($company_name)){
+            $name_spell=getPinyin($company_name);
+        }else{
+            $name_spell="";
+        }
+        $user_sql="select userid from user  where phone='".$tel."'";
+        $user_id=$db->query($user_sql);
+        if(!empty($user_id['0'])){
+            $user_id=$user_id['0']['userid'];
+        }else{
+            $user_id="";
+        }
+        $sql = "insert into contract_info(company_name,name_spell,representative,open_bank,bank_num,duty_paragraph,address,tel,userid,coontacts) values ('" . $company_name . "','" . $name_spell . "','" . $representative . "','" . $open_bank . "','" . $bank_num . "','" . $duty_paragraph . "','" . $address . "','" . $tel . "','" . $user_id . "','".$contacts."')";
+//        var_dump($sql);die;
+    }else{
+        $user_sql="select userid from user  where phone='".$tel."'";
+        $user_id=$db->query($user_sql);
+        if(!empty($user_id['0'])){
+            $user_id=$user_id['0']['userid'];
+        }else{
+            $user_id="";
+        }
+        $contract_id=$res[0]['contract_id'];
+        $sql="update contract_info set company_name='".$company_name."' ,representative='".$representative."',open_bank='".$open_bank."',bank_num='".$bank_num."',duty_paragraph='".$duty_paragraph."',address='".$address."',tel='".$tel."',userid='".$user_id."',contacts='".$contacts."' where contract_id=$contract_id";
+//        var_dump($sql);die;
+    }
+    $db->exec($sql);
+//    unset($db);
+}
+//修改项目订单表甲乙双方信息
+function update_project($project_id="",$party_A="",$party_B="",$thhird_party_receivables="",$ring_price="",$begin_time="",$end_time="",$ring_num="",$hcity="",$hproper="",$harea=""){
+    $db= new  db();
+    $create_time=date("Y-m-d H:i:s",time());
+    $Up_time=date("Y-m-d H:i:s",time()+30*86400);
+//    var_dump($Up_time);die;
+    $order_num=date("Ymd",time()).$project_id;
+    if(empty($party_B)){
+        $status=2;
+        $sql=" update order_project set partya_company_name='".$party_A."',third_party_receivables='".$thhird_party_receivables."',ring_price='".$ring_price."',begin_time='".$begin_time."',ring_num='".$ring_num."',end_time='".$end_time."',create_time='".$create_time."',status='".$status."',hcity='".$hcity."',hproper='".$hproper."',harea='".$harea."',Up_time='".$Up_time."',order_num='".$order_num."' where project_id=$project_id";
+//        var_dump($sql);die;
+        $db->exec($sql);
+        $sqll="select * from order_project where project_id = '".$project_id."'";
+        $project=$db->query($sqll)[0];
+        $sqli="update new_tree_order set status='".$status."',Up_time='".$Up_time."',hcity='".$project['hcity']."',hproper='".$project['hproper']."',harea='".$project['harea']."'  where project='".$project_id."'";
+
+    }else{
+        $status=1;
+        $sql=" update order_project set partya_company_name='".$party_A."' ,partyb_company_name='".$party_B."',third_party_receivables='".$thhird_party_receivables."',ring_price='".$ring_price."',ring_num='".$ring_num."',begin_time='".$begin_time."',end_time='".$end_time."',create_time='".$create_time."',status='".$status."',hcity='".$hcity."',hproper='".$hproper."',harea='".$harea."' ,order_num='".$order_num."' where project_id=$project_id";
+//        var_dump($sql);die;
+        $db->exec($sql);
+        $sqll="select * from order_project where project_id = '".$project_id."'";
+        $project=$db->query($sqll)[0];
+        $sqli="update new_tree_order set status='".$status."',Up_time='".$Up_time."',hcity='".$project['hcity']."',hproper='".$project['hproper']."',harea='".$project['harea']."' where project='".$project_id."'";
+    }
+
+
+    $db->exec($sqli);
+    unset($db);
+}
+//存入招标信息表
+function insert_tender($project_id="",$party_A=""){
+    $tender_create_time=time();
+    $tender_end_time=time()+86400*30;
+    $sql= "insert into tender(tender_project_id,partya_company_name,tender_create_time,tender_end_time) values ('" . $project_id . "','" . $party_A . "','" . $tender_create_time . "','" . $tender_end_time . "')";
+//    var_dump($sql);die;
+    $db= new db();
+    $db->exec($sql);
+    unset($db);
+}
+
+//获取采购单所有名称 并与tree表数据进行比对 获取user表中的openid
+function get_all($project_id){
+        $db= new db();
+        $sql="select tree_name,plant_height from new_tree_order where project='".$project_id."'";
+        $data=$db ->query($sql);
+//        var_dump($data);
+        $count=count($data);
+        for($i=0;$i<$count;$i++){
+
+            $plant_height[]=$data[$i]['plant_height'];
+            if(strpos($plant_height[$i],"-")){
+                $plant_max[]=strtok($plant_height[$i], '-');
+                $plant_min[]=substr($plant_height[$i],strripos($plant_height[$i],"-")+1);
+            }else{
+                $plant_max[]=$plant_height[$i];
+                $plant_min[]=$plant_height[$i];
+            }
+            $crown[]=$data[$i]['crown'];
+            if(strpos($crown[$i],"-")){
+                $crown_max[]=strtok($count[$i],'-');
+                $crown_min[]=substr($crown[$i],strripos($crown[$i],"-")+1);
+            }else{
+                $crown_max=$crown[$i];
+                $crown_min=$crown[$i];
+            }
+                $sqli="select name,userid from tree where name='".$data[$i]['tree_name']."' and dbh='".$data[$i]['dbh']."' and crownwidth between '".$crown_min[$i]."' and  '".$crown_min[$i]."'  and height between '".$plant_max[$i]."' and '".$plant_min[$i]."'";
+                $res[]=$db->query($sqli);
+                $name_count[]=count($res[$i]);
+                for($j=0;$j<$name_count[$i];$j++){
+                    $sqls="select wechatid from user where userid='".$res[$i][$j]['userid']."' ";
+                    $res[$i][$j]['wechatid']=$db->query($sqls)[0]['wechatid'];
+                    $res[$i][$j]['project_id']=$project_id;
+                }
+        }
+
+        return $res;
+}
+
+

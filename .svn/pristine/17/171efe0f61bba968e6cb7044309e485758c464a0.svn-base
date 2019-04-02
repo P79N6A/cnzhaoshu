@@ -1,0 +1,14 @@
+<?php 
+	
+require 'db.php';
+$db = new db();
+
+$userid = $_GET['userid'];
+if ($userid) {
+	$sql = 'select name,phone,userid,shopid from user where userid=?';
+	$result = $db->prepare_query($sql, array($userid));
+}
+
+echo json_encode($result[0]);
+unset($db);
+?>

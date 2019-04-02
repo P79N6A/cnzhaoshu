@@ -1,0 +1,106 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Mrwang
+ * Date: 2018/9/14
+ * Time: 10:32
+ */
+header('Access-Control-Allow-Origin:*');
+include "../com/db.php";
+$db=new db();
+$tender_order_id=isset($_POST['tender_order_id'])?$_POST['tender_order_id']:"";
+$tender_status=isset($_POST['status'])?$_POST['status']:"";
+$remarks=isset($_POST['remarks'])?$_POST['remarks']:"";
+$project_id_sql="select project,tender_tree_id from tender_order  where tender_order_id='".$tender_order_id."'";
+$tender_data=$db->query($project_id_sql);
+$project_id=$tender_data[0]['project'];
+$tender_tree_id=$tender_data[0]['tender_tree_id']
+;
+//var_dump($project_id);die;
+if($tender_status==3){
+    $sql="update tender_order set tender_status='".$tender_status."',remarks='".$remarks."' where tender_order_id='".$tender_order_id."'";
+}else{
+    $sql="update tender_order set tender_status='".$tender_status."' where tender_order_id='".$tender_order_id."'";
+}
+//var_dump($sql);die;
+$res=$db->exec($sql);
+//var_dump($res);die;
+if($res){
+//    echo 1;die;
+    $pro_sql="select tree_order_id ,tree_num from new_tree_order  where project ='".$project_id."'";
+
+//    var_dump($audits_un_num);die;
+    $dta=$db->query($pro_sql);
+//    var_dump($dta);die;
+    $count_dta=count($dta);
+    //每颗树所占百分比
+    $percentage=round(100/$count_dta,2);
+
+    $tender_sql="select sum(tree_num) as tender_order_totle from tender_order where tender_tree_id='".$tender_tree_id."' and tender_status=2";
+    //获取推荐投标单的树木数量
+    $tender_order_totle=$db->query($tender_sql)[0]['tender_order_totle'];
+//    var_dump($tender_order_totle);die;
+    $tender_audit="select count(tender_order_id) as tender_order_audit from tender_order where tender_tree_id='".$tender_tree_id."' and tender_status=1";
+    //未审核的数量
+    $tender_order_audit=$db->query($tender_audit)[0]['tender_order_audit'];
+//    var_dump($tender_order_audit);die;
+    $tree_num_sql="select tree_num from new_tree_order where tree_order_id='".$tender_tree_id."'";
+    $tree_num=$db->query($tree_num_sql)[0]['tree_num'];
+//    var_dump($tree_num);die;
+    //所投数量与 需求树木的数量比
+//    var_dump($tender_order_totle);
+//    echo "<pre>";
+//    var_dump($tree_num);die;
+    $percent=round($tender_order_totle/$tree_num,2);
+//    var_dump($percentage);
+//    var_dump($percent);die;
+    $tree_percent= round($percent*$percentage,2);
+//    var_dump($tree_percent);die;
+    //当前树木进度所占项目进度的百分比
+    if($tree_percent>=$percentage){
+        $tree_percent=$percentage;
+    }
+    if($percent>=1){
+        $percent=100;
+    }else{
+        $percent=$percent*100;
+    }
+    $oked_audite_sql="select count(tender_order_id) as oked_audite from tender_order where tender_tree_id='".$tender_tree_id."' and tender_status<>1";
+    //已经审核过的数量
+    $oked_audite=$db->query($oked_audite_sql)[0]['oked_audite'];
+//        var_dump($oked_audite);die;
+    //将所投树木数量与
+    $adop_num_sql="select count(tender_tree_id) as adop_num from tender_order where tender_tree_id='".$tender_tree_id."'and tender_status=2 and adoption_status=0";
+    $adop_num=$db->query($adop_num_sql)[0]['adop_num'];
+    $insert_order_sql="update new_tree_order set tree_progress='".$tree_percent."', tree_oked_audits ='".$oked_audite."',tree_un_audits='".$tender_order_audit."' ,percent='".$percent."',adop_num='".$adop_num."'  where tree_order_id='".$tender_tree_id."'";
+//    var_dump($insert_order_sql);die;
+    $inser_exec=$db->exec($insert_order_sql);
+    //添加一个单个树木进度   字段  在项目 接口展示 所需要的百分比进度   求和
+    $audits_un_num_sql="select sum(tree_un_audits) as project_un_audits from new_tree_order where project='".$project_id."'";
+    $audits_un_num=$db->query($audits_un_num_sql)[0]['project_un_audits'];
+    //计算当前项目进度 并把信息存入到项目数据库中
+    $project_progress_sql=" select sum(tree_progress) as project_progress, sum(tree_oked_audits) as audits_num  from new_tree_order where project ='".$project_id."'";
+    $project=$db->query($project_progress_sql);
+    $project_progress=$project[0]['project_progress'];
+    $audits_num=$project[0]['audits_num'];
+//    var_dump($project_progress);die;
+    $project_progress_sql=" update order_project set project_progress='".$project_progress."',audits_num='".$audits_un_num."' where project_id='".$project_id."' ";
+    $update_project=$db->exec($project_progress_sql);
+if($update_project){
+    $content=[
+        'status'=>0,
+        'data'=>"修改成功"
+    ];
+}else{
+    $content=[
+        'status'=>3,
+        'data'=>"更新进度失败"
+    ];
+}
+}else{
+    $content=[
+        'status'=>1,
+        'data'=>"修改失败"
+    ];
+}
+echo json_encode($content);

@@ -1,0 +1,12 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Mrwang
+ * Date: 2018/10/12
+ * Time: 13:36
+ */
+$imgs=isset($_POST['imgs'])?$_POST['imgs']:"";
+$imgs_status=isset($_POST['img_status'])?$_POST['img_status']:"";
+if(!empty($imgs)){
+    $imgs=implode(",",$imgs);
+}

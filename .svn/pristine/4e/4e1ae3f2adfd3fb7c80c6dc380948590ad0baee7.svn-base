@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>function getcookie(d){for(var b=document.cookie.split("; "),a=0;a<b.length;a++){var c=b[a].split("=");if(c[0]==d)return unescape(c[1])}}getcookie("user2")||location.replace("login.html");</script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>苗木字典 等级表-找树网管理平台</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-reset.css" rel="stylesheet">
+
+    <link href="../iconfont/iconfont.css?t=20170307" rel="stylesheet" />
+
+    <!-- Custom styles for this template -->
+    <link href="css/style.css?t=20170308" rel="stylesheet">
+    <link href="css/style-responsive.css" rel="stylesheet" />
+
+    <link href="css/zhaoshu.css" rel="stylesheet">  
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
+    <!--[if lt IE 8]><script>window.location.replace('forie.html');</script><![endif]-->
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+      <script src="js/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <header id="header" class="header white-bg"></header>
+
+    <aside><div id="sidebar" class="nav-collapse"></div></aside>
+
+    <!--main content start-->
+    <section id="main-content">
+        <section class="wrapper">
+            <!-- page start-->
+            <div class="row">
+                <div class="col-lg-12">
+                    <!--breadcrumbs start -->
+                    <ul class="breadcrumb">
+                        <li><a href="#"><i class="icon icon-miaomuzidian"></i> 苗木字典 等级表</a></li>
+                    </ul>
+                    <!--breadcrumbs end -->
+                </div>
+            </div>
+
+            <div class="row">
+                <aside class="profile-nav col-lg-3">
+                    <section class="panel">
+                      <div class="input-group m-bot15">
+                          <input class="form-control" type="text" id="keyword" value="" placeholder="关键字: 如国槐">
+                          <span class="input-group-btn">
+                            <button class="btn btn-primary" id="find" type="button">搜索</button>
+                          </span>
+                      </div>
+                      <select multiple="" class="form-control" id="showname" style="height:510px">
+                      </select>
+                    </section>
+                </aside>
+                <aside class="profile-info col-lg-9">
+                    <section class="panel">
+                        <div class="panel-body">
+                            <div class=" form" style="height:530px">
+                                <form class="cmxform form-horizontal" id="commentForm">
+                                    <div class="form-group" id="type">
+                                        <label class="control-label col-lg-2">分类</label>
+                                        <div class="col-lg-2">
+                                            <select class="form-control" id="typename">
+                                                <option value="1">落叶乔木</option>
+                                                <option value="2">常绿乔木</option>
+                                                <option value="3">落叶灌木</option>
+                                                <option value="4">常绿灌木</option>
+                                                <option value="5">藤木</option>
+                                                <option value="6">竹类</option>
+                                                <option value="7">木本花卉</option>
+                                                <option value="8">宿根花卉</option>
+                                                <option value="9">水生植物</option>
+                                                <option value="10">地被草皮</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-2">树名称</label>
+                                        <div class="col-lg-4">
+                                            <input class="form-control" id="name" type="text" />
+                                            <input id="id" type="hidden" value=""/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-2">拉丁名称</label>
+                                        <div class="col-lg-4">
+                                            <input class="form-control" id="ldname" type="text" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group " id="trunk_diameter" style="display:none;">
+                                        <label class="control-label col-lg-2">胸径</label>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" placeholder="一级" id="trunk_diameter1" type="text" />
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" placeholder="二级" id="trunk_diameter2" type="text" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group " id="plant_height" style="display:none;">
+                                        <label class="control-label col-lg-2">株高</label>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" placeholder="一级" id="plant_height1" type="text" />
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" placeholder="二级" id="plant_height2" type="text" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group " id="ground_diameter" style="display:none;">
+                                        <label class="control-label col-lg-2">地径</label>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" placeholder="一级" id="ground_diameter1" type="text" />
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" placeholder="二级" id="ground_diameter2" type="text" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group " id="pot_diameter" style="display:none;">
+                                        <label class="control-label col-lg-2">盆径</label>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" placeholder="一级" id="pot_diameter1" type="text" />
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" placeholder="二级" id="pot_diameter2" type="text" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group " id="crown" style="display:none;">
+                                        <label class="control-label col-lg-2">冠幅</label>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" placeholder="一级" id="crown1" type="text" />
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" placeholder="二级" id="crown2" type="text" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group " id="branch_length" style="display:none;">
+                                        <label class="control-label col-lg-2">条长</label>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" placeholder="一级" id="branch_length1" type="text" />
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" placeholder="二级" id="branch_length2" type="text" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group " id="age" style="display:none;">
+                                        <label class="control-label col-lg-2">苗龄</label>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" id="age1" type="text" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group " id="bough_length" style="display:none;">
+                                        <label class="control-label col-lg-2">主蔓(枝)长</label>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" placeholder="一级" id="bough_length1" type="text" />
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" placeholder="二级" id="bough_length2" type="text" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group " id="branch_number" style="display:none;">
+                                        <label class="control-label col-lg-2">分枝数</label>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" placeholder="一级" id="branch_number1" type="text" />
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" placeholder="二级" id="branch_number2" type="text" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group " id="bough_number" style="display:none;">
+                                        <label class="control-label col-lg-2">主枝数</label>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" placeholder="一级" id="bough_number1" type="text" />
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" placeholder="二级" id="bough_number2" type="text" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group " id="branch_point_height" style="display:none;">
+                                        <label class="control-label col-lg-2">分枝点高</label>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" placeholder="一级低点" id="branch_point_height1_min" type="text" />
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" placeholder="一级高点" id="branch_point_height1_max" type="text" />
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" placeholder="二级低点" id="branch_point_height2_min" type="text" />
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <input class="form-control" placeholder="二级高点" id="branch_point_height2_max" type="text" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class=" col-lg-2">
+                                            <button class="btn btn-info" id="addattribute"  type="button">增加属性</button>
+                                        </div>
+                                        <div class="col-lg-10" id="attribute" style="display:none;">
+                                          <!-- <button class="btn btn-info" id="trunk_diameter"  type="button">胸径</button> -->
+                                            <button class="btn btn-info att"  type="button">胸径</button>
+                                            <button class="btn btn-info att"  type="button">株高</button>
+                                            <button class="btn btn-info att"  type="button">地经</button>
+                                            <button class="btn btn-info att"  type="button">盆径</button>
+                                            <button class="btn btn-info att"  type="button">冠幅</button>
+                                            <button class="btn btn-info att"  type="button">条长</button>
+                                            <button class="btn btn-info att"  type="button">苗龄</button>
+                                            <button class="btn btn-info att"  type="button">主蔓长</button>
+                                            <button class="btn btn-info att"  type="button">分枝数</button>
+                                            <button class="btn btn-info att"  type="button">主枝数</button>
+                                            <button class="btn btn-info att"  type="button">分枝点高</button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-lg-offset-2 col-lg-10">
+                                            <button class="btn btn-danger" id="edit"  type="button">修改</button>
+                                            <button class="btn btn-danger" id="delete" type="button">删除</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
+                </aside>
+            </div>
+           <!-- page end-->
+        </section>
+    </section>
+    <!--main content end-->
+
+    <!-- js placed at the end of the document so the pages load faster -->
+    <script src="/js/jquery-1.12.4.min.js"></script>
+    <script src="js/login.js?t=20170307"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.scrollTo.min.js"></script>
+    <script src="js/jquery.nicescroll.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/jquery.validate.min.js"></script>
+
+
+    <script src="js/common-scripts.js"></script>
+
+    <script type="text/javascript">
+        if (navigator.userAgent.indexOf('MicroMessenger')>0 
+            || window.screen.height<700 || window.screen.width<700){
+          $('#showname').attr('multiple', false).height('');
+        }
+
+        loadall('');
+        var data;
+        var typenames = ['落叶乔木','常绿乔木','落叶灌木','常绿灌木','藤木','竹类','木本花卉','宿根花卉','水生植物','地被草皮'];
+      // 修改
+        $('#edit').click(function(){
+          var type = $('#typename').val();
+          var typename = typenames[type-1];
+          var id = $('#id').val();
+          var name = $('#name').val();
+          var ldname = $('#ldname').val();
+          var trunk_diameter1 = $('#trunk_diameter1').val();
+          var trunk_diameter2 = $('#trunk_diameter2').val();
+          var plant_height1 = $('#plant_height1').val();
+          var plant_height2 = $('#plant_height2').val();
+          var crown1 = $('#crown1').val();
+          var crown2 = $('#crown2').val();
+          var branch_point_height1_min = $('#branch_point_height1_min').val();
+          var branch_point_height1_max = $('#branch_point_height1_max').val();
+          var branch_point_height2_min = $('#branch_point_height2_min').val();
+          var branch_point_height2_max = $('#branch_point_height2_max').val();
+          var branch_number1 = $('#branch_number1').val();
+          var branch_number2 = $('#branch_number2').val();
+          var ground_diameter1 = $('#ground_diameter1').val();
+          var ground_diameter2 = $('#ground_diameter2').val();
+          var bough_number1 = $('#bough_number1').val();
+          var bough_number2 = $('#bough_number2').val();
+          var age = $('#age1').val();
+          var branch_length1 = $('#branch_length1').val();
+          var branch_length2 = $('#branch_length2').val();
+          var bough_length1 = $('#bough_length1').val();
+          var bough_length2 = $('#bough_length2').val();
+          var pot_diameter1 = $('#pot_diameter1').val();
+          var pot_diameter2 = $('#pot_diameter2').val();
+          var datas = {"id":id,"type":type,"typename":typename,"name":name,"ldname":ldname,"trunk_diameter1":trunk_diameter1,"trunk_diameter2":trunk_diameter2,"ground_diameter1":ground_diameter1,"ground_diameter2":ground_diameter2,"plant_height1":plant_height1,"plant_height2":plant_height2,"crown1":crown1,"crown2":crown2,"branch_number1":branch_number1,"branch_number2":branch_number2,"bough_number1":bough_number1,"bough_number2":bough_number2,"age":age,"branch_length1":branch_length1,"branch_length2":branch_length2,"bough_length1":bough_length1,"bough_length2":bough_length2,"branch_point_height1_min":branch_point_height1_min,"branch_point_height1_max":branch_point_height1_max,"branch_point_height2_min":branch_point_height2_min,"branch_point_height2_max":branch_point_height2_max,"pot_diameter1":pot_diameter1,"pot_diameter2":pot_diameter2};
+          // console.log(datas);
+          $.post('/com/dictionary_grade_update.php',{data:JSON.stringify(datas)},function(){
+            alert('修改成功');
+          });
+        });
+
+
+      // 显示增加属性
+        var btn = 0;
+        $('#addattribute').click(function(){
+          if(btn == 0){
+            $('#attribute').css('display','block');
+            btn = 1;
+          }else{
+            $('#attribute').css('display','none');
+            btn = 0;
+          }
+        });
+
+
+      // 增加属性
+        var attributes = {"胸径":"trunk_diameter","地经":"ground_diameter","盆径":"pot_diameter","冠幅":"crown","株高":"plant_height","条长":"branch_length","主蔓长":"bough_length","分枝数":"branch_number","主枝数":"bough_number","分枝点高":"branch_point_height","苗龄":"age"};
+        $('.att').click(function(){
+          var s = $(this).html();
+          $('#'+attributes[s]).css('display','block');
+          $('#attribute').css('display','none');
+          btn = 0;
+        });
+
+        
+
+      // 搜索
+        $('#find').click(function(){
+          var keyword = $('#keyword').val();
+          loadall(keyword);
+        });
+
+      // 加载显示框内容
+        function loadall(name){
+          $.getJSON('/com/dictionary_grade_search.php',{name:name},function(json){
+
+              if(json){
+                data = json;
+                var html = '';
+                for (var i = 0; i < data.length; i++) {
+                  // 判断查询结果显示内容
+                  if(data[i].trunk_diameter2){
+                    html += '<option value='+i+'>'+data[i].name+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;胸径'+data[i].trunk_diameter1+'~'+data[i].trunk_diameter2+'</option>';
+                  }else if(data[i].plant_height2){
+                    html += '<option value='+i+'>'+data[i].name+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;株高'+data[i].plant_height1+'~'+data[i].plant_height2+'</option>';
+                  }else if(data[i].age){
+                    html += '<option value='+i+'>'+data[i].name+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;苗龄'+data[i].age+'</option>';
+                  }else if(data[i].ground_diameter2){
+                    html += '<option value='+i+'>'+data[i].name+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;地径'+data[i].ground_diameter1+'~'+data[i].ground_diameter2+'</option>';
+                  }else if(data[i].plant_height2){
+                    html += '<option value='+i+'>'+data[i].name+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;条长'+data[i].plant_height1+'~'+data[i].plant_height2+'</option>';
+                  }
+                }
+                $('#showname').html(html);
+              }else{
+                data = '';
+                var html = '<option>未找到符合要求的数据 :(</option>';
+                $('#showname').html(html);
+              }
+          });
+        };
+
+
+      // 搜索所得数据显示
+        $('#showname').click(function(){
+          $('#commentForm input').val('');
+
+          var attributes = {0:"age",1:"trunk_diameter",2:"ground_diameter",3:"pot_diameter",4:"crown",5:"plant_height",6:"branch_length",7:"bough_length",8:"branch_point_height",9:"branch_number",10:"bough_number"};
+          for (var i = 0; i < 11; i++) {
+            $('#'+attributes[i]).css('display','none');
+          }
+
+          // 显示选择信息
+          var i = $(this).find('option:selected').val();
+          var attribute = data[i];
+          $('#typename').val(attribute.type);
+          $('#id').val(attribute.id);
+          $('#name').val(attribute.name);
+          $('#ldname').val(attribute.ldname);
+          if(attribute.trunk_diameter2){
+            $('#trunk_diameter').css('display','block');
+            $('#trunk_diameter1').val(attribute.trunk_diameter1);
+            $('#trunk_diameter2').val(attribute.trunk_diameter2);
+          }
+          if(attribute.plant_height2){
+            $('#plant_height').css('display','block');
+            $('#plant_height1').val(attribute.plant_height1);
+            $('#plant_height2').val(attribute.plant_height2);
+          }
+          if(attribute.crown2){
+            $('#crown').css('display','block');
+            $('#crown1').val(attribute.crown1);
+            $('#crown2').val(attribute.crown2);
+          }
+          if(attribute.branch_point_height1_min){
+            $('#branch_point_height').css('display','block');
+            $('#branch_point_height1_min').val(attribute.branch_point_height1_min);
+            $('#branch_point_height1_max').val(attribute.branch_point_height1_max);
+            $('#branch_point_height2_min').val(attribute.branch_point_height2_min);
+            $('#branch_point_height2_max').val(attribute.branch_point_height2_max);
+          }
+          if(attribute.branch_number2){
+            $('#branch_number').css('display','block');
+            $('#branch_number1').val(attribute.branch_number1);
+            $('#branch_number2').val(attribute.branch_number2);
+          }
+          if(attribute.ground_diameter2){
+            $('#ground_diameter').css('display','block');
+            $('#ground_diameter1').val(attribute.ground_diameter1);
+            $('#ground_diameter2').val(attribute.ground_diameter2);
+          }
+          if(attribute.bough_number2){
+            $('#bough_number').css('display','block');
+            $('#bough_number1').val(attribute.bough_number1);
+            $('#bough_number2').val(attribute.bough_number2);
+          }
+          if(attribute.age){
+            $('#age').css('display','block');
+            $('#age1').val(attribute.age);
+          }
+          if(attribute.branch_length2){
+            $('#branch_length').css('display','block');
+            $('#branch_length1').val(attribute.branch_length1);
+            $('#branch_length2').val(attribute.branch_length2);
+          }
+          if(attribute.bough_length2){
+            $('#bough_length').css('display','block');
+            $('#bough_length1').val(attribute.bough_length1);
+            $('#bough_length2').val(attribute.bough_length2);
+          }
+        });
+
+
+      // 删除(传name和规格参数)
+        $('#delete').click(function(){
+          var id = $('#id').val();
+          $.post('/com/dictionary_grade_delete.php',{id:id},function(){
+            alert('删除成功');
+            // 重置选框
+            $('#commentForm input').val('');
+            loadall('');
+          });
+        })
+
+
+
+    </script>
+
+
+  </body>
+</html>

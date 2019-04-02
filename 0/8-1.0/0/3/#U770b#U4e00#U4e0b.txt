@@ -1,0 +1,6 @@
+
+
+user表增加star字段
+bid_order表增加	is_evaluate , is_evaluates 两个字段
+order_one表增加	is_evaluate , is_evaluates 两个字段
+增加order_evaluate表

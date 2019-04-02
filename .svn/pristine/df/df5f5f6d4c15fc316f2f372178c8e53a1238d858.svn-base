@@ -1,0 +1,18 @@
+<?php 
+// require 'checkhost.php'; checkhost();
+require 'db.php';
+$db = new db();
+
+$shopid = $_GET['shopid'];
+$limit = $_GET['limit'];
+$limit = explode(',',$limit);
+if ($shopid) {
+	$sql = 'select a.userid,a.name,a.time from v_collectorinfo a,(select userid,shopid,max(time) max_time from v_collectorinfo where shopid=? group by userid) b where a.userid = b.userid and a.time = b.max_time  order by b.max_time desc limit ?,?';
+
+	$result2 = $db->prepare_query($sql, array($shopid,$limit[0],$limit[1]));
+	echo json_encode($result2);
+	
+}
+unset($db);
+
+?>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>跨网读取养护数据</title>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/vue.js"></script>
+    <script src="https://unpkg.com/cube-ui/lib/cube.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/cube-ui/lib/cube.min.css">
+    <style>
+        .warp{
+            padding: 20px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div v-if="show">
+        <textarea name="" v-model="data" id="text" cols="30" rows="3"></textarea>
+    </div>
+
+    <div v-else>
+        <div class="warp">
+            地区：{{addressList[obj.address]}}
+        </div>
+        <div class="warp">
+            姓名：{{nameList[obj.name]}}
+        </div>
+        <div class="warp">
+            人数：{{numList[obj.num]}}
+        </div>
+        <div class="warp">
+            工作：{{getjob(obj.work)}}
+        </div>
+        <div class="warp">
+            时间：{{truntime(obj.time)}}
+        </div>
+
+
+    </div>
+</div>
+
+</textarea>
+</body>
+<script>
+    let work = [{label: '绿地保洁', value: '1'},{label: '落叶清理', value: '2'},{label: '草坪修剪', value: '3'}];
+    let addressList = ["西北旺东区" , "西北旺南区" , "西北旺北区" , "西北旺西区" , "东北旺东区" , "东北旺西区" ]
+    let nameList = ["员工甲" , "员工乙" , "员工丙" , "员工丁"  ]
+    let numList = [1 , 2 , 3 , 4]
+    var app = new Vue({
+        el: '#app',
+        data: {
+            value:"2",
+            show:true,
+            checkList: [ '2'],
+            work : [{label: '绿地保洁', value: '1'},{label: '落叶清理', value: '2'},{label: '草坪修剪', value: '3'}],
+            addressList: ["西北旺东区" , "西北旺南区" , "西北旺北区" , "西北旺西区" , "东北旺东区" , "东北旺西区" ],
+            address:"西北旺东区",
+            name:"员工甲",
+            nameList:["员工甲" , "员工乙" , "员工丙" , "员工丁"  ],
+            numList:[1 , 2 , 3 , 4],
+            num:1,
+            qrcode:{},
+            data:'',
+            obj:{}
+        },
+        created(){
+
+        },
+        mounted(){
+            $("#text").focus()
+            $("#text").on("keydown",e => {
+                if(e.keyCode == 144){
+                    this.show = false
+                    this.encodeU($("#text").val())
+                }
+            })
+        },
+        methods:{
+            encodeU(data){
+                let arr = data.split("&")
+                let obj = {}
+                for (index in arr){
+                    obj[arr[index].split("=")[0]] =  arr[index].split("=")[1]
+                }
+                this.obj = obj;
+                console.log(obj)
+            },
+            truntime(time){
+                    var date = new Date(time-0);
+                    var y = date.getFullYear();
+                    var m = date.getMonth() + 1;
+                    m = m < 10 ? ('0' + m) : m;
+                    var d = date.getDate();
+                    d = d < 10 ? ('0' + d) : d;
+                    var h = date.getHours();
+                    h = h < 10 ? ('0' + h) : h;
+                    var minute = date.getMinutes();
+                    var second = date.getSeconds();
+                    minute = minute < 10 ? ('0' + minute) : minute;
+                    second = second < 10 ? ('0' + second) : second;
+                    return y + '-' + m + '-' + d+' '+h+':'+minute+':'+second;
+            },
+            getjob(JSONStr){
+                console.log(JSONStr)
+                let arr = JSONStr.split("*");
+                let str = ""
+                for (index in arr){
+                    if(index != 0){
+                        str += "和"
+                    }
+                    str +=this.work[arr[index]-1]["label"];
+
+                }
+                return str
+            }
+        }
+    })
+</script>
+</html>

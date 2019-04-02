@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!--<script>function getcookie(d) {-->
+    <!--for (var b = document.cookie.split("; "), a = 0; a < b.length; a++) {-->
+    <!--var c = b[a].split("=");-->
+    <!--if (c[0] == d) return unescape(c[1])-->
+    <!--}-->
+    <!--}-->
+
+    <!--getcookie("user2") || location.replace("login.html");</script>-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>精品项目-找树网管理平台</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-reset.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/vue_view/iview.css">
+    <link href="../iconfont/iconfont.css?t=20170307" rel="stylesheet"/>
+    <link href="css/style.css?t=20170308" rel="stylesheet">
+    <link href="css/style-responsive.css" rel="stylesheet"/>
+    <link href="css/zhaoshu.css" rel="stylesheet">
+    <script src="js/vue/vue.min.js"></script>
+    <script src="js/vue/vue-iview.min.js"></script>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
+    <!--[if lt IE 8]>
+    <script>window.location.replace('forie.html');</script><![endif]-->
+    <!--[if lt IE 9]>
+<!--    <script src="js/html5shiv.min.js"></script>
+    <script src="js/respond.min.js"></script>-->
+    <![endif]-->
+    <style>
+        #tableshow {
+            display: block;
+        }
+
+        .bottom-button {
+            width: 100%;
+            text-align: right;
+            padding-top: 20px;
+        }
+
+        .bottom-button label {
+            margin-right: 20px;
+            margin-bottom: 20px;
+        }
+
+        #tableList input {
+            outline: none;
+            border: none;
+            max-width: 300px;
+            min-width: 0;
+        }
+
+        #tableList input:focus {
+            border: 1px solid #e2e2e4;
+            outline: 1px solid #e2e2e4;
+
+        }
+        td {
+            white-space: nowrap;
+        }
+        .error-remind{
+            font-size: 20px;
+            color: red;
+        }
+        .error-remark{
+            float: right;
+            font-size: 14px;
+            color: red;
+        }
+    </style>
+    <title>发布流程</title>
+</head>
+<body>
+<header id="header" class="header white-bg"></header>
+
+<aside>
+    <div id="sidebar" class="nav-collapse"></div>
+</aside>
+
+<!--main content start-->
+<section id="main-content">
+    <section class="wrapper">
+        <div id="app">
+            <i-button @click="show">Click me!</i-button>
+            <Modal v-model="visible" title="Welcome">Welcome to iView</Modal>
+            <Table :columns="columns1" :data="data1"></Table>
+       </div>
+    </section>
+</section>
+<!--main content end-->
+<script src="js/jquery-1.8.3.min.js"></script>
+
+<!--<script src="js/login.js?t=20170307"></script>-->
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            visible: false,
+            columns1: [
+                {
+                    title: 'Name',
+                    key: 'name'
+                },
+                {
+                    title: 'Age',
+                    key: 'age'
+                },
+                {
+                    title: 'Address',
+                    key: 'address'
+                }
+            ],
+            data1: [
+                {
+                    name: 'John Brown',
+                    age: 18,
+                    address: 'New York No. 1 Lake Park',
+                    date: '2016-10-03'
+                },
+                {
+                    name: 'Jim Green',
+                    age: 24,
+                    address: 'London No. 1 Lake Park',
+                    date: '2016-10-01'
+                },
+                {
+                    name: 'Joe Black',
+                    age: 30,
+                    address: 'Sydney No. 1 Lake Park',
+                    date: '2016-10-02'
+                },
+                {
+                    name: 'Jon Snow',
+                    age: 26,
+                    address: 'Ottawa No. 2 Lake Park',
+                    date: '2016-10-04'
+                }
+            ]
+        },
+        methods: {
+            show: function () {
+                this.visible = true;
+            }
+        }
+    })
+</script>
+</body>
+</html>

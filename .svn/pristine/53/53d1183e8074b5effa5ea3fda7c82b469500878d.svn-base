@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校对信息-找树网管理平台</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-reset.css" rel="stylesheet">
+    <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <link href="../iconfont/iconfont.css?t=20170307" rel="stylesheet"/>
+
+    <link href="css/style.css?t=20170308" rel="stylesheet">
+    <link href="css/style-responsive.css" rel="stylesheet"/>
+    <link href="css/zhaoshu.css" rel="stylesheet">
+    <link href="js/we_ui_spa/autocomplete/autocomplete.css" rel="stylesheet">
+    <link href="js/we_ui_spa/inputbox/inputbox.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
+    <!--[if lt IE 8]>
+    <script>window.location.replace('forie.html');</script><![endif]-->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.min.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        p {
+            margin: 0
+        }
+
+        #main-content input {
+            outline: none;
+            border: none;
+            max-width: 300px;
+            min-width: 0;
+        }
+
+        #main-content input:focus {
+            border: 1px solid #e2e2e4;
+            outline: 1px solid #e2e2e4;
+
+        }
+
+        #company_nameA, #company_nameB {
+            border: 1px solid #e2e2e4 !important;
+            outline: 1px solid #e2e2e4;
+            font-size: 12px !important;
+        }
+
+        label {
+            font-size: 12px !important;
+        }
+    </style>
+</head>
+<body>
+<!--<header id="header" class="header white-bg"></header>
+<aside>
+    <div id="sidebar" class="nav-collapse"></div>
+</aside>-->
+<!--main content start-->
+<section>
+    <section>
+        <form class="cmxform form-horizontal tasi-form" action="#" id="signupForm" novalidate="novalidate">
+            <div class="row">
+                <div class="col-lg-4">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            甲方信息
+                        </header>
+                        <div class="panel-body" id="partyA">
+
+                            <div class=" form">
+                                <div class="form-group">
+                                    <label for="company_nameA" class="control-label col-lg-3">公司名称</label>
+                                    <div class="col-lg-9">
+                                        <div class="col-lg-9" style="padding-left: 0;padding-right: 0">
+                                            <input type="text" class="form-control" id="company_nameA"
+                                                   name="company_name" placeholder="根据公司查询信息" required="">
+                                        </div>
+                                        <div class="col-lg-1" style="display: none">
+                                            <span class="input-group-btn">
+                                                <button id="company_nameAsc" class="btn btn-white partyA" type="button">查询</button>
+                                              </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group ">
+                                    <label class="control-label col-lg-3">用苗地</label>
+                                    <div class="col-lg-9">
+                                        <input class="input" style="width: 200px;" name="" id="city" type="text" placeholder="请选择" autocomplete="off" readonly="true">
+                                        <input style="visibility: hidden" name="hcity" data-id="" id="hcity" value="">
+                                        <input type="hidden" name="hproper" data-id="" id="hproper" value="">
+                                        <input type="hidden" name="harea" data-id="" id="harea" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group ">
+                                    <label for="representativeA" class="control-label col-lg-3">法人代表</label>
+                                    <div class="col-lg-9">
+                                        <input class="form-control  input-blur" id="representativeA"
+                                               name="representative" minlength="2"
+                                               type="text" required="">
+                                    </div>
+                                </div>
+                                <div class="form-group ">
+                                    <label for="bank_numA" class="control-label col-lg-3">银行号</label>
+                                    <div class="col-lg-9">
+                                        <input class=" form-control input-blur" id="bank_numA" name="bank_num"
+                                               type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group ">
+                                    <label for="open_bankA" class="control-label col-lg-3">开户银行</label>
+                                    <div class="col-lg-9">
+                                        <input class=" form-control input-blur" id="open_bankA" name="open_bank"
+                                               type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group ">
+                                    <label for="duty_paragraphA" class="control-label col-lg-3">税号</label>
+                                    <div class="col-lg-9">
+                                        <input class=" form-control input-blur" id="duty_paragraphA"
+                                               name="duty_paragraph" type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group ">
+                                    <label for="addressA" class="control-label col-lg-3">地址</label>
+                                    <div class="col-lg-9">
+                                        <input class=" form-control input-blur" id="addressA" name="address"
+                                               type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group ">
+                                    <label for="contactsA" class="control-label col-lg-3">联系人</label>
+                                    <div class="col-lg-9">
+                                        <input class=" form-control input-blur" id="contactsA" name="contacts"
+                                               type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group ">
+                                    <label for="telA" class="control-label col-lg-3">联系方式</label>
+                                    <div class="col-lg-9">
+                                        <input class=" form-control input-blur" id="telA" name="tel" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="col-lg-4">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            乙方信息(非必填，如未指定可不填)
+                        </header>
+                        <div class="panel-body" id="partyB">
+                            <div class=" form">
+
+                                <div class="form-group">
+                                    <label for="company_nameB" class="control-label col-lg-3">公司名称</label>
+                                    <div class="col-lg-9">
+                                        <div class="col-lg-9" style="padding-left: 0;padding-right: 0">
+                                            <input type="text" class="form-control" id="company_nameB"
+                                                   name="company_name2" placeholder="根据公司查询信息">
+                                        </div>
+                                        <div class="col-lg-2" style="display: none;">
+                                            <span class="input-group-btn">
+                                                <button id="company_nameBsc" class="btn btn-white partyB" type="button">查询</button>
+                                              </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group ">
+                                    <label for="representativeB" class="control-label col-lg-3">法人代表</label>
+                                    <div class="col-lg-9">
+                                        <input class="form-control  input-blur" id="representativeB"
+                                               name="representative2"
+                                               type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group ">
+                                    <label for="bank_numB" class="control-label col-lg-3">银行号</label>
+                                    <div class="col-lg-9">
+                                        <input class=" form-control input-blur" id="bank_numB" name="bank_num2"
+                                               type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group ">
+                                    <label for="open_bankB" class="control-label col-lg-3">开户银行</label>
+                                    <div class="col-lg-9">
+                                        <input class=" form-control input-blur" id="open_bankB" name="open_bank2"
+                                               type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group ">
+                                    <label for="duty_paragraphB" class="control-label col-lg-3">税号</label>
+                                    <div class="col-lg-9">
+                                        <input class=" form-control input-blur" id="duty_paragraphB"
+                                               name="duty_paragraph2" type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group ">
+                                    <label for="addressB" class="control-label col-lg-3">地址</label>
+                                    <div class="col-lg-9">
+                                        <input class=" form-control input-blur" id="addressB" name="address2"
+                                               type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group ">
+                                    <label for="contactsB" class="control-label col-lg-3">联系人</label>
+                                    <div class="col-lg-9">
+                                        <input class=" form-control input-blur" id="contactsB" name="contacts2"
+                                               type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group ">
+                                    <label for="telB" class="control-label col-lg-3">联系方式</label>
+                                    <div class="col-lg-9">
+                                        <input class=" form-control input-blur" id="telB" name="tel2" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="col-lg-4">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            找树网
+                        </header>
+                        <div class="panel-body" id="partyC">
+                            <div class=" form">
+
+                                <div class="form-group ">
+                                    <label for="third_party_receivables" class="control-label col-lg-3">服务费</label>
+                                    <div class="col-lg-9">
+                                        <input class=" form-control input-blur" id="third_party_receivables"
+                                               name="third_party_receivables" type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group ">
+                                    <label for="ring_price" class="control-label col-lg-3">树环价格</label>
+                                    <div class="col-lg-9">
+                                        <input class=" form-control input-blur" id="ring_price" name="ring_price"
+                                               type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group ">
+                                    <label for="ring_num" class="control-label col-lg-3">树环数量</label>
+                                    <div class="col-lg-9">
+                                        <input class=" form-control input-blur" id="ring_num" name="ring_num"
+                                               type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group ">
+                                    <label for="begin_time" class="control-label col-lg-3">开始时间</label>
+                                    <div class="col-lg-9">
+                                        <input class=" form-control input-blur" id="begin_time" name="begin_time"
+                                               type="date">
+                                    </div>
+                                </div>
+                                <div class="form-group ">
+                                    <label for="end_time" class="control-label col-lg-3">结束时间</label>
+                                    <div class="col-lg-9">
+                                        <input class=" form-control input-blur" id="end_time" name="end_time"
+                                               type="date">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </section>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div>
+                                <button class="btn btn-primary" type="submit">提交表单</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </section>
+</section>
+<!--main content end-->
+<script src="/js/jquery-1.12.4.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.scrollTo.min.js"></script>
+<script src="js/jquery.nicescroll.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="js/we_ui_spa/autocomplete/autocomplete.js"></script>
+<script type="text/javascript" src="js/we_ui_spa/inputbox/inputbox.js"></script>
+<script src="js/common-scripts.js"></script>
+<script src="js/we_ui_spa/layer/layer.js"></script>
+<script src="/js/login.js?v=12323"></script>
+<script src="js/we_ui_spa/publish/publish-confirm.js"></script>
+<script>
+    var postData = {partya: {}, partyb: {}};
+    var partya = {};
+    var partyb = {};
+    var labelList = [];
+    postPhone();
+    getCompanyList();
+
+    function postPhone() {
+        $('.partyA,.partyB').click(function (e) {
+            var isA = true;
+            var company_name = ""
+            if (!$(this).hasClass("partyA")) isA = false;
+            if (isA) {
+                company_name = $("#partyA input[name='company_name']").val()
+            } else {
+                company_name = $("#partyB input[name='company_name2']").val()
+            }
+            // alert(company_name);
+            $.ajax({
+                url: 'verify_contract.php',
+                type: 'POST',
+                data: {company_name: company_name},
+                //这两个设置项必填
+                success: function (data) {
+                    data = JSON.parse(data)
+                    if (data.status == 0) {
+                        showCompanyInfo(data.msg, isA)
+                    } else {
+                        // layer.msg('系统报错');
+                    }
+
+
+                },
+                fail: function (msg) {
+                    console.log("提交失败")
+                }
+            })
+        })
+    }
+
+    function getCompanyList() {
+        $.ajax({
+            url: 'select_all_enterprise.php',
+            type: 'GET',
+            //这两个设置项必填
+            success: function (data) {
+                labelList = companyListChange(JSON.parse(data))
+                inintSelectData(labelList);
+            },
+            fail: function (msg) {
+                console.log("提交失败")
+            }
+        })
+    }
+
+    function companyListChange(data) {
+        var labelList = [];
+        for (one in data) {
+            var dataone = data[one]
+            dataone.label = data[one].company_name + data[one].name_spell;
+            labelList.push(dataone);
+        }
+        return labelList
+    }
+
+    function showCompanyInfo(data, isA) {
+        var partyid = "partyA";
+        if (isA) {
+            partyid = "partyA"
+            partya = data
+        } else {
+            partyid = "partyB"
+            partyb = data
+        }
+        for (name in data) {
+            console.log(data, name, "-----")
+            if (isA) {
+                var nameStr = "#" + partyid + " input[name='" + name + "']"
+            } else {
+                var nameStr = "#" + partyid + " input[name='" + name + "2']"
+            }
+            $(nameStr).val(data[name]);
+        }
+    }
+
+    var aa = {isa: 111};
+    var bb = {isa: 111}
+
+    function isObjectValueEqual(a, b) {
+        var aProps = Object.getOwnPropertyNames(a);
+        var bProps = Object.getOwnPropertyNames(b);
+        if (aProps.length != bProps.length) {
+            return false;
+        }
+        for (var i = 0; i < aProps.length; i++) {
+            var propName = aProps[i];
+
+            if (a[propName] !== b[propName]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function getobj() {
+        var ischange = false;
+        var project_id = document.location.toString().split("?")[1].split("=")[1]
+        var partyc = {
+            third_party_receivables: "",
+            ring_price: "",
+            begin_time: "",
+            end_time: "",
+            ring_num: "",
+            hcity:"",
+            hproper:"",
+            harea:""
+        }
+        var postData = formData();
+        postData.project_id = project_id
+        postData.partya.data.contract_id = partya.contract_id;
+        postData.partyb.data.contract_id = partyb.contract_id;
+        if (isObjectValueEqual(postData.partya.data, partya) && partya) {
+            if (partya) {
+                postData.partya.status = 1
+            } else {
+                postData.partya.status = 2
+            }
+
+        } else {
+            if (partya) {
+                postData.partya.status = 3
+            } else {
+                postData.partya.status = 2
+            }
+
+        }
+        if (isObjectValueEqual(postData.partyb.data, partyb && partyb)) {
+            if (partyb) {
+                postData.partyb.status = 1
+            } else {
+                postData.partyb.status = 2
+            }
+        } else {
+            if (partyb) {
+                postData.partyb.status = 3
+            } else {
+                postData.partyb.status = 2
+            }
+        }
+        for (c in partyc) {
+            postData[c] = $("input[name='" + c + "']").val();
+        }
+        return postData
+
+    }
+
+    function formData() {
+        var newa = {};
+        var newb = {};
+        var newmodel = {
+            company_name: "",
+            representative: "",
+            bank_num: "",
+            open_bank: "",
+            duty_paragraph: "",
+            address: "",
+            contacts:"",
+            tel: "",
+            tree_place: ""
+        }
+        for (a in newmodel) {
+            var nameStr = "#partyA input[name='" + a + "']";
+            var nameStr2 = "#partyB input[name='" + a + "2']";
+            newa[a] = $(nameStr).val();
+            newb[a] = $(nameStr2).val();
+        }
+        postData.partya.data = newa;
+        postData.partyb.data = newb;
+        return postData
+    }
+
+    $.validator.setDefaults({
+        submitHandler: function () {
+            alert("submitted!");
+        }
+    });
+
+    $().ready(function () {
+
+        $("#signupForm").validate({
+            rules: {
+                company_name: "required",
+                representative: "required",
+                bank_num: "required",
+                open_bank: "required",
+                duty_paragraph: "required",
+                address: "required",
+                tel: "required",
+                hcity: "required",
+                contacts:"required"
+            },
+            messages: {
+                company_name: "必填项",
+                representative: "必填项",
+                bank_num: "必填项",
+                open_bank: "必填项",
+                duty_paragraph: "必填项",
+                address: "必填项",
+                tel: "必填项",
+                hcity: "必填项",
+                contacts:"必填项"
+
+            },
+            submitHandler: function () {
+                var postData = getobj();
+                $.ajax({
+                    url: 'contract_info.php',
+                    type: 'POST',
+                    data: {postData: postData},
+                    //这两个设置项必填
+                    success: function (data) {
+                        window.location.replace(JSON.parse(data).url);
+
+                    },
+                    fail: function (msg) {
+                        console.log("提交失败")
+                    }
+                })
+            }
+        });
+
+    });
+
+    function inintSelectData(data) {
+        $("#company_nameA,#company_nameB").autocomplete({
+            minLength: 0,
+            source: data,
+            focus: function (event, ui) {
+
+                return false;
+            },
+            select: function (event, ui) {
+                $(event.target).val(ui.item.company_name);
+                $("#company_nameAsc").click();
+                return false;
+            }
+        })
+            .data("ui-autocomplete")._renderItem = function (ul, item) {
+            console.log(ul);
+            return $("<li>")
+                .append("<a>" + item.company_name + "</a>")
+                .appendTo(ul);
+        };
+        $("#company_nameB").autocomplete({
+            minLength: 0,
+            source: data,
+            focus: function (event, ui) {
+
+                return false;
+            },
+            select: function (event, ui) {
+                $(event.target).val(ui.item.company_name);
+                $("#company_nameBsc").click();
+                return false;
+            }
+        })
+            .data("ui-autocomplete")._renderItem = function (ul, item) {
+            console.log(ul);
+            return $("<li>")
+                .append("<a>" + item.company_name + "</a>")
+                .appendTo(ul);
+        };
+    }
+
+    $("#city").click(function (e) {
+        SelCity(this,e);
+    });
+    $("s").click(function (e) {
+        SelCity(document.getElementById("city"),e);
+    });
+
+
+
+</script>
+<script src="js/common-scripts.js"></script>
+</body>
+</html>

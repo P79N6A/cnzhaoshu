@@ -1,0 +1,10 @@
+import axios from '@/libs/api.request'
+import { getAxiosData } from '@/libs/util'
+export const  geTmangement= (res) => {
+    let data = getAxiosData(res);
+    return axios.request({
+        url: 'store_management/store_management.php',
+        data : data,
+        method: 'post'
+    })
+}

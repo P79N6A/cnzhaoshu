@@ -1,0 +1,19 @@
+<?php
+// 统计关键词搜索频次
+require('db.php');
+
+
+
+$shopid = $_GET['userid'];	
+
+if($shopid){
+	$db = new db();
+	$sql = 'select id,msg_title,msg_desc,msg_link from shop_project where shopid=? order by time desc';
+	$result = $db->prepare_query($sql , array($shopid));
+	unset($db);
+
+}
+
+echo json_encode($result);
+
+?>

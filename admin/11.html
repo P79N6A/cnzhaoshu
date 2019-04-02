@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <script>function getcookie(d){for(var b=document.cookie.split("; "),a=0;a<b.length;a++){var c=b[a].split("=");if(c[0]==d)return unescape(c[1])}}getcookie("user2")||location.replace("login.html");</script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>荣誉资质-找树网管理平台</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-reset.css" rel="stylesheet">
+
+    <link href="../iconfont/iconfont.css" rel="stylesheet" />
+
+    <!-- Custom styles for this template -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/style-responsive.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="css/webuploader.css">
+    <link rel="stylesheet" type="text/css" href="css/webuploader-demo.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+      <script src="js/respond.min.js"></script>
+    <![endif]-->
+    <link href="css/zhaoshu.css" rel="stylesheet">
+    <style type="text/css">
+      .honor{
+        float:left;
+        width: 145px; 
+        height:250px;
+        text-align: center;
+        margin:10px 20px;
+      }
+      .honorname{
+        float:left;
+        width:100%;
+        margin-top:3px;
+        height:30px;
+        line-height: 30px
+      }
+      #honors img{
+        width:90%;
+        height:auto;
+        max-height:150px;
+      }
+      .edit,.delete{
+        margin-top:4px;
+      }
+    </style>
+  </head>
+
+  <body>
+
+  <!-- <section id="container" class=""> -->
+      <!--header start-->
+    <header id="header" class="header white-bg"></header>
+
+    <aside><div id="sidebar" class="nav-collapse"></div></aside>
+
+      <!--sidebar end-->
+      <!--main content start-->
+      <section id="main-content">
+          <section class="wrapper">
+              <!-- page start-->
+              <div class="row">
+                  <div class="col-lg-12">
+                      <!--breadcrumbs start -->
+                      <ul class="breadcrumb">
+                          <li><a href="#"><i class="icon icon-woyaokaidian1"></i> 荣誉资质设置</a></li>
+                      </ul>
+                      <!--breadcrumbs end -->
+                  </div>
+              </div>
+              <div class="row">
+                  <aside class="profile-info col-lg-12">
+                      <section class="panel">
+                          <div id="progress" style="display:none;"><progress max="100" value="0" style="width:100%;"></progress></div>
+                          <div class="panel-heading">
+                            <div style="position: relative;display: inline-block;cursor: pointer; ">
+                              <button type="button" class="btn btn-primary"><i class="icon icon-shangchuan1"></i> 上传荣誉资质图片</button>
+                              <input style="position: absolute;top: 0;left: 0;width: 145px;height: 34px;opacity: 0; " type="file" id="uploadImage" multiple="" />
+                            </div>
+                            <span style="float: right; font-size: 12px; color: #ccc">双击图片，修改名称</span>
+                          </div>
+                          <div class="panel-body" id="honors">
+                            
+                          </div>
+                      </section>
+                  </aside>
+              </div>
+             <!-- page end-->
+          </section>
+      </section>
+      <!--main content end-->
+  <!-- </section> -->
+
+    <!-- js placed at the end of the document so the pages load faster -->
+    <script src="../js/jquery-1.12.4.min.js"></script>
+    <script src="js/login.js?t=20170121"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.scrollTo.min.js"></script>
+    <script src="js/jquery.nicescroll.js" type="text/javascript"></script>
+    <script src="../js/zxxFile.js"></script>
+
+
+    <!--common script for all pages-->
+    <script src="js/common-scripts.js"></script>
+    <script src="/js/doT.min.js"></script>
+    <script id="dot_image" type="text/x-dot-template">
+        {{ for(var i in it) { }}
+            <div class="honor" data-id="{{=it[i].id}}">
+              <span style="width:145px;height:150px;float:left;">
+                <img class="image" src='../shop/honor/b/{{=it[i].id}}.jpg' alt="">
+              </span>
+              <div class="honorname">{{=it[i].name?it[i].name:'未命名'}}</div>
+              <button type="button" class="btn sr-btn btn-danger delete">删除</button>
+            </div>
+        {{ } }}
+    </script>
+
+    <!--script for this page-->
+    <!-- <script src="js/form-validation-script.js"></script> -->
+    <script type="text/javascript">
+        // 添加全局站点信息
+        
+        var dot_image = doT.template($("#dot_image").text());
+        var allimage = [];
+        var image = [];
+        var imagename = [];
+        var _wirte = false;
+
+        // loglo上传
+        var params = {
+          fileInput: $("#uploadImage").get(0),
+          url: '/com/upload.honor.php?userid='+user.userid,
+          filter: function(files) {
+            var arrFiles = [];
+            for (var i = 0, file; file = files[i]; i++) {
+              if (file.type.indexOf("image") == 0) {
+                if (file.size >= 10485760) {
+                  alert('您这张"'+ file.name +'"图片大小过大，应小于10M');  
+                } else {
+                  arrFiles.push(file);  
+                }     
+              } else {
+                alert('文件"' + file.name + '"不是图片。');  
+              }
+            }
+            return arrFiles;
+          },
+          onSelect: function(files) {
+            // 此处是单一图片肯定是第一个, 0            
+            var file = files[0];
+            if (file) {
+              var reader = new FileReader()
+              reader.onload = function(e) {
+                // 自动上传文件
+                ZXXFILE.funUploadFile();
+              }
+              reader.readAsDataURL(file);
+            }
+          },onProgress: function(file, loaded, total) {
+            var percent = Math.round(loaded / total * 100);
+            $('#progress').show();
+            $("progress").css("visibility", "visible").val(percent);
+          },
+          onSuccess: function(file, response) {
+            var data = [{id: response}];
+            var $first = $("#honors").find("div:first-child");
+            if ($first.length) {
+              $first.before(dot_image(data));
+            } else {
+              $("#honors").html(dot_image(data));
+            }
+            $("progress").val('0');
+            $('#progress').hide();
+          }
+        };
+        ZXXFILE = $.extend(ZXXFILE, params);
+        ZXXFILE.init();
+
+
+        loadhonor();
+        function loadhonor(){
+          $.getJSON('/com/shop.honor.get.php',{userid: user.userid},function(json){
+            if(json){
+                $("#honors").html(dot_image(json));
+            }
+          });
+        }
+
+        $('#honors').on('dblclick','.honor',function(){
+          if(!_wirte){
+            _wirte = true;
+            var $honorname = $(this).find('.honorname');
+            var honorname = $honorname.html();
+            $honorname.html('');
+
+            var $input = $('<input>').addClass('rename form-control').appendTo($honorname).focus();
+            if (honorname != '未命名') $input.val(honorname);
+          }
+        });
+
+        $('#honors').on('blur','.rename',function(){
+          if(_wirte){
+            _wirte = false;
+            var $input = $(this);
+            var honorname = $.trim($input.val());
+            var $honorname = $input.parent();
+
+            if (honorname) {
+              $honorname.html(honorname);
+              var honorid = $honorname.parent().data('id');
+              console.log($honorname.parent(), {id: honorid, name: honorname});
+              $.post('/com/shop.honor.update.php',{id: honorid, name: honorname},function(){
+
+              });
+            } else {
+              $honorname.html('未命名');
+            }
+          }
+        });
+
+        $('#honors').on('click','.delete',function(){
+          if(confirm('确定要删除吗?')){
+            var honorid = $(this).parent().data('id');
+            $(this).parent().remove();
+            $.post('/com/shop.honor.delete.php',{id: honorid},function(){
+
+            });
+          }
+        });
+
+
+    </script>
+
+
+  </body>
+</html>

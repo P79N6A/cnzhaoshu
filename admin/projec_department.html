@@ -1,0 +1,467 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<script>function getcookie(d){for(var b=document.cookie.split("; "),a=0;a<b.length;a++){var c=b[a].split("=");if(c[0]==d)return unescape(c[1])}}getcookie("user2")||location.replace("login.html");</script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人员-养护管理平台</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-reset.css" rel="stylesheet">
+    <link href="../iconfont/iconfont.css" rel="stylesheet">
+    <link href="./../jstree/style.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/style-responsive.css" rel="stylesheet">
+    <link href="css/yangshu.css" rel="stylesheet">
+    <style type="text/css">
+        .drag{
+            z-index:999999;
+            position:fixed;
+            width:100px;
+            height:25px;
+            background:#aaa;
+            cursor:move;
+            display: none;
+            text-align: center;
+            font-size: 13px;
+            line-height: 25px;
+            border-radius: 4px;
+        } 
+        .topshow{
+            position:fixed;
+        }
+        .resets{
+            margin-top: 20px;
+            margin-left:40%;
+        }
+        .uploaduserinfo{
+            margin-left:12%;
+            margin-top: 20px;
+        }
+        .title{
+            text-align: center;
+            line-height: 20px;
+            margin-bottom: 20px;
+        }
+        .uploadcontent{
+            width:60%;
+            height:400px;
+            border:1px solid #ccc;
+            border-radius: 4px;
+            margin-left:20%;
+            resize:none;
+            padding: 1%;
+        }
+        .hint{
+            text-align: center;
+            color: #ccc;
+        }
+        .allproject{
+            max-height:200px;
+            overflow-y:auto;
+        }
+    </style>
+</head>
+<body>
+<div class="drag"></div>
+    <header id="header" class="header white-bg"></header>
+    <aside><div id="sidebar" class="nav-collapse"></div></aside>
+    <section id="main-content">
+        <section class="wrapper">
+            <div class="row">
+                <aside class="col-lg-3 topshow">
+                    <section class="panel" style="width:90%">
+                        <div class="panel-body">
+                            <div class="input-append">
+                                <input placeholder="搜索部门" class="form-control" id="demo_q" type="text">
+                            </div>
+                            <!-- 树 -->
+                            <div id="tree" class=""></div>
+                        </div>
+                    </section>
+                </aside>
+                <aside class="col-lg-offset-3 col-lg-9">
+                    <section class="panel findshow">
+                        <header class="panel-heading">
+                            <div class="input-append" style="border-radius: 4px;border:1px solid #ddd;float:left;margin-bottom:5px;width:40%">
+                                <input placeholder="搜索项目" class="form-control" style="border-radius: 4px;border:1px solid #fff;width:80%;float:left;" id="searching_user" type="text">
+                                <button type="button" class="btn sr-btn  btn-success searching_user" style="border-radius: 4px;border:1px solid #ddd;width:20%;float:left;height:34px;"><i class="iconfont icon-search"></i></button>
+                            </div>
+                            <button type="button" class="btn sr-btn btn-success nodepartment" style="margin-left:0.5%">无部门项目</button>
+                        </header>
+                        <div class="col-lg-12">
+                            <table class="table table-striped table-advance table-hover" show="1">
+                                <thead>
+                                    <tr>
+                                        <th class="col-xs-1">序号</th>
+                                        <th class="col-xs-3">项目名称</th>
+                                        <th class="col-xs-3">所属部门</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="user">
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </aside>
+            </div>    
+        </section>
+    </section>
+    <!--main content end-->
+
+
+    <!-- 人员加载模板 -->
+    <script id="dot_department" type="text/x-dot-template">
+        {{ for(var i in it) { }}
+                <tr dateid="{{=it[i].id}}">
+                    <td class="order">{{=it[i].order}}</td>
+                    <td class="move">{{=it[i].name}}</td>
+                    <td class="depart">{{=it[i].departmentname ? it[i].departmentname : '暂无部门'}}</td>
+                </tr>
+        {{ } }}
+    </script>
+
+    <script src="/js/jquery-1.12.4.min.js"></script>
+    <script src="js/login.js?t=20170313"></script>
+    <script src="/js/doT.min.js"></script>
+    <script src="./../jstree/jstree.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.scrollTo.min.js"></script>
+    <script src="js/jquery.nicescroll.js" type="text/javascript"></script>
+    <script src="js/common-scripts.js"></script>
+
+
+    
+    <script type="text/javascript">
+        var alldate = [];
+        var nodepartmentdate = [];
+        var _move=false;
+        var moveing = false; 
+        var move=false; 
+        var nmoveing = false;
+        var dot_department = doT.template($("#dot_department").text());
+        var projectsid;
+        var selecteddepartmentid;
+        var selected_title;
+        
+        // 加载部门和项目
+        $(function(){
+            var where={"flagid":user.flagid};
+            $.getJSON('/com/projectdepartment.search.php',{where:JSON.stringify(where)},function(name){
+                if(name){
+                    for (var i = 0; i < name.length; i++) {
+                        if(name[i].departmentid){
+                            var lengths = alldate.length;
+                            alldate[lengths] = name[i];
+                            alldate[lengths].order = 1+lengths;
+                        }else{
+                            var lengths = nodepartmentdate.length;
+                            nodepartmentdate[lengths] = name[i];
+                            nodepartmentdate[lengths].order = 1+lengths;
+                        }
+                    }
+
+                    $("#user").html(dot_department(alldate)); 
+                }else{
+                    alldate = [];
+                }
+            });
+        });
+
+
+        // 改变部门
+        $('#user').on('click','.move',function(){
+        }).on('mousedown','.move',function(e){
+            _move=true; 
+            var projectname = $(this).closest('tr').children('td').eq(1).html(); 
+            projectsid = $(this).closest('tr').attr('dateid'); 
+            $('.drag').html(projectname);
+            e.preventDefault();
+        }).on('mouseup','.move',function(e){
+            _move=false; 
+            $(".drag").hide(); 
+            e.preventDefault();
+        });
+
+        $(document).mousemove(function(e){  
+            if(_move){  
+                moveing = true;
+                e.preventDefault();
+                var height = $(document).scrollTop();
+                $(".drag").show(); 
+                var x=e.pageX + 10; 
+                var y=e.pageY - 12 - height;  
+                $(".drag").css({top:y,left:x});
+            }  
+        }).mouseup(function(){
+            if(_move&&moveing){
+                _move=false; 
+                moveing = false; 
+                $(".drag").hide();
+                var treeid = parseInt($('#tree .jstree-hovered').closest('li').attr('id'));
+
+                if((treeid != undefined)&&(treeid > 0)){
+                    $.getJSON('/com/project.department.update.php',{'projectid':projectsid,'departmentid':treeid},function(json){
+                        if(json){
+                            var newnohomedata = [];
+                            for (var i = 0; i < nodepartmentdate.length; i++) {
+                                if(nodepartmentdate[i].id != projectsid){
+                                    var lengths = newnohomedata.length;
+                                    newnohomedata[lengths] = nodepartmentdate[i];
+                                    newnohomedata[lengths].order = 1+lengths;
+                                }else{
+                                    var lengths = alldate.length;
+                                    alldate[lengths] = nodepartmentdate[i];
+                                    alldate[lengths].order = 1+lengths;
+                                }
+                            }
+                            nodepartmentdate = newnohomedata;
+                            $("#user").html(dot_department(nodepartmentdate)); 
+                            
+                            for (var i = 0; i < alldate.length; i++) {
+                                if(alldate[i].id == projectsid){
+                                    alldate[i].departmentname = json;
+                                    alldate[i].departmentid = treeid;
+                                }
+                            }
+                            loadDepartmentCount();
+                        }else{
+                            alert('分配部门失败!');
+                        }
+                    });
+                }
+            }
+        }); 
+
+        $('.nodepartment').click(function(){
+            $('.nodepartment').attr('checked',true);
+            $("#user").html(dot_department(nodepartmentdate)); 
+        });
+
+        // 搜索
+        $('#searching_user').bind('keydown', function (e) {
+            var key = e.which;
+            if (key == 13) {
+                e.preventDefault();
+                search_user();
+            }
+        });
+        $('#searching_user').on('keyup', function (e) {
+            var key = e.which;
+            if ((key == 127) || (key == 8)) {
+                search_user();
+            }
+        });
+        // 搜索
+        $('.searching_user').click(function(){
+            search_user();
+        });
+        function search_user(){
+            var selecteddata = [];
+            var userinput = $('#searching_user').val();
+            if(userinput){
+                var name = null;
+                var order = 1;
+                for (var i = 0; i < alldate.length; i++) {
+                    if(alldate[i].name) name = alldate[i].name.replace(userinput,',');
+                    if(name != alldate[i].name){
+                        var lengths = selecteddata.length;
+                        selecteddata[lengths] = alldate[i];
+                        selecteddata[lengths].order = order;
+                        order++;
+                    }
+                }
+                $("#user").html(dot_department(selecteddata));
+            }else{
+                $("#user").html(dot_department(alldate));
+            }
+        }
+
+
+        // jstree
+        var jstree_path = './../jstree/jstree.php?flagid='+user.flagid+'&operation=';
+        var department_count;
+        var isLoadingDepartmentCount = false;
+        loadDepartmentCount();
+        $('#tree')
+            .jstree({
+                'core' : {
+                    'data' : {
+                        'url' : jstree_path + 'get_node',
+                        'data' : function (node) {
+                            setTimeout(setDepartmentCount,300);
+                            return { 'id' : node.id };
+                        }
+                    },
+                    'check_callback' : true,
+                    'themes' : {
+                        'responsive' : false
+                    }
+                },
+                'force_text' : true,
+                'plugins' : ['state','dnd','types','search','wholerow']
+            })
+            .on('delete_node.jstree', function (e, data) {
+                if(confirm("您确定将要删除吗?")){
+                    var mm = 0;
+                    for (var i = 0; i < department_count.length; i++) {
+                        if((department_count[i].id == data.node.id) && (department_count[i].count > 0)){
+                            mm++;
+                            data.instance.refresh();
+                            alert('请先移除该组织人员!');
+                        }
+                    }
+                    if(mm == 0){
+                        $.get(jstree_path + 'delete_node', { 'id' : data.node.id })
+                            .fail(function () {
+                                data.instance.refresh();
+                            })
+                            .done(function () {
+                                setDepartmentCount();
+                            });   
+                    }
+                } else {
+                    data.instance.refresh();
+                }
+            })
+            .on('create_node.jstree', function (e, data) {
+                $.get(jstree_path + 'create_node', { 'id' : data.node.parent, 'position' : data.position, 'text' : data.node.text })
+                    .done(function (d) {
+                        data.instance.set_id(data.node, d.id);
+                        loadDepartmentCount();
+                    })
+                    .fail(function () {
+                        data.instance.refresh();
+                    });
+            })
+            .on('rename_node.jstree', function (e, data) {
+                $.get('/com/department.update.php',{id:data.node.id,department:data.text},function(){
+                    for (var i = 0; i < homedata.length; i++) {
+                        if(homedata[i].departmentid == data.node.id){
+                            homedata[i].department = data.text;
+                        }
+                    }
+                    $('#user tr').each(function(){
+                        $(this).children('td').eq(3).html(data.text); 
+                    })
+                });
+                $.get(jstree_path + 'rename_node', { 'id' : data.node.id, 'text' : data.text })
+                    .fail(function () {
+                        data.instance.refresh();
+                    })
+                    .done(function () {
+                        setDepartmentCount();
+                    });
+            })
+            .on('move_node.jstree', function (e, data) {
+                $.get(jstree_path + 'move_node', { 'id' : data.node.id, 'parent' : data.parent, 'position' : data.position })
+                    .fail(function () {
+                        data.instance.refresh();
+                    })
+                    .done(function () {
+                        loadDepartmentCount();
+                    });
+            })
+            .on('copy_node.jstree', function (e, data) {
+                $.get(jstree_path + 'copy_node', { 'id' : data.original.id, 'parent' : data.parent, 'position' : data.position })
+                    .always(function () {
+                        data.instance.refresh();
+                    })
+                    .done(function () {
+                        loadDepartmentCount();
+                    });
+            })
+            .on('changed.jstree', function (e, data) {
+                selecteddepartmentid = parseInt(data.selected[0]);
+                $('.nodepartment').attr('checked',false);
+
+                loadDepartmentCount();
+        });
+
+        function loadDepartmentCount() {
+            if (isLoadingDepartmentCount) return;
+
+            isLoadingDepartmentCount = true;
+            $.getJSON('/com/depart.project.count.php', {flagid: user.flagid}, function (data) {
+                // 递归父节点
+                for (var i = data.length - 1; i > 0; i--) {
+                    var department = data[i];
+                    for (var j = i-1; j > 0; j--) {
+                        var parent_department = data[j];
+                        if (parent_department.id==department.pid) {
+                            parent_department.count += department.count;
+                            break;
+                        }
+                    }
+                }
+                department_count = data;
+                setDepartmentCount();
+                var children = [];
+                if(selecteddepartmentid){
+                    if($('.nodepartment').attr('checked')){
+                        $("#user").html(dot_department(nodepartmentdate));
+                    }else{
+                        children[0] = selecteddepartmentid;
+                        finddepartmentid(selecteddepartmentid);
+                        function finddepartmentid(find){
+                            for (var i = 0; i < data.length; i++) {
+                                if(data[i].pid == find){
+                                    children[children.length] = data[i].id;
+                                    finddepartmentid(data[i].id);
+                                }else{
+                                    continue;
+                                }
+                            }
+                        }
+                        var departmentdata = [];
+                        for (var i = 0; i < alldate.length; i++) {
+                            for (var j = 0; j < children.length; j++) {
+                                if(alldate[i].departmentid == children[j]){
+                                    var lengths = departmentdata.length;
+                                    departmentdata[lengths] = alldate[i];
+                                    departmentdata[lengths].order = 1+lengths;
+                                }
+                            }
+                        }
+                        $("#user").html(dot_department(departmentdata));
+                    }
+                }
+                isLoadingDepartmentCount = false;
+            });
+        }
+
+        function setDepartmentCount() {
+            if (!department_count) {
+                loadDepartmentCount();
+                return;
+            }
+
+            for (var i in department_count) {
+                if ($('#count'+department_count[i].id).html() != '('+department_count[i].count+')') {
+                    $('#count'+department_count[i].id).html('('+department_count[i].count+')');
+                }
+            }
+        }
+
+        $('#tree').click(function(){
+            setDepartmentCount();
+        })
+
+
+        // jstree搜索
+        $("#tree").jstree({
+            "plugins" : [ "search" ]
+        });
+        var to = false;
+        $('#demo_q').keyup(function () {
+            if(to) { clearTimeout(to); }
+            to = setTimeout(function () {
+                var v = $('#demo_q').val();
+                $('#tree').jstree(true).search(v);
+            }, 250);
+        });
+
+    </script>
+</body>
+</html>

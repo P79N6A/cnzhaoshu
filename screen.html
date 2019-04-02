@@ -1,0 +1,436 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<title>投标筛选</title>
+<style type="text/css">
+    body{
+    	margin: 0;  
+		padding:0;  
+		border: 0;  
+		font: inherit;  
+		font-size: 100%;  
+		vertical-align: baseline;  
+    }
+    .title{
+    	width:80%;
+    	margin: 10px 10%;
+    	text-align: center;
+    	font-size: 20px;
+    	line-height: 40px;
+    	height:40px;
+    	float: left;
+    	background: #ddd;
+    	border-radius: 4px;
+    }
+    .showone{
+    	float: left;
+    	width:100%;
+    	border-top: 1px solid #eee;
+    	padding:5px 0;
+    }
+	.row1{
+    	float: left;
+    	width:100%;
+    }
+    .order{
+    	width:8%;
+    	margin-left: 2%;
+    	float: left;
+    	line-height: 27px;
+    }
+    .name{
+    	width:40%;
+    	float: left;
+    	line-height: 27px;
+    }
+    .number{
+    	width:15%;
+    	float: left;
+    	line-height: 27px;
+    }
+    .biduser{
+    	float: left;
+    }
+    .row2{
+    	float: left;
+    	width:90%;
+    	margin-left: 10%;
+    	line-height: 18px;
+    	font-size: 14px;
+    }
+    .row3{
+    	float: left;
+    	width:90%;
+    	margin-left: 10%;
+    	font-size: 14px;
+    }
+    .row4{
+    	float: left;
+    	margin-top: 5px;
+    	padding:3px 0;
+    	width:89%;
+    	margin-left: 10%;
+    	border:1px solid #eee;
+    	display: none;
+    	font-size: 14px;
+    }
+    .bids{
+    	width:100%;
+    	float:left;
+    	margin:5px 0;
+    }
+    .image{
+    	width:25%;
+    	height:90px;
+    	margin: 0 1%;
+    	float:left;
+    	background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        overflow: hidden;
+    }
+    .bidinfo{
+    	width:40%;
+    	margin:0 1%;
+    	height:90px;
+    	float:left;
+    }
+    .button{
+    	width:31%;
+    	height:90px;
+    	float:left;
+    }
+    .bidinfo_name{
+    	width:100%;
+    	line-height: 16px;
+    	float:left;
+    }
+	.bidinfo_phone{
+		width:100%;
+    	line-height: 18px;
+		float:left;
+	}
+	.bidinfo_price,.bidinfo_count{
+		width:90%;
+    	line-height: 17px;
+		float:left;
+		text-align: right;
+		padding-right:10%;
+	}
+	.supplier{
+		width:90%;
+		float:left;
+		margin-top: 5px;
+		padding:5px 3px;
+		font-size: 15px;
+		border-radius:3px;
+		background:#1AAD19;
+		color:#fff;
+		text-align: center;
+	}
+	.delete{
+		width:90%;
+		float:left;
+		margin-top: 15px;
+		padding:5px 3px;
+		font-size: 15px;
+		border-radius:3px;
+		background:#E64340;
+		color:#fff;
+		text-align: center;
+	}
+	#show{
+		float: left;
+		width: 100%;
+	}
+	.showone_title{
+		width:100%;
+		float: left;
+	}
+	.winning{
+		width:100%;
+		float: left;
+	}
+	#bigimages{
+		width:100%;
+		height:100%;
+		z-index: 500;
+		background: #fff;
+		display: none;
+		float: left;
+		position: absolute;
+	}
+	.bigimage{
+		width:98%;
+		float: left;
+		margin: 10px 1%;
+	}
+</style>
+
+</head>
+<body>
+	<div class="title">投标筛选</div>
+	<div id="show"></div>
+	<div id="bigimages"></div>
+	<script id="dot_show" type="text/x-dot-template">
+	    {{ for(var i in it) { }}
+	        <div class="showone" id="{{=it[i].id}}">
+	        	<div class="showone_title">
+	        		<div class="row1">
+	        			<div class="order">{{=addone(i)}}</div>
+	        			<div class="name">{{=it[i].name}}</div>
+	        			<div class="number">{{=it[i].count}}株</div>
+	        		</div>
+	        		<div class="row2">{{=guige(it[i])}}</div>
+	        		<div class="row3"></div>
+	        	</div>
+        		<div class="row4">
+        		</div>
+	        </div>
+	    {{ } }}
+	</script>
+
+	<script id="dot_bids" type="text/x-dot-template">
+	    {{ for(var i in it) { }}
+	        <div class="bids" data-userid="{{=it[i].userid}}" check="{{= (it[i].state==2) ? true : false}}">
+				<div class="image" data-image="{{=it[i].image}}" style="background-image: url('../bidimage/{{=firstimage(it[i].image)}}.jpg')"></div>
+				<div class="bidinfo">
+					<div class="bidinfo_name">{{=it[i].city}}({{=it[i].username}})</div>
+					<div class="bidinfo_phone">{{=it[i].phone}}</div>
+					<div class="bidinfo_count">{{=it[i].number}}株</div>
+					<div class="bidinfo_price">{{=it[i].price}}元/株</div>
+				</div>
+				<div class="button">
+					<div class="supplier" state="{{=it[i].relationshipstate}}">{{=(it[i].relationshipstate == 1) ? buttoname(it[i].state) : '成为供应商'}}</div>
+					{{= (it[i].state == 2) ? '' : '<div class="delete">删除</div>'}}
+				</div>
+			</div>
+	    {{ } }}
+	</script>
+
+	<script src="../js/doT.min.js"></script>
+	<script src="../js/zepto.min.js"></script>
+	<script type="text/javascript">
+		var dot_show = doT.template($("#dot_show").text());
+		var dot_bids = doT.template($("#dot_bids").text());
+		var workingid = 0;
+		var user = {userid:29908};
+		var orderid;
+
+		function urlRequest(name) {
+	        var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);  
+	        return match && decodeURIComponent(match[1].replace(/\+/g, ' ')); 
+	    }
+
+	    var qrcodeid = urlRequest("id");
+
+		$.getJSON('/com/search_mytreeorder.php',{qrcodeid:qrcodeid,userid:user.userid},function(json){
+			if(json){
+				orderid = json.order[0]['orderid'];
+				$('#show').html(dot_show(json.order));
+				if(json.bidorder){
+					$('.showone').each(function() {
+						var thisid = this.id;
+							for (var i = 0; i < json.bidorder.length; i++) {
+								var winorder = json.bidorder[i];
+								if(winorder.id == thisid){
+									var m = $(this).find('.row3');
+									$('<div>').addClass('winning').attr('data-userid',winorder.userid).appendTo(m);
+									$(this).find('.winning').html(winorder.city+'('+winorder.username+') '+winorder.phone);
+								}
+							}
+					});
+				}
+			}
+		})
+
+		function buttoname(namestate){
+			if(namestate == 2){
+				return '付定金';
+			}else{
+				return '中标';
+			}
+		}
+
+		function guige(data_attribute){
+		    var attr = '';
+            if(data_attribute.trunk_diameter){
+                var at = data_attribute.trunk_diameter.replace(',','-');
+                attr += '胸径:'+at+'公分 ';
+            }
+            if(data_attribute.ground_diameter){
+                var at = data_attribute.ground_diameter.replace(',','-');
+                attr += '地径:'+at+'公分 ';
+            }
+            if(data_attribute.pot_diameter){
+                var at = data_attribute.pot_diameter.replace(',','-');
+                attr += '盆径:'+at+'公分 ';
+            }
+            if(data_attribute.plant_height){
+                var at = data_attribute.plant_height.replace(',','-');
+                attr += '株高:'+at+'米 ';
+            }
+            if(data_attribute.plant_height_cm){
+                var at = data_attribute.plant_height_cm.replace(',','-');
+                attr += '株高:'+at+'公分 ';
+            }
+            if(data_attribute.crown){
+                var at = data_attribute.crown.replace(',','-');
+                attr += '冠幅:'+at+'米 ';
+            }
+            if(data_attribute.crown_cm){
+                var at = data_attribute.crown_cm.replace(',','-');
+                attr += '冠幅:'+at+'公分 ';
+            }
+            if(data_attribute.branch_number){
+                var at = data_attribute.branch_number.replace(',','-');
+                attr += '分枝数:'+at+'个 ';
+            }
+            if(data_attribute.bough_number){
+                var at = data_attribute.bough_number.replace(',','-');
+                attr += '主枝数:'+at+'个 ';
+            }
+            if(data_attribute.age){
+                var at = data_attribute.age.replace(',','-');
+                attr += '苗龄:'+at+'年 ';
+            }
+            if(data_attribute.branch_length){
+                var at = data_attribute.branch_length.replace(',','-');
+                attr += '条长:'+at+'米 ';
+            }
+            if(data_attribute.bough_length){
+                var at = data_attribute.bough_length.replace(',','-');
+                attr += '主蔓(枝)长:'+at+'米 ';
+            }
+            if(data_attribute.branch_point_height){
+                var at = data_attribute.branch_point_height.replace(',','-');
+                attr += '分枝点高:'+at+'米 ';
+            }
+            if(data_attribute.substrate){
+                var at = data_attribute.substrate;
+                attr += '基质:'+at;
+            }
+            
+            return attr;
+		}
+
+		function addone(one){
+			var a = 1+parseInt(one);
+			return a+'.';
+		}
+
+		function firstimage(imageid){
+			var a = imageid.split(',');
+			return a[0];
+		}
+
+		function loadbidorder(bidorderid,that){
+			$.getJSON('/com/search_upbidorder.php',{id:bidorderid,userid:user.userid,orderid:orderid},function(json){
+				if(json){
+					that.parent().find('.row4').show();
+					that.parent().find('.row4').animate({'height':json.length*90+10});
+					$('.on .row4').html(dot_bids(json));
+				}
+			})
+		}
+
+
+		$('#show').on('click','.showone_title',function(){
+			var that = $(this);
+		    if(that.parent().hasClass('on')){
+		        that.parent().removeClass('on');
+		        $('#show .row4').hide();
+		        $('#show .row4').animate({'height':'0'});
+		        working = 0;
+		    }else{
+		        var bidorder = that.parent().find('.bids').length;
+		        workingid = that.parent().attr('id');
+		        that.parent().siblings().find('.row4').animate({'height':'0'});
+		        $('#show .row4').hide();
+		        $('#show .showone').removeClass('on');
+		        that.parent().addClass('on');
+		        if(bidorder){
+		        	that.parent().find('.row4').show();
+		        	that.parent().find('.row4').animate({'height':bidorder*90+10});
+		        }else{
+		        	loadbidorder(workingid,that);
+		        }
+
+		    }
+		})
+
+		// 成为供应商
+		$('#show').on('click','.supplier',function(){
+			var that = $(this);
+			if(that.parents('.bids').attr('check') == 'true') return;
+			var state = that.attr('state');
+			var supplierid = that.parents('.bids').data('userid');
+			if(state == 1){
+				that.parents('.bids').attr('check','true');
+				var id = that.parents('.showone').attr('id');
+				$.getJSON('/com/bid_order_deal.php',{id:id,supplierid:supplierid},function(data){
+					if(data){
+						var name = that.parents('.bids').find('.bidinfo_name').html();
+						var phone = that.parents('.bids').find('.bidinfo_phone').html();
+						var m = that.parents('.showone').find('.row3');
+						$('<div>').addClass('winning').attr('data-userid',supplierid).appendTo(m);
+						that.parents('.showone').find('.winning').html(name+' '+phone);
+						that.html('付定金');
+						that.next().remove();
+					}
+				})
+			}else{
+				$.getJSON('/com/tobe_mysupplier.php',{userid:user.userid,supplierid:supplierid,state:state},function(data){
+					if(data){
+						$('.bids').each(function() {
+							if($(this).data('userid') == supplierid){
+								$(this).find('.supplier').html('中标');
+								$(this).find('.supplier').attr('state','1');
+							}
+						});
+					}
+				})
+			}
+		})
+
+		// 删除
+		$('#show').on('click','.delete',function(){
+			var that = $(this);
+			var deleteid = that.parents('.bids').data('userid');
+			var id = that.parents('.showone').attr('id');
+			$.getJSON('/com/bid_order_delete.php',{userid:deleteid,id:id,orderid:orderid},function(data){
+				if(data){
+					that.parents('.bids').remove();
+					var bidorder = that.parent().find('.bids').length;
+					that.parent().find('.row4').animate({'height':bidorder*90+10});
+				}
+			})
+		})
+
+		$('#show').on('click','.image',function(){
+			var imagestring = $(this).data('image');
+			if(imagestring.length > 15){
+				imagestring = imagestring.split(',');
+				for (var i = 0; i < imagestring.length; i++) {
+					$('<img>').addClass('bigimage').attr('src','../bidimage/'+imagestring[i]+'.jpg').appendTo('#bigimages');
+				}
+			}else{
+				$('<img>').addClass('bigimage').attr('src','../bidimage/'+imagestring+'.jpg').appendTo('#bigimages');
+			}
+			$('#bigimages').show();
+		})
+
+		$('#bigimages').click(function(){
+			$('#bigimages').hide();
+			$('#bigimages').html('');
+		})
+		
+
+	</script>
+
+</body>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<!--上传excel 文件-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>甲方信息的录入</title>
+</head>
+<body>
+<form action="upload_excel.php" method="post" enctype="multipart/form-data">
+    <h4>甲方信息录入</h4>
+    甲方信息:<input type="text" name="party_A">
+    <br>
+    甲方法人(代表):<input type="text" name="A_legal_person">
+    <br>
+    甲方银行: <input type="text" name="A_open_bank">
+    <br>
+    甲方银行账号: <input type="text" name="A_bank_num">
+    <br>
+    甲方税号: <input type="text" name="A_paragraph">
+    <br>
+    甲方地址: <input type="text" name="A_address">
+    <br>
+    甲方电话: <input type="text" name="A_phone">
+    <br>
+    甲方传真: <input type="text " name="A_fax">
+    <br>
+    甲方联系人: <input type="text" name="A_contacts">
+    <br>
+    甲方微信号: <input type="text" name="A_wechat">
+    <br>
+    甲方电子邮箱: <input type="text" name="A_email">
+    <hr>
+    <h4>乙方信息录入</h4>
+    乙方信息:<input type="text" name="party_B">
+    <br>
+    乙方法人(代表):<input type="text" name="B_legal_person">
+    <br>
+    乙方银行: <input type="text" name="B_open_bank">
+    <br>
+    乙方银行账号: <input type="text" name="B_bank_num">
+    <br>
+    乙方税号: <input type="text" name="B_paragraph">
+    <br>
+    乙方电话: <input type="text" name="B_phone">
+    <br>
+    乙方地址: <input type="text" name="B_address">
+    <br>
+    乙方传真: <input type="text " name="B_fax">
+    <br>
+    乙方联系人: <input type="text" name="B_contacts">
+    <br>
+    乙方微信号: <input type="text" name="B_wechat">
+    <br>
+    乙方电子邮箱: <input type="text" name="B_email">
+    <hr>
+    <h4>苗木采购期限</h4>
+    采购开始日期:<input type="date" name="b_time">
+    <br>
+    采购结束日期:<input type="date" name="s_time">
+    <hr>
+    <h4>丙方找树网收款金额</h4>
+    第三方代收款:<input type="text" name="c_price">
+    <br>
+    <br>
+    树环价格: <input type="text" name="ring_price">
+    <hr>
+    <h4>采购单录入</h4>
+    <input type="file" name="userfile" id="userfile" value="" />
+    <br>
+    <br>
+    <input type="submit"  value="合同信息提交" />
+</form>
+</body>
+</html>

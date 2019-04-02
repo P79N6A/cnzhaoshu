@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>生成二维码</title>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/qrcode.min.js"></script>
+    <script src="js/vue.js"></script>
+    <script src="https://unpkg.com/cube-ui/lib/cube.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/cube-ui/lib/cube.min.css">
+    <style>
+        .warp{
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 100;
+            background: #fff;
+        }
+        .warp #qrcode{
+            position: absolute;
+            width: 80%;
+            top: 20%;
+            left: 10%;
+            margin: 0 auto;
+        }
+        .warp #qrcode img{
+            display: block;
+            width: 100% ;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="content">
+        <cube-button>切换</cube-button>
+        <div>
+            <cube-select
+                    v-model="address"
+                    :options="addressList">
+            </cube-select>
+            <cube-select
+                    v-model="name"
+                    :options="nameList">
+            </cube-select>
+            <cube-select
+                    v-model="num"
+                    :options="numList">
+            </cube-select>
+            <div>
+                <cube-checkbox-group v-model="checkList" :options="options" :horizontal="true" shape="square" :hollow-style="true" />
+            </div>
+            <cube-button :primary="true" @click="showcode">生成二维码</cube-button>
+            <div class="warp" v-show="isshow" @click="hidecode">
+                <div id="qrcode"></div>
+            </div>
+
+        </div>
+
+    </div>
+</body>
+<script>
+    console.log(Vue)
+    Vue.use(cube)
+    let work = [{label: '绿地保洁', value: '1'},{label: '落叶清理', value: '2'},{label: '草坪修剪', value: '3'}];
+    var app = new Vue({
+        el: '#app',
+        data: {
+            isshow:false,
+            checkList: [ '2'],
+            options: work,
+            addressList: ["西北旺东区" , "西北旺南区" , "西北旺北区" , "西北旺西区" , "东北旺东区" , "东北旺西区" ],
+            address:"西北旺东区",
+            name:"员工甲",
+            nameList:["员工甲" , "员工乙" , "员工丙" , "员工丁"  ],
+            numList:[1 , 2 , 3 , 4],
+            num:1,
+            qrcode:{}
+        },
+        created(){
+            setTimeout(res =>{
+                 this.qrcode = new QRCode(document.getElementById("qrcode"), {
+                    text: "http://jindo.dev.naver.com/collie",
+                    width: 128,
+                    height: 128,
+                    colorDark : "#000000",
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.H
+                })
+            },200)
+        },
+        methods:{
+            showcode(){
+                this.isshow = true
+                let time = new Date().getTime()
+                let work = this.checkList.join("*")
+                console.log(time)
+                let url = `address=${this.addressList.indexOf(this.address)}&work=${work}&name=${this.nameList.indexOf(this.name)}&num=${this.num}&time=${time}`
+                console.log(url)
+                this.qrcode.makeCode(url)
+            },
+            hidecode(){
+                this.isshow = false
+            }
+        }
+    })
+</script>
+</html>

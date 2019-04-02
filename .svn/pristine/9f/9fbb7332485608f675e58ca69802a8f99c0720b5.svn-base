@@ -1,0 +1,37 @@
+<?php 
+// ini_set('date.timezone','Asia/Shanghai');
+// require_once "../lib/WxPay.Api.php";
+// require_once "WxPay.JsApiPay.php";
+require 'db.php';
+include 'user2.php';
+
+//     $openid = 'oM-qJjt89n6XLD8Tm8KSi3sI6qh8';  
+//     $trade_no = date('YmdHis').mt_rand(1000,9999);
+//     $money = 110;
+//     $desc = '提现';
+
+//  $input = new WxPayCompanypay();
+//  $input->Setpartner_trade_no($trade_no);
+//  $input->Setopenid($openid);
+//  $input->Setcheck_name('NO_CHECK');
+//  $input->Setamount($money);
+//  $input->Setdesc($desc);
+//     $order = WxPayApi::companyPay($input);
+//     var_dump($order);
+
+$tender_userid = $_GET['tender_userid'];
+$bid_userid = $_GET['bid_userid'];
+$tree_order_id = $_GET['tree_order_id'];
+
+
+$info = user::getUserByUserId($bid_userid);
+$wechatid = $info['wechatid'];
+$db = new db();
+
+$sql = 'select money,serial_number from orders where tender_userid=? and bid_userid=? and tree_order_id=?';
+$data = $db->prepare_query($sql,array($tender_userid,$bid_userid,$tree_order_id));
+
+var_dump($data,$wechatid);
+
+unset($db);
+

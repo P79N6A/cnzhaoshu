@@ -1,0 +1,23 @@
+<?php
+require 'checkhost.php';
+require 'db2.php';
+
+$id = $_GET['id'];
+$userid = $_GET['userid'];
+$db = new db();
+
+$sql = 'select id,userid from tree_order_index where qrcode=?';
+$info = $db->prepare_query($sql,array($id))[0];
+
+$sql = 'select orderid from order_permission where orderid=? and userid=? and permission_userid=?';
+$result = $db->prepare_query($sql,array($info['id'],$info['userid'],$userid))[0]['orderid'];
+
+if(!$result){
+    $sql = 'insert into order_permission(orderid, userid, permission_userid) values (?,?,?)';
+    $result = $db->prepare_exec($sql,array($info['id'],$info['userid'],$userid));
+}
+    
+echo $result;
+unset($db);
+?>
+

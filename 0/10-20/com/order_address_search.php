@@ -1,0 +1,17 @@
+<?php 
+require 'checkhost.php';
+require 'db2.php';
+
+// 获取参数
+$userid = $_GET['uid'];
+!$userid && exit;
+$db = new db();
+$sql = 'select * from tree_order_index where userid=?';
+
+// $result = $db->query($sql);
+$trees = $db->prepare_query($sql, array($userid));
+echo json_encode($result);
+unset($db);
+
+
+?>

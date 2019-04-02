@@ -1,0 +1,21 @@
+<?php
+
+include "../com/db.php";
+//$user=json_decode($_COOKIE['user2'],true);
+//$user=$user['userid'];
+$userid=isset($user)?$user:"";
+$bidding_project=isset($_POST['bidding_project'])?$_POST['bidding_project']:"";
+$bidding_tree_id=isset($_POST['tree_order_id'])?$_POST['tree_order_id']:"";
+$bidding_tree_num=isset($_POST['bidding_tree_num'])?$_POST['bidding_tree_num']:"";
+$bidding_tree_remarks=isset($_POST['bidding_tree_remarks'])?$_POST['bidding_tree_remarks']:"";
+$bidding_tree_time=date("Y-m-d H:i:s",time());
+$bidding_tree_price=isset($_POST['bidding_tree_price'])?$_POST['bidding_tree_price']:"";
+$bidding_tree_image=isset($_POST['bidding_tree_image'])?$_POST['bidding_tree_image']:"";
+
+
+$sql=" insert into bidd_order(userid,bidding_project,bidding_tree_id,bidding_tree_num,bidding_tree_price,bidding_tree_remarks,bidding_create_time,bidding_tree_image)value('".$userid."','".$bidding_project."','".$bidding_tree_id."','".$bidding_tree_num."','".$bidding_tree_price."','".$bidding_tree_remarks."','".$bidding_create_time."','".$bidding_tree_image."')";
+var_dump($sql);die;
+$db= new db();
+$db->exec($sql);
+
+?>

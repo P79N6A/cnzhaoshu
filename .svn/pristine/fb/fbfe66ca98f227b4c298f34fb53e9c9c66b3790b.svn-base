@@ -1,0 +1,14 @@
+<?php 
+
+require 'db.php';
+$db = new db();
+if($_GET['search']){
+	$search = $_GET['search'];
+	$sql = 'select userid,shopname,invoice from user where invoice > 0 and (name like ? or shopname like ? or phone like ?)';
+	$searching = '%'.$search.'%';
+	$result = $db->prepare_query($sql,array($searching,$searching));
+}
+unset($db);
+echo json_encode($result);
+
+ ?>

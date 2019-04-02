@@ -1,0 +1,155 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Mrwang
+ * Date: 2018/9/5
+ * Time: 16:08
+ */
+ini_set('date.timezone','Asia/Shanghai');
+include "../com/db.php";
+//include "tree_operation.php";
+//session_start();
+//var_dump($_POST);die;
+$dbs= new db();
+//投标接口
+//
+$user=json_decode($_COOKIE['user2'],true);
+$user=$user['userid'];
+//$user=6;
+$data=$_POST;
+
+$tree_imgs=isset($data['tree_imgs'])?$data['tree_imgs']:"";
+$phone=isset($data['phone'])?$data['phone']:"";
+
+//var_dump($phone);die;
+if($phone!=""){
+
+        $user_phone_sql="update user set phone='".$phone."' where userid='".$user."'";
+//        var_dump($user_phone_sql);die;
+        $dbs->exec($user_phone_sql);
+
+}
+//var_dump(123123);die;
+//var_dump($tree_imgs);die;
+if(!empty($tree_imgs)){
+    for($ie=0;$ie<count($tree_imgs);$ie++){
+        if(strpos($tree_imgs[$ie],'http://cnzhaoshu.com') !== false){
+           $tree_imgs[$ie]=str_replace("http://cnzhaoshu.com/","/",$tree_imgs[$ie]);
+        }else{
+            $tree_imgs[$ie]=$tree_imgs[$ie];
+        }
+    }
+    $tree_imgs=implode(",",$tree_imgs);
+}
+//var_dump($tree_imgs);die;
+$tree_id=$data['tree_id'];
+$tree_price =$data['tree_price'];
+$tree_num=$data['tree_num'];
+
+
+$tree_address=$data['tree_address'];
+$sqls="select project from new_tree_order where tree_order_id ='".$tree_id."'";
+$project_id=$dbs->query($sqls)[0]['project'];
+// var_dump($project_id);die;
+$sql="select * from  tender_order where tender_tree_id='".$tree_id."' and tender_user_id = $user ";
+//var_dump($sql);die;
+$res=$dbs->query($sql)[0];
+//var_dump($res);die;
+$tender_time=date("Y-m-d H:i:s",time());
+$tender_status=1;
+if(empty($res)){
+
+    $sqli="insert into tender_order(tender_tree_id,tender_user_id,tree_price,tree_num,tree_imgs,tree_address,tender_time,tender_status,project) values ('".$tree_id."','".$user."','".$tree_price."','".$tree_num."','".$tree_imgs."','".$tree_address."','".$tender_time."','".$tender_status."','".$project_id."')";
+//        var_dump($sqli);die;
+}else{
+
+    $sqli="update tender_order set tender_tree_id = '".$tree_id."', tender_user_id = '".$user."',tree_price ='".$tree_price."',tree_num='".$tree_num."',tree_imgs='".$tree_imgs."',tree_address='".$tree_address."',tender_time='".$tender_time."',project='".$project_id."' where tender_order_id ='".$res['tender_order_id']."'";
+
+}
+
+$rec= $dbs->exec($sqli);
+//var_dump($rec);die;
+
+if($rec){
+//    echo 1;die;
+    $pro_sql="select tree_order_id ,tree_num from new_tree_order  where project ='".$project_id."'";
+
+//    var_dump($audits_un_num);die;
+    $dta=$dbs->query($pro_sql);
+//    var_dump($dta);die;
+    $count_dta=count($dta);
+    //每颗树所占百分比
+    $percentage=round(100/$count_dta,2);
+
+    $tender_sql="select sum(tree_num) as tender_order_totle from tender_order where tender_tree_id='".$tree_id."' and tender_status=2";
+    //获取推荐投标单的树木数量
+    $tender_order_totle=$dbs->query($tender_sql)[0]['tender_order_totle'];
+//    var_dump($tender_order_totle);die;
+    $tender_audit="select count(tender_order_id) as tender_order_audit from tender_order where tender_tree_id='".$tree_id."' and tender_status=1";
+    //未审核的数量
+    $tender_order_audit=$dbs->query($tender_audit)[0]['tender_order_audit'];
+//    var_dump($tender_order_audit);die;
+    $tree_num_sql="select tree_num from new_tree_order where tree_order_id='".$tree_id."'";
+    $tree_num=$dbs->query($tree_num_sql)[0]['tree_num'];
+//    var_dump($tree_num);die;
+    //所投数量与 需求树木的数量比
+//    var_dump($tender_order_totle);
+//    echo "<pre>";
+//    var_dump($tree_num);die;
+    $percent=round($tender_order_totle/$tree_num,2);
+//    var_dump($percentage);
+//    var_dump($percent);die;
+    $tree_percent= round($percent*$percentage,2);
+//    var_dump($tree_percent);die;
+    //当前树木进度所占项目进度的百分比
+    if($tree_percent>=$percentage){
+        $tree_percent=$percentage;
+    }
+    if($percent>=1){
+        $percent=100;
+    }else{
+        $percent=$percent*100;
+    }
+    $oked_audite_sql="select count(tender_order_id) as oked_audite from tender_order where tender_tree_id='".$tree_id."' and tender_status<>1";
+    //已经审核过的数量
+    $oked_audite=$dbs->query($oked_audite_sql)[0]['oked_audite'];
+//        var_dump($oked_audite);die;
+    //将所投树木数量与
+    $adop_num_sql="select count(tender_tree_id) as adop_num from tender_order where tender_tree_id='".$tree_id."'and tender_status=2 and adoption_status=0";
+    $adop_num=$dbs->query($adop_num_sql)[0]['adop_num'];
+    $insert_order_sql="update new_tree_order set tree_progress='".$tree_percent."', tree_oked_audits ='".$oked_audite."',tree_un_audits='".$tender_order_audit."' ,percent='".$percent."',adop_num='".$adop_num."' where tree_order_id='".$tree_id."'";
+//    var_dump($insert_order_sql);die;
+    $inser_exec=$dbs->exec($insert_order_sql);
+    //添加一个单个树木进度   字段  在项目 接口展示 所需要的百分比进度   求和
+    $audits_un_num_sql="select sum(tree_un_audits) as project_un_audits from new_tree_order where project='".$project_id."'";
+    $audits_un_num=$dbs->query($audits_un_num_sql)[0]['project_un_audits'];
+    //计算当前项目进度 并把信息存入到项目数据库中
+    $project_progress_sql=" select sum(tree_progress) as project_progress, sum(tree_oked_audits) as audits_num  from new_tree_order where project ='".$project_id."'";
+    $project=$dbs->query($project_progress_sql);
+
+
+
+    $project_progress=$project[0]['project_progress'];
+    $audits_num=$project[0]['audits_num'];
+//    var_dump($project_progress);die;
+    $project_progress_sql=" update order_project set project_progress='".$project_progress."',audits_num='".$audits_un_num."' where project_id='".$project_id."' ";
+//    var_dump($project_progress_sql);die;
+    $update_project=$dbs->exec($project_progress_sql);
+//    if($update_project){
+        $content=[
+            'status'=>0,
+            'data'=>"修改成功"
+        ];
+//    }else{
+//        $content=[
+//            'status'=>3,
+//            'data'=>"更新进度失败"
+//        ];
+//    }
+}else{
+    $content=[
+        'status'=>1,
+        'data'=>"修改失败"
+    ];
+}
+echo json_encode($content);

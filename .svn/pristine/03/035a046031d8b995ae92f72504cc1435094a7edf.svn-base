@@ -1,0 +1,89 @@
+<?php
+// 批量更新开放平台菜单，未认证公众号设置菜单无效
+header("Content-type: text/html;charset=utf-8");
+
+require '../com/db2.php';
+require '../wechat/wechat.class.php';
+
+$db = new db();
+$platforms = $db->query('select id,platformid,company from openadmin where refresh_token is not null and state>0');
+unset($db);
+
+foreach ($platforms as $platform) {
+    echo json_encode($platform).'<br>';
+
+    $options = array(
+        'token'=>'zhaoshu', //填写你设定的key
+        'auth'=>true, //已认证授权的第三方开放平台
+        'platformid'=>$platform['platformid'],
+        'encodingaeskey'=>'ylXmQb9lO9uVfCHSZAMCMsTtvUsTu0clAeR1qiXN62A', //填写加密用的EncodingAESKey
+        'appid'=>'wx464f6ef9bf09dccf', //填写高级调用功能的app id, 请在微信开发模式后台查询
+        'appsecret'=>'f66e94dab4ec8c1556716181412afb61' //填写高级调用功能的密钥
+        );
+
+    $weObj = new Wechat($options);
+
+    // echo '删除菜单...'.$weObj->deleteMenu().'<br>';
+
+    $newmenu = array (
+       'button' => array (
+        0 => array(
+            'type'=>'click',
+            'name'=>'我卖树',
+            'key'=>'sell'
+        ),
+        1 => array(
+            'type'=>'click',
+            'name'=>'我找树',
+            'key'=>'find'
+        ),
+        2 => array(
+           'name' => '会员中心',
+           'sub_button' => array (
+               0 => array (
+                 'type' => 'view',
+                 'name' => '我的苗店',
+                 'url' => 'http://www.cnzhaoshu.com/shop.php?where={"flagid":'.$platform['id'].',"platformid":"'.$platform['platformid'].'","platformname":"'.$platform['company'].'"}'
+               ),
+               1 => array (
+                 'type' => 'view',
+                 'name' => '我的找树车',
+                 'url' => 'http://www.cnzhaoshu.com/cart.php?where={"flagid":'.$platform['id'].',"platformid":"'.$platform['platformid'].'","platformname":"'.$platform['company'].'"}'
+               ),
+               2 => array (
+                 'type' => 'view',
+                 'name' => '苗店维护',
+                 'url' => 'http://www.cnzhaoshu.com/admin.php'
+               ),
+               3 => array (
+                 'type' => 'view',
+                 'name' => '我要招标',
+                 'url' => 'http://www.cnzhaoshu.com/yusuanphone.php#current_order'
+               ),
+               4 => array (
+                 'type' => 'view',
+                 'name' => '招标大厅',
+                 'url' => 'http://www.cnzhaoshu.com/tenderall.php'
+               )
+               // 2 => array (
+               //   'type' => 'click',
+               //   'name' => '我要招标',
+               //   'key' => 'bidding'
+               // ),
+               // 3 => array (
+               //   'type' => 'view',
+               //   'name' => '管理中心',
+               //   'url' => 'http://www.cnzhaoshu.com/admin.php'
+               // ),
+               // 4 => array (
+               //   'type' => 'click',
+               //   'name' => '修改我的信息',
+               //   'key' => 'contact'
+               // )
+           )
+         )
+       )
+    );
+
+    echo '设置菜单...'.$weObj->createMenu($newmenu).'<br>';
+}

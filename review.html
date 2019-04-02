@@ -1,0 +1,315 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<title>招标审核</title>
+<style type="text/css">
+    body{
+        margin: 0;  
+        padding:0;  
+        border: 0;  
+        font: inherit;  
+        font-size: 100%;  
+        vertical-align: baseline;  
+    }
+    .title{
+        width:80%;
+        margin: 10px 10%;
+        text-align: center;
+        font-size: 20px;
+        line-height: 40px;
+        height:40px;
+        float: left;
+        background: #ddd;
+        border-radius: 4px;
+    }
+    #show{
+        float: left;
+        width: 100%;
+    }
+    .order{
+        float:left;
+        width:96%;
+        padding:0 2%;
+        margin-bottom: 5px;
+    }
+    .ordertitle{
+        width:98%;
+        line-height:40px;
+        background: #ddd;
+        border-radius: 3px;
+        padding-left: 2%;
+        float:left;
+        margin-bottom: 2px;
+    }
+    .order_ordername{
+        float: left;
+        width:100%;
+        height: 40px;
+        overflow:hidden;
+    }
+    .on .order_ordername{
+        float: left;
+        width:70%;
+        height: 40px;
+        overflow:hidden;
+    }
+    .order_state{
+        display: none;
+        border-radius: 5px;
+        background: #0089ff;
+        float: left;
+        width:0%;
+        height: 40px;
+        text-align: center;
+    }
+    .on .order_state{
+        border-radius: 5px;
+        background: #0089ff;
+        float: left;
+        width:30%;
+        height: 40px;
+        text-align: center;
+        display: block;
+        border-radius: 4px;
+    }
+    .allorder{
+        float: left;
+        width: 100%;
+    }
+    .on .allorder{
+        float: left;
+        width: 100%;
+        margin-top: 5px;
+    }
+    .showone{
+        float: left;
+        width:100%;
+        border-top: 1px solid #eee;
+        padding:5px 0;
+    }
+    .showone_title{
+        width:100%;
+        float: left;
+    }
+    .row1{
+        float: left;
+        width:100%;
+    }
+    .showone_order{
+        width:8%;
+        margin-left: 2%;
+        float: left;
+        line-height: 27px;
+    }
+    .showone_name{
+        width:40%;
+        float: left;
+        line-height: 27px;
+    }
+    .showone_number{
+        width:20%;
+        float: left;
+        line-height: 27px;
+    }
+    .row2{
+        float: left;
+        width:90%;
+        margin-left: 10%;
+        line-height: 18px;
+        font-size: 14px;
+    }
+    .delete{
+        width:25%;
+        float:left;
+        padding:4px 3px;
+        font-size: 14px;
+        border-radius:4px;
+        background:#E64340;
+        color:#fff;
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+	<div class="title">招标审核</div>
+	<div id="show"></div>
+	
+    <script id="dot_screen_order" type="text/x-dot-template">
+        {{ for(var i in it) { }}
+            <div id="{{=it[i].id}}" class="order" data-userid="{{=it[i].userid}}">
+                <div class="ordertitle">
+                    <div class="order_ordername">{{=it[i].ordername ? it[i].ordername : ''}}</div>
+                    <div class="order_state">通过</div>
+                </div>
+                <div class="allorder" id="show{{=it[i].id}}">
+                </div>
+            </div>
+        {{ } }}
+    </script>
+
+    <script id="dot_show" type="text/x-dot-template">
+        {{ for(var i in it) { }}
+            <div class="showone" id="{{=it[i].id}}">
+                <div class="showone_title">
+                    <div class="row1">
+                        <div class="showone_order">{{=addone(i)}}</div>
+                        <div class="showone_name">{{=it[i].name}}</div>
+                        <div class="showone_number">{{=it[i].count}}株</div>
+                        <div class="delete">删除</div>
+                    </div>
+                    <div class="row2">{{=guige(it[i])}}</div>
+                </div>
+            </div>
+        {{ } }}
+    </script>
+
+
+	<script src="./js/doT.min.js"></script>
+	<script src="./js/zepto.min.js"></script>
+	<script type="text/javascript">
+        var dot_screen_order = doT.template($("#dot_screen_order").text());
+        var dot_show = doT.template($("#dot_show").text());
+        var user = {userid:29908};
+        loadunrevieworder();
+
+        function loadunrevieworder(){
+            $.getJSON('/com/search_unrevieworder.php',{userid:user.userid},function(json){
+                if(json){
+                    $('#show').html(dot_screen_order(json));
+                }else{
+                    alert('无待审核的订单');
+                }    
+            });
+        }
+
+        function loadtreeorder(orderid,that){
+            $.getJSON('/com/search_unrevieworderindex.php',{orderid:orderid},function(json){
+                if(json){
+                    that.parents('.order').find('.allorder').animate({'height':json.length*55});
+                    that.parents('.order').find('.allorder').html(dot_show(json));
+                }
+            });
+        }
+
+        function guige(data_attribute){
+            var attr = '';
+            if(data_attribute.trunk_diameter){
+                var at = data_attribute.trunk_diameter.replace(',','-');
+                attr += '胸径:'+at+'公分 ';
+            }
+            if(data_attribute.ground_diameter){
+                var at = data_attribute.ground_diameter.replace(',','-');
+                attr += '地径:'+at+'公分 ';
+            }
+            if(data_attribute.pot_diameter){
+                var at = data_attribute.pot_diameter.replace(',','-');
+                attr += '盆径:'+at+'公分 ';
+            }
+            if(data_attribute.plant_height){
+                var at = data_attribute.plant_height.replace(',','-');
+                attr += '株高:'+at+'米 ';
+            }
+            if(data_attribute.plant_height_cm){
+                var at = data_attribute.plant_height_cm.replace(',','-');
+                attr += '株高:'+at+'公分 ';
+            }
+            if(data_attribute.crown){
+                var at = data_attribute.crown.replace(',','-');
+                attr += '冠幅:'+at+'米 ';
+            }
+            if(data_attribute.crown_cm){
+                var at = data_attribute.crown_cm.replace(',','-');
+                attr += '冠幅:'+at+'公分 ';
+            }
+            if(data_attribute.branch_number){
+                var at = data_attribute.branch_number.replace(',','-');
+                attr += '分枝数:'+at+'个 ';
+            }
+            if(data_attribute.bough_number){
+                var at = data_attribute.bough_number.replace(',','-');
+                attr += '主枝数:'+at+'个 ';
+            }
+            if(data_attribute.age){
+                var at = data_attribute.age.replace(',','-');
+                attr += '苗龄:'+at+'年 ';
+            }
+            if(data_attribute.branch_length){
+                var at = data_attribute.branch_length.replace(',','-');
+                attr += '条长:'+at+'米 ';
+            }
+            if(data_attribute.bough_length){
+                var at = data_attribute.bough_length.replace(',','-');
+                attr += '主蔓(枝)长:'+at+'米 ';
+            }
+            if(data_attribute.branch_point_height){
+                var at = data_attribute.branch_point_height.replace(',','-');
+                attr += '分枝点高:'+at+'米 ';
+            }
+            if(data_attribute.substrate){
+                var at = data_attribute.substrate;
+                attr += '基质:'+at;
+            }
+            
+            return attr;
+        }
+
+        function addone(one){
+            var a = 1+parseInt(one);
+            return a+'.';
+        }
+
+        // 点击订单标头展开内容
+        $('#show').on('click','.order_ordername',function(){
+            var that = $(this);
+            if(that.parents('.order').hasClass('on')){
+                that.parents('.order').removeClass('on');
+                $('#show .allorder').animate({'height':'0'});
+                that.parents('.order').find('.allorder').hide();
+            }else{
+                var orderid = that.parents('.order').attr('id');
+                $('#show .order').removeClass('on');
+                that.parents('.order').addClass('on');
+                that.parents('.order').siblings().find('.allorder').animate({'height':'0'});
+                that.parents('.order').siblings().find('.allorder').hide();
+                var lengths = that.parents('.order').find('.showone').length;
+                that.parents('.order').find('.allorder').show();
+                if(lengths){
+                    that.parents('.order').find('.allorder').animate({'height':lengths*55});
+                }else{
+                    loadtreeorder(orderid,that);
+                }
+            }
+        })
+
+        $('#show').on('click','.delete',function(){
+            var that = $(this);
+            var id = that.parents('.showone').attr('id');
+            var orderid = that.parents('.order').attr('id');
+            var lengths = that.parents('.order').find('.showone').length;
+            $.getJSON('/com/delete_unviewindexid.php',{orderid:orderid,id:id,count:lengths},function(result){
+                if(result){
+                    if(lengths == 1){
+                        that.parents('.order').remove();
+                    }
+                    that.parents('.showone').remove();
+                } 
+            })
+        })
+
+        $('#show').on('click','.on .order_state',function(){
+            var that = $(this);
+            var orderid = that.parents('.order').attr('id');
+            var userid = that.parents('.order').data('userid');
+            $.getJSON('/com/pass_vieworder.php',{orderid:orderid,userid:userid},function(result){
+                if(result) that.parents('.order').remove();
+            })
+        })
+
+    </script>
+
+</body>

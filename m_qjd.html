@@ -1,0 +1,222 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<title></title>
+<link href="m_style.css" type="text/css" rel="stylesheet" />
+
+</head>
+<body>
+<div class="pz_top">
+	<div class="c_0100_1">
+    	<div class="so">
+          <input type="text" class="Search" placeholder="搜索店内商品...">
+          <input type="image" src="images/Search.png" class="sear_sub">
+    	</div>
+    </div>
+</div>
+<div class="pz_main">
+	<div class="banner">
+    	<div id="slideBox" class="slideBox">
+			<div class="bd">
+				<ul>
+					<li><a class="pic" href="#"><img src="images/banner.jpg" /></a></li>
+                    <li><a class="pic" href="#"><img src="images/banner.jpg" /></a></li>
+                    <li><a class="pic" href="#"><img src="images/banner.jpg" /></a></li>
+				</ul>
+			</div>
+            <div class="hd">
+                <ul></ul>
+            </div>
+		</div>
+    </div>
+    <div class="c_0100_2">
+    	<div class="l_0100_1">
+        	<div class="logo"><img id="logo" src=""/></div>
+            <div class="lc_0100_1">
+                <div id="shopname" class="text_0100_1"></div>
+                <div class="text_0100_2"><a href="#">品牌旗舰店</a><span>点米50000排名1</span></div>
+            </div>
+        </div>
+        <div style="display: none;" class="l_0100_2"><span>线上交易额<strong>500</strong>万</span></div>
+    </div>
+    <div class="c_0100_3">
+    	<li>
+        	<a href="#">
+            	<i class="nav1"></i>
+                <span class="name">公司首页</span>
+            </a>
+        </li>
+        <li>
+        	<a href="#">
+            	<i class="nav2"></i>
+                <span class="name">全部苗木</span>
+            </a>
+        </li>
+        <li>
+        	<a href="#">
+            	<i class="nav3"></i>
+                <span class="name">更新苗木</span>
+            </a>
+        </li>
+        <li>
+        	<a href="#">
+            	<i class="nav4"></i>
+                <span class="name">公司地图</span>
+            </a>
+        </li>
+    </div>
+    <div class="c_0100_5"></div>
+    <div class="c_0100_9">
+    	<div class="l_0100_6">
+        	<div class="tit_0100_2"><span><strong style=" font-size:15px;">公司介绍</strong>&nbsp;&nbsp;Company Profile</span></div>
+        </div>
+        <div class="l_0100_7">
+        	<p class="pic_180"><span><img src="images/main28.png" width="100%" /></span></p>
+        	<p id="introduction"></p>
+        </div>
+    </div>
+    <div class="c_0100_8">
+    	<div class="l_0100_3 tit_bg1">
+        	<div class="tit_0100_1">
+            	<strong style=" color:#fff;">荣誉资质</strong>
+                <span style=" color:#fff;">Qualification</span>
+            </div>
+            <div class="pic_tit1"><img src="images/main22.png" width="100%" /></div>
+        </div>
+        <div id="honors" class="l_0100_5"></div>
+    </div>
+    <div class="c_0100_8">
+    	<div class="l_0100_3">
+        	<div class="tit_0100_1">
+            	<strong>精品项目</strong>
+                <span>Boutique projects</span>
+            </div>
+            <div class="pic_tit1"><img src="images/main19.png" width="100%" /></div>
+        </div>
+        <div class="l_0100_4">
+        	<ul id="projects"></ul>
+        </div>
+    </div>
+    <div class="c_0100_7">
+    	<img src="images/main6.jpg" width="150" height="150" /><br/>
+        <span>扫一扫  微信找树更方便</span>
+    </div>
+</div>
+<div class="pz_down">
+	<div class="bq">
+    	版权所有：找树网 & 北京汉林国际园林工程有限公司<br/>
+京ICP证1403号  联系我们
+    </div>
+    <div class="c_0100_6"></div>
+</div>
+<div class="pf_tel">
+	<div class="tel">联系电话：<span id="shopphone"></span></div>
+    <div class="bohao">一键拨号</div>
+</div>
+
+<script src="/js/jquery-3.1.0.min.js"></script>
+<script src="/js/TouchSlide.1.1.js"></script>
+<script src="/js/doT.min.js"></script>
+<script id="dot_honor" type="text/x-dot-template">
+    {{ for(var i in it) { }}
+        <li>
+            {{? i>0 && i<5}}
+            <img src="./shop/honor/m/{{=it[i].id}}.jpg" width="100%" height="160px;"/>
+            {{??}}
+            <img src="./shop/honor/b/{{=it[i].id}}.jpg" width="100%"/>
+            {{?}} 
+            
+        </li>
+    {{ } }}
+</script>
+<script id="dot_project" type="text/x-dot-template">
+    {{ for(var i in it) { }}
+        <li>
+            <a href="#">
+                <div class="pic_108">
+                    <div class="boxF">
+                        <div class="boxS">
+                            <div class="boxT" style=" background:url(./shop/project/b/{{=it[i].id}}.jpg) center no-repeat; background-size:100%;">
+                                <div class="overlay">
+                                    <a>dd</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text_0100_3"><span>{{=it[i].msg_title}}</span><i class="jiantou"></i></div>
+            </a>
+        </li>
+    {{ } }}
+</script>
+
+
+
+<script type="text/javascript">
+//获取网页url?参数
+function urlRequest(name)
+{
+    var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);  
+    return match && decodeURIComponent(match[1].replace(/\+/g, ' ')); 
+}
+function website_filter(str)
+{
+    var regEx1 = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w-   .\/?%&=]*)?/g;
+    var arr1 = str.match(regEx1);
+    if (arr1 != null) {
+        for (var i=0;i<arr1.length;i++) {
+            var link = arr1[i].replace(/www./,'');
+            str = str.replace(arr1[i], '<a class="website" href="'+link+'">'+link+'</a>');
+        }
+    }
+
+
+    var regEx2=/www.([\w-]+\.)+[\w-]+(\/[\w-   .\/?%&=]*)?/g;
+    var arr2=str.match(regEx2);
+    if(arr2 != null)
+    {
+        for(var i=0;i<arr2.length;i++)
+        str = str.replace(arr2[i], '<a class="website" href="http://'+arr2[i]+'">'+arr2[i]+'</a>')
+    }
+
+    return str;
+}
+
+var shopid = urlRequest('shopid');
+var dot_honor = doT.template($("#dot_honor").text());
+var dot_project = doT.template($("#dot_project").text());
+
+$('#logo').attr('src', '/headimg/96/'+shopid+'.jpg?t=' + new Date().getTime());
+
+// console.log(shopid);
+
+$.getJSON('/com/shop.get.php', {shopid: shopid}, function (data) {
+        $("#shopname").html(data.name);
+        $("#shopphone").html(data.phone);
+        $("#introduction").html(website_filter(data.introduction));
+
+        $('#honors').html(dot_honor(data.honor));
+        $('#projects').html(dot_project(data.project));
+});
+
+    TouchSlide({ 
+        slideCell:"#slideBox",
+        titCell:".hd ul", //开启自动分页 autoPage:true ，此时设置 titCell 为导航元素包裹层
+        mainCell:".bd ul", 
+        effect:"leftLoop", 
+        autoPage:true,//自动分页
+        autoPlay:true //自动播放
+    });
+
+
+
+</script>
+
+
+</body>
+</html>

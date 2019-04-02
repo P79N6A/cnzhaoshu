@@ -1,0 +1,42 @@
+<?php 
+	require 'checkhost.php';
+	require('db2.php');
+	
+	// 获取参数
+	$userid = $_POST['userid'];
+	$address = $_POST['address'];
+	$ordername = $_POST['ordername'];
+	
+	if ($userid) {
+		$db = new db();
+		$sql = 'insert into tree_order_index(userid,ordername,address) values(?,?,?)';
+		$orderid = $db->prepare_insert($sql,array($userid,$ordername,$address));
+		echo $orderid;
+		unset($db);
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ ?>

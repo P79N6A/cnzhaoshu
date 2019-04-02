@@ -1,0 +1,11 @@
+<?php 
+ require 'db2.php';
+
+ $db = new db();
+
+ $sql = 'select count(id) from tree_order';
+
+ $result = $db->prepare_query($sql)[0]['count(id)'];
+
+echo $result;
+

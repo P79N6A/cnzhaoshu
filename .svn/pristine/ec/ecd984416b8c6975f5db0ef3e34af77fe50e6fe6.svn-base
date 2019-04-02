@@ -1,0 +1,15 @@
+<?php 
+require 'db.php';
+
+	
+	$userid = $_GET['userid'];
+	$orderid = $_GET['orderid'];
+	$id = $_GET['id'];
+	if($orderid && $id){
+		$db = new db();
+		$sql = 'select a.*,b.name,b.phone from (select k.*,j.unit from (select * from bid_order) k left join (select unit,orderid,id from tree_order) j on k.orderid=j.orderid and k.id=j.id  where k.id=? and k.state>1 and k.orderid=?) a left join (select userid,name,phone from user) b on a.userid = b.userid';
+		$result = $db->prepare_query($sql,array($id,$orderid));
+		echo json_encode($result);
+		unset($db);
+	}
+

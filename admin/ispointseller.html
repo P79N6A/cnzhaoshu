@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>是否指定供应商</title>
+</head>
+<body>
+        <h2>是否指定供应商</h2>
+        <form action="" method="post">
+            是否指定供应商 :
+            <input type="radio" name="pointsell" id="man" onclick="show()">是
+            <input type="radio" name="pointsell" id="woman" onclick="show()">否
+            <div style="display:none" id="div1">
+            请输入指定供应商：
+                <br>
+                <input type="text" name="sell_name"> <span></span>
+                <br>
+                <input type="submit" value="确定">
+                <input type="reset" value="重置">
+            </div>
+            <div style="display:none" id="div2">
+                <input type="submit" value="进 行发标">
+            </div>
+        </form>
+</body>
+</html>
+<script type="text/javascript">
+    function show(){
+        if(document.getElementById("man").checked){
+            document.getElementById("div1").style.display="block";
+            document.getElementById("div2").style.display="none";
+        }else if(document.getElementById("woman").checked){
+            document.getElementById("div2").style.display="block";
+            document.getElementById("div1").style.display="none";
+        };
+    };
+</script>

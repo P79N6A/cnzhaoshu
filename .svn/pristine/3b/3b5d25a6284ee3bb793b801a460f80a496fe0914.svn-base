@@ -1,0 +1,19 @@
+<?php 
+// require 'checkhost.php';
+require 'db.php';
+
+
+$id = $_POST['id'];
+$attribute = $_POST['attribute'];
+$name = $_POST['name'];
+
+$db = new db();
+
+
+if($id){
+	$sql = 'update maps_order set tree_name=?,tree_attribute=? where id=?';
+	$result = $db->prepare_exec($sql,array($name,$attribute,$id));
+	echo $result;
+}
+
+unset($db);

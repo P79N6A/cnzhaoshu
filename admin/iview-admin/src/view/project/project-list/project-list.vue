@@ -1,0 +1,409 @@
+<style>
+  #qrcode {
+    width: 160px;
+    height: 160px;
+    margin-top: 15px;
+  }
+
+  #qrcode image {
+    margin: 0 auto;
+  }
+</style>
+<template>
+  <div>
+    <Modal
+      v-model="codestatus"
+      title="请扫码后分享"
+      @on-ok="cancelcode">
+      <div id="qrcode" style="margin: 0 auto;"></div>
+    </Modal>
+    <div style="padding-bottom: 10px">
+      <div>
+        <Input v-model="partya_company_name" placeholder="甲方" clearable style="width: 170px;margin-right: 10px"/>
+        <Input v-model="project_name" placeholder="项目" clearable style="width: 170px;margin-right: 10px"/>
+        <Input v-model="tel" placeholder="手机" clearable style="width: 170px;margin-right: 10px"/>
+        <Button @click="getList(true)" style="margin-left: 20px" type="primary">
+          <Icon type="search"/>
+          搜索
+        </Button>
+        <div style="float: right;padding-right: 20px">
+          <Select v-model="status" @on-change="getList(true)" style="width:100px">
+            <Option :value="2">招标中</Option>
+            <Option :value="3">招标终止</Option>
+            <Option :value="4">招标结束</Option>
+          </Select>
+          <Select v-model="audit_status" @on-change="getList(true)" style="width:100px;margin-left: 20px">
+            <Option :value="2">待审核</Option>
+            <Option :value="1">已审核</Option>
+          </Select>
+        </div>
+
+      </div>
+    </div>
+    <Table border :columns="columns" :data="bidList" @on-row-click="linkInfo"
+           :class="isflex?'flextree_list':''"></Table>
+    <div style="padding: 20px 0;text-align: center;background: #fff">
+      <Page :total="totol_num" :page-size="20" :current="p" @on-change="changePage" show-elevator/>
+    </div>
+
+  </div>
+</template>
+<script>
+  import {changeProjectStatus, getBidList} from '@/api/data'
+  import {getRemoveagsNav} from '@/libs/util'
+  import {mapMutations} from 'vuex'
+  import {remainingTime} from '@/libs/tools'
+  import QRcode from 'qrcodejs2'
+
+  export default {
+    data () {
+      return {
+        codestatus: false,
+        isflex: false,
+        status: 2,
+        audit_status: 2,
+        partya_company_name: '',
+        project_name: '',
+        tel: '',
+        totol_num: 1,
+        columns: [
+          {
+            title: '序号',
+            key: 'name',
+            render: (h, params) => {
+              return h('div', [
+                h('Icon', {
+                  props: {
+                    type: 'person'
+                  }
+                }),
+                h('strong', params.index + 1)
+              ])
+            }
+          },
+          {
+            title: '订单编号',
+            key: 'order_num',
+            render: (h, params) => {
+              return h('div', [
+                h('Icon', {
+                  props: {
+                    type: 'person'
+                  }
+                }),
+                h('strong', params.row.project_info.order_num)
+              ])
+            }
+          },
+          {
+            title: '项目名称',
+            key: 'name',
+            render: (h, params) => {
+              return h('div', [
+                h('Icon', {
+                  props: {
+                    type: 'person'
+                  }
+                }),
+                h('strong', params.row.project_info.project_name)
+              ])
+            }
+          },
+          {
+            title: '招标进度',
+            key: 'jindu',
+            render: (h, params) => {
+              return h('div', [
+                h('Icon', {
+                  props: {
+                    type: 'person'
+                  }
+                }),
+                h('strong', params.row.project_info.project_progress + '%')
+              ])
+            }
+          },
+          {
+            title: '剩余时间',
+            key: 'shijian',
+            render: (h, params) => {
+              return h('div', [
+                h('Icon', {
+                  props: {
+                    type: 'person'
+                  }
+                }),
+                h('strong', remainingTime(params.row.project_info.Up_time))
+              ])
+            }
+          },
+          {
+            title: '用苗地',
+            key: 'address',
+            render: (h, params) => {
+              return h('div', [
+                h('Icon', {
+                  props: {
+                    type: 'person'
+                  }
+                }),
+                h('strong', params.row.project_info.hcity + params.row.project_info.hproper)
+              ])
+            }
+          },
+          {
+            title: '甲方',
+            key: 'partya',
+            render: (h, params) => {
+              return h('div', [
+                h('Icon', {
+                  props: {
+                    type: 'person'
+                  }
+                }),
+                h('strong', params.row.company_info.company_name)
+              ])
+            }
+          },
+          {
+            title: '联系人',
+            key: 'lianxi',
+            render: (h, params) => {
+              return h('div', [
+                h('Icon', {
+                  props: {
+                    type: 'person'
+                  }
+                }),
+                h('strong', params.row.company_info.contacts)
+              ])
+            }
+          },
+          {
+            title: '联系电话',
+            key: 'tel',
+            render: (h, params) => {
+              return h('div', [
+                h('Icon', {
+                  props: {
+                    type: 'person'
+                  }
+                }),
+                h('strong', params.row.company_info.tel)
+              ])
+            }
+          },
+          {
+            title: '待审核数',
+            key: 'daishenhe',
+            render: (h, params) => {
+              return h('div', [
+                h('Icon', {
+                  props: {
+                    type: 'person'
+                  }
+                }),
+                h('strong', params.row.project_info.audits_num)
+              ])
+            },
+            sortable: true
+          },
+          {
+            title: '操作',
+            key: 'action',
+            width: 220,
+            align: 'center',
+            render: (h, params) => {
+              let btnArr = []
+              btnArr.push(h('Button', {
+                props: {
+                  type: 'primary',
+                  size: 'small',
+                },
+                style: {
+                  marginRight: '5px',
+                },
+                on: {
+                  click: (e) => {
+                    e.stopPropagation()
+                    window.event.cancelBubble = true
+                    this.codestatus = true
+                    this.showcode(params.index)
+                  }
+                }
+              }, '分享'))
+              if (params.row.project_info.status == 3) {
+                btnArr.push(h('Button', {
+                  props: {
+                    type: 'primary',
+                    size: 'small'
+                  },
+                  style: {
+                    marginRight: '5px'
+                  },
+                  on: {
+                    click: (e) => {
+                      e.stopPropagation()
+                      window.event.cancelBubble = true
+                      this.changeStatus(params.index, true)
+                    }
+                  }
+                }, '启用'))
+              } else if (params.row.project_info.status == 2) {
+                btnArr.push(h('Button', {
+                  props: {
+                    type: 'error',
+                    size: 'small'
+                  },
+                  style: {
+                    marginRight: '5px',
+                  },
+                  on: {
+                    click: (e) => {
+                      e.stopPropagation()
+                      window.event.cancelBubble = true
+                      this.changeStatus(params.index, false)
+                    }
+                  }
+                }, '禁用'))
+              }
+              if(params.row.isnull_user != 1){
+                btnArr.push(h('Button', {
+                  props: {
+                    type: 'primary',
+                    size: 'small',
+                  },
+                  style: {
+                    marginRight: '5px',
+                  },
+                  on: {
+                    click: (e) => {
+                      e.stopPropagation()
+                      window.event.cancelBubble = true
+                      this.showcode(params.index,true)
+                    }
+                  }
+                }, '绑定'))
+              }
+
+              return h('div', btnArr)
+
+            }
+          }
+        ],
+        bidList: [],
+        p: 1
+      }
+    },
+    methods: {
+      ...mapMutations([
+        'setBreadCrumb',
+        'setTagNavList',
+        'addTag',
+        'setLocal',
+        'removeTag',
+      ]),
+      linkInfo (row, index) {
+        this.$router.push({
+          name: 'projectInfo',
+          params: {
+            projectInfo: row
+          }
+        })
+      },
+      getList (first) {
+        if (first) {
+          this.p = 1
+        }
+        let res = {
+          p: this.p,
+          status: this.status,
+          audit_status: this.audit_status,
+          partya_company_name: this.partya_company_name,
+          project_name: this.project_name,
+          tel: this.tel,
+        }
+        this.$Message.loading({
+          content: '加载中',
+          duration: 0
+        })
+        getBidList(res).then(res => {
+          /*res = JSON.parse(res);*/
+          this.$Message.destroy()
+          this.bidList = res.data.data
+          if (res.data.status == 1) {
+            this.bidList = []
+          }
+          this.totol_num = res.data.totol_num
+        })
+      },
+      changePage (p) {
+        this.p = p
+        this.getList()
+      },
+      handleScroll (e) {
+        var scrollTop = e.target.scrollTop
+        var topHeight = document.getElementsByClassName('ivu-table-wrapper')[0].offsetTop - 64
+        if (scrollTop > topHeight) {
+          this.isflex = true
+        } else {
+          this.isflex = false
+        }
+      },
+      changeStatus (index, is) {
+        let bidOne = this.bidList[index]
+        let data = {
+          project_id: bidOne.project_info.project_id,
+          status: is ? 2 : 3
+        }
+        changeProjectStatus(data).then(res => {
+          if (res.data.status == 0) {
+            this.$Message.success({
+              content: '操作成功',
+            })
+            this.$set(this.bidList[index].project_info, 'status', is ? 2 : 3)
+          } else {
+            this.$Message.warning({
+              content: '服务器繁忙'
+            })
+          }
+        })
+      },
+      makeCode () {
+        let qrcode = new QRcode('qrcode', {
+          width: 160,
+          height: 160, // 高度
+          text: '', // 二维码内容
+          image: '/admin/img/log.png',
+          render: 'canvas' // 设置渲染方式（有两种方式 table和canvas，默认是canvas）
+          // background: '#f0f'
+          // foreground: '#ff0'
+        })
+        this.qrcode = qrcode
+      },
+      cancelcode () {
+        this.codestatus = false
+      },
+      showcode (index,bind) {
+        this.codestatus = true
+        console.log(this.bidList[index])
+        let code = window.location.origin
+        if(bind){
+          code += '/admin/mobile/zhaoshu/index.html#/bindPhone/' + this.bidList[index].company_info.tel
+        }else {
+          code += '/admin/m_bid.html#home&project_id=' + this.bidList[index].project_info.project_id
+        }
+        this.qrcode.makeCode(code)
+      }
+    },
+    mounted () {
+      this.getList(true)
+      /*this.removeTag("projectList");*/
+      this.makeCode()
+      document.getElementsByClassName('content-wrapper')[0].addEventListener('scroll', this.handleScroll)
+    },
+    beforeDestroy () {
+      document.getElementsByClassName('content-wrapper')[0].removeEventListener('scroll', this.handleScroll)
+    }
+  }
+</script>

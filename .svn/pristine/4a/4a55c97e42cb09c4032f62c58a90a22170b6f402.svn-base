@@ -1,0 +1,16 @@
+<?php
+// 属性字典 删除
+// if ( empty($_SERVER['HTTP_REFERER']) || strtolower($_SERVER['SERVER_NAME'])!='cnzhaoshu.com') exit; 
+// $.getJSON('/com/dictionary_none_search.php', function(json){...});
+
+require 'db.php';
+
+$name = $_REQUEST['name'];	
+
+$sql = 'update dictionary_none set state=1 where name=?';
+
+$db = new db();
+$db->prepare_exec( $sql, array( $name ) );
+unset($db);
+
+?>

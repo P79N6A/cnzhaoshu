@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>店铺管理-认证店铺</title>
+    <head>
+        <script>function getcookie(d) {
+            for (var b = document.cookie.split("; "), a = 0; a < b.length; a++) {
+                var c = b[a].split("=");
+                if (c[0] == d) return unescape(c[1])
+            }
+        }
+
+        getcookie("user2") || location.replace("login.html");</script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>精品项目-找树网管理平台</title>
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/bootstrap-reset.css" rel="stylesheet">
+        <!--&lt;!&ndash;external css&ndash;&gt;-->
+        <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+        <!-- Custom styles for this template -->
+        <link href="css/style.css" rel="stylesheet">
+        <link href="css/style-responsive.css" rel="stylesheet" />
+
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/bootstrap-reset.css" rel="stylesheet">
+        <!--载入框架的js文件-->
+        <link rel="stylesheet" href="layui-v2.4.2/css/layui.css" />
+        <link href="../iconfont/iconfont.css?t=20170307" rel="stylesheet"/>
+
+        <link href="css/style.css?t=20170308" rel="stylesheet">
+        <link href="css/style-responsive.css" rel="stylesheet"/>
+        <link href="css/zhaoshu.css" rel="stylesheet">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
+        <!--[if lt IE 8]>
+        <script>window.location.replace('forie.html');</script><![endif]-->
+        <!--[if lt IE 9]>
+        <script src="js/html5shiv.min.js"></script>
+        <script src="js/respond.min.js"></script>
+        <![endif]-->
+        <style>
+            #tableshow {
+                display: block;
+            }
+
+            .bottom-button {
+                width: 100%;
+                text-align: right;
+                padding-top: 20px;
+            }
+
+            .bottom-button label {
+                margin-right: 20px;
+                margin-bottom: 20px;
+            }
+
+            #tableList input {
+                outline: none;
+                border: none;
+                max-width: 300px;
+                min-width: 0;
+            }
+
+            #tableList input:focus {
+                border: 1px solid #e2e2e4;
+                outline: 1px solid #e2e2e4;
+
+            }
+            td {
+                white-space: nowrap;
+            }
+            .error-remind{
+                font-size: 20px;
+                color: red;
+            }
+            .error-remark{
+                float: right;
+                font-size: 14px;
+                color: red;
+            }
+
+/* 防止下拉框的下拉列表被隐藏---必须设置--- */
+.layui-table-cell {            overflow: visible !important;        }
+/* 使得下拉框与单元格刚好合适 */
+td .layui-form-select{
+    margin-top: -10px;
+    margin-left: -15px;
+    margin-right: -15px;
+}
+        </style>
+        <title>认证店铺店铺列表</title>
+    </head>
+<body>
+<header id="header" class="header white-bg"></header>
+
+<aside>
+    <div id="sidebar" class="nav-collapse"></div>
+</aside>
+
+<!--main content start-->
+<section id="main-content">
+    <section class="wrapper">
+        <!-- page start-->
+        <div class="row">
+            <div class="col-lg-12">
+                <section class="panel">
+                    <header class="panel-heading">
+                        <i class="icon icon-woyaokaidian1"></i> 认证店铺
+                    </header>
+                    <form class="layui-form">
+                        <div class="layui-form-item">
+                            <div class="layui-inline" style="display: inline;">
+                                <div class="layui-input-inline">
+                                    <input type="text" name="shopname" class="layui-input" placeholder="请输入主店名称" >
+                                </div>
+                                <div class="layui-input-inline">
+                                <select name="member_level" id="" style="margin-left: 50px" class="layui-input">
+                                    <option value="">请选择店铺等级</option>
+                                    <option value="0">普通会员</option>
+                                    <option value="2">官方旗舰店</option>
+                                    <option value="1">官方认证店</option>
+                                </select>
+                                </div>
+                                <div class="layui-input-inline">
+                                        <input type="text" class="layui-input test-item" placeholder="认证时间" name="member_paid_time">
+                                </div>
+                                    <div class="layui-input-inline">
+                                        <input type="text" class="layui-input test-item" placeholder="过期时间" name="member_expire_time">
+                                    </div>
+                                <div class="layui-input-inline">
+                                    <button class="layui-btn" lay-submit lay-filter="formDemo">点我搜索</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <table class="table table-striped border-top" id="userCertification" lay-filter="userCertification"></table>
+                </section>
+            </div>
+        </div>
+
+        <!-- <script type="text/html" id="barDemo"> -->
+<script type="text/html" id="selectGxmc" >
+    <form class="layui-form">
+        <select name='jtcyGxmc' lay-filter="jtcyGxmc" >
+            <option value="0,{{d.shopid}},{{d.member_level}}" {{ d.member_level  == 0 ? 'selected' : '' }}>普通会员</option>
+            <option value="2,{{d.shopid}},{{d.member_level}}" {{ d.member_level  == 2 ? 'selected' : '' }}>官方旗舰店</option>
+            <option value="1,{{d.shopid}},{{d.member_level}}" {{ d.member_level  == 1 ? 'selected' : '' }}>官方认证店</option>
+        </select>
+    </form>
+
+</script>
+        <!-- </script> -->
+        <!-- page end-->
+    </section>
+    <!--main content end-->
+</section>
+</body>
+<!--main content end-->
+<script src="./js/jquery-1.8.3.min.js"></script>
+<script src="./layui-v2.4.2/layui.all.js"></script>
+<script src="./js/login.js?t=20170308"></script>
+<script src="js/common-scripts.js"></script>
+<script>
+</script>
+
+<script>
+
+    //需声明空间
+    var laydate=layui.laydate;
+    var table = layui.table;
+    var form = layui.form;
+    var laypage = layui.laypage;
+    //数据列表
+    $(function () {
+        reload();//初始化加载
+    });
+    function reload(where) {
+        table.render({
+            elem:'#userCertification'
+            ,height:' 680px'
+            ,where:where
+            ,method: 'post'
+            ,url: 'store_management/store_certification.php' //数据接口
+            ,page:{ //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+              layout: [ 'prev', 'page', 'next','count', 'skip'] //自定义分页布局
+              ,curr: 1 //设定初始在第 5 页
+              ,groups: 5 //只显示 1 个连续页码
+              ,first: false //不显示首页
+              ,limit:10
+              ,last: false //不显示尾页
+            } //开启分页
+            ,cols: [[ //表头
+                {field: 'shopid', title: '店铺id',width:'5%'}
+                ,{field: 'shopname', title: '店铺名称',width:'35%'}
+                ,{field: 'phone', title: '联系电话', width:'15%'}
+                ,{field: 'member_paid_time', title: '认证时间', width:'15%'}
+                ,{field: 'member_expire_time', title: '到期时间', width:'15%'}
+                ,{ title: '认证修改', width:'15%',toolbar: '#selectGxmc',}
+            ]]
+            ,done: function(res, curr, count){
+                if(count==0){
+                    $('.layui-none').html('没有查找到相关信息');
+                }
+                laypage.render({
+                    cont: 'demo',
+                    pages: count,
+                    curr: function(){
+                        var page = location.search.match(/page=(\d+)/);
+                        return page ? page[1] : 1;
+                    }(),
+                    jump: function(e, first){ //触发分页后的回调
+                        if(!first){ //一定要加此判断，否则初始时会无限刷新
+                            location.href=setParam("page",e.curr);
+                        }
+                    }
+                });
+            }
+
+        });
+
+    }
+    // 搜索
+    layui.use(['form','table'], function(){
+        var form = layui.form;
+        var table = layui.table;
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+            var jsonstr=JSON.stringify(data.field);
+            // console.log(jsonstr);
+            var obj = eval('(' + jsonstr + ')');
+            var newstr={shop_name: obj.shopname, member_level: obj.member_level,member_paid_time:obj.member_paid_time,member_expire_time:obj.member_expire_time};
+            // console.log(newstr);
+            reload(newstr);
+            return false;
+        });
+    });
+
+    // console.log(table)
+    //声明时间控件
+    lay('.test-item').each(function(){
+        laydate.render({
+            elem: this
+            ,trigger: 'click'
+        });
+    });
+
+
+form.on('select(jtcyGxmc)', function(data){
+    data = data.value; //得到被选中的值
+    arr=data.split(',');
+    shopid = arr[1];
+    // console.log(shopid);
+    member_level = arr[0];
+    member_leveled = arr[2];
+    if(member_level == member_leveled){
+        return false;
+    }else{
+        $.ajax({
+          url:'store_management/store_updatemember_level.php',  //改变状态接口地址
+          type:'post',
+          data:{shopid:shopid,member_level:member_level},
+          dataType:'JSON',
+          success:function(res){
+            layer.msg(res.data);
+            setTimeout("location.reload();",2000);
+          },
+          error:function (data) {
+          }
+        })
+    }
+    // console.log(member_level);
+
+});
+</script>
+</html>

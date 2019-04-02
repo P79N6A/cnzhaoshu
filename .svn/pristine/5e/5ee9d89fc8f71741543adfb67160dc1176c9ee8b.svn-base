@@ -1,0 +1,55 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Mrwang
+ * Date: 2018/9/5
+ * Time: 16:08
+ */
+include "../com/db.php";
+$db= new db();
+//投标接口
+//
+//$user=json_decode($_COOKIE['user2'],true);
+//$user=$user['userid'];
+$user=6;
+$data=$_POST;
+$tree_imgs=isset($data['tree_imgs'])?$data['tree_imgs']:"";
+if(!empty($tree_imgs)){
+    $tree_imgs=implode(" ",$tree_imgs);
+}
+
+$tree_id=$data['tree_id'];
+$tree_price =$data['tree_price'];
+$tree_num=$data['tree_num'];
+
+
+$tree_address=$data['tree_address'];
+
+$sql="select * from  tender_order where tender_tree_id='".$tree_id."' and tender_user_id = $user ";
+//var_dump($sql);die;
+$res=$db->query($sql)[0];
+//var_dump($res);die;
+$tender_time=date("Y-m-d H:i:s",time());
+$tender_status=1;
+if(empty($res)){
+
+        $sqli="insert into tender_order(tender_tree_id,tender_user_id,tree_price,tree_num,tree_imgs,tree_address,tender_time,tender_status) values ('".$tree_id."','".$user."','".$tree_price."','".$tree_num."','".$tree_imgs."','".$tree_address."','".$tender_time."','".$tender_status."')";
+//        var_dump($sqli);die;
+}else{
+
+    $sqli="update tender_order set tender_tree_id = '".$tree_id."', tender_user_id = '".$user."',tree_price ='".$tree_price."',tree_num='".$tree_num."',tree_imgs='".$tree_imgs."',tree_address='".$tree_address."',tender_time='".$tender_time."'";
+
+}
+
+$rec= $db->exec($sqli);
+//var_dump($rec);die;
+if($rec){
+     $content=[
+         "status"=>0
+     ];
+}else{
+    $content=[
+        "status"=>1
+    ];
+}
+echo json_encode($content);

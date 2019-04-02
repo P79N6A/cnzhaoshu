@@ -1,0 +1,17 @@
+<?php 
+// require 'checkhost.php'; checkhost();
+require 'db.php';
+$db = new db();
+
+$visitorid = $_GET['visitorid'];
+$userid = $_GET['userid'];
+
+if ($userid) {
+	$sql = 'select visitorid,userid,name,time,type from v_shareinfo where visitorid=? and userid=?  order by time desc';
+
+	$result2 = $db->prepare_query($sql, array($visitorid,$userid));
+	echo json_encode($result2);
+}
+unset($db);
+
+?>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<?php
+    include 'com2/wechat_login2.php';
+    wechatLogin();
+?>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="./css/weui.min.css"/>
+    <link rel="stylesheet" href="./css/example.css"/>
+    <link rel="stylesheet" href="./css/basics_m.css?t=20170907"/>
+    <title>创建树牌二维码</title>
+    <style type="text/css">
+        body{
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font: inherit;
+            font-size: 100%;
+            vertical-align: baseline;
+        }
+        form{
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="weui-cells weui-cells_form">
+        <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label">树牌数量</label></div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="number" id="number" placeholder="请输入数量">
+            </div>
+        </div>
+    </div>
+    <div class="weui-btn-area">
+        <a class="weui-btn weui-btn_primary submit_create" href="javascript:">确定</a>
+    </div>
+
+    <div class="alert none" style="width: 100%;height: 100%;background: #aaa;z-index: 1010;position: absolute;top:0">
+        <div class="weui-dialog">
+            <div class="weui-dialog__hd"><strong class="weui-dialog__title">提示信息</strong></div>
+            <div class="weui-dialog__bd" id="message"></div>
+        </div>
+    </div>
+    
+    <script src="./js/zepto.min.js"></script>
+    <script>
+        var user = getcookie('user');
+        user = user ? JSON.parse(user) : null;
+        var over = false;
+        $('#number').focus();
+        
+        function getcookie(name){
+            var arrStr = document.cookie.split("; ");
+            for(var i = 0;i < arrStr.length;i ++){
+                var temp = arrStr[i].split("=");
+                if(temp[0] == name) return unescape(temp[1]);
+            } 
+        }
+
+
+        // 创建树牌
+        $('.submit_create').click(function(){
+            var number = $.trim($('#number').val());
+            number = parseInt(number);
+            if(number){
+                timestamp = Date.parse(new Date());
+                $('#message').html('正在生成二维码，请勿退出');
+                $('.alert').show();
+                create(1,number,timestamp);
+            }else{
+                alert('数量不能为空');
+            }
+                
+        })
+
+        function create(a,b,c){
+            var id = c+a.toString();
+            $.post('/com2/adopt_createtreeqrcode.php',{id:id},function (result) {
+                result = JSON.parse(result);
+                if(result.return_code == 200){
+                    if(a<b){
+                        ++a;
+                        create(a,b,c);
+                    }else{
+                        $('#message').html('生成完毕');
+                        over = true;
+                    }
+                }
+            });
+        }
+        $('.alert').click(function(){
+            if(over){
+                $('.alert').hide();
+                over = false;
+            }
+        })
+    </script>
+</body>

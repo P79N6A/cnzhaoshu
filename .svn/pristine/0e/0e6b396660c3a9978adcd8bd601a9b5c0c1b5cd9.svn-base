@@ -1,0 +1,16 @@
+<?php 
+
+require 'db.php';
+
+$qrcodeid = $_GET['qrcodeid'];
+
+$db = new db();
+
+$sql = 'select a.*,b.name username,b.phone from (select name,address,id,userid from map where qrcode=? and switch=1) a left join (select name,phone,userid from user) b on a.userid=b.userid';
+
+$result = $db->prepare_query($sql,array($qrcodeid))[0];
+
+echo json_encode($result);
+
+unset($db);
+

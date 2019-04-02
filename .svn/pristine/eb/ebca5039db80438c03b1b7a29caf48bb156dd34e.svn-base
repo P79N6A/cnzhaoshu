@@ -1,0 +1,56 @@
+<?php
+/*
+生成邀请二维码
+ */
+// require 'checkhost.php';
+require '../wechat/wechat.class.php';
+// require 'db2.php';
+include '../com/qrcode.image.php'; 
+
+$options = array(
+    'token'=>'zhaoshu', //填写你设定的key
+    'auth'=>true, //已认证授权的第三方开放平台
+    'platformid'=>'gh_2b5bfe05ef68',
+    'encodingaeskey'=>'ylXmQb9lO9uVfCHSZAMCMsTtvUsTu0clAeR1qiXN62A', //填写加密用的EncodingAESKey
+    'appid'=>'wx464f6ef9bf09dccf', //填写高级调用功能的app id, 请在微信开发模式后台查询
+    'appsecret'=>'f66e94dab4ec8c1556716181412afb61' //填写高级调用功能的密钥
+    );
+
+$weObj = new Wechat($options);	
+
+$qrcode = $weObj->getQRCode(2, 0, 2592000);
+$ticket = $qrcode['ticket'];
+
+
+$url = $weObj->getQRUrl($ticket);
+$img = $weObj->http_get($url);
+
+if (!$img) {
+	$weObj->deleteAccessToken();
+	$url = $weObj->getQRUrl($ticket);
+	$img = $weObj->http_get($url);
+}
+
+file_put_contents('../qrinvite/lmzm.jpg', $img);
+
+unset($img);
+
+
+$image = imagecreatefromjpeg('../qrinvite/lmzm.jpg');
+
+$logofile = $_SERVER['DOCUMENT_ROOT'].'/platform/1020.png';
+
+$logo = imagecreatefrompng($logofile);
+
+
+$image = QrcodeImage::logo($image, $logo);
+// $image = QrcodeImage::label($image, '邀请好友开店二维码');
+
+imagejpeg($image, '../qrinvite/lmzm.jpg', 80);
+
+echo $image;
+
+unset($image);
+
+
+?>

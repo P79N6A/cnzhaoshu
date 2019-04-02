@@ -1,0 +1,29 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Mrwang
+ * Date: 2018/10/12
+ * Time: 13:36
+ */
+header('Access-Control-Allow-Origin:*');
+include "../com/db.php";
+$db=new db();
+$imgs=isset($_POST['imgs'])?$_POST['imgs']:"";
+$imgs_kind=isset($_POST['img_kind'])?$_POST['img_kind']:"";
+$project_id=isset($_POST['project_id'])?$_POST['project_id']:"";
+$remark=isset($_POST['remark'])?$_POST['remark']:"";
+if(!empty($imgs)){
+    $imgs=implode(",",$imgs);
+}
+$insert_imgs_sql="insert into contract_imgs(img_kind,imgs,project_id,remark) values ('".$imgs_kind."','".$imgs."','".$project_id."','".$remark."')";
+$insert_imgs=$db->exec($insert_imgs_sql);
+if($insert_imgs){
+    $content=[
+        "status"=>0
+    ];
+}else{
+    $content=[
+        "status"=>1
+    ];
+}
+echo json_encode($content);

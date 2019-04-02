@@ -1,0 +1,16 @@
+<?php
+// 获取所有未匹配名称
+// if ( empty($_SERVER['HTTP_REFERER']) || strtolower($_SERVER['SERVER_NAME'])!='cnzhaoshu.com') exit; 
+// $.getJSON('/com/dictionary_none_search.php', function(json){...});
+
+require 'db.php';
+
+$sql = 'select name from dictionary_none where state=0 order by CONVERT(name USING gbk)';
+
+$db = new db();
+$result = $db->query($sql);
+unset($db);
+
+echo json_encode($result);
+
+?>

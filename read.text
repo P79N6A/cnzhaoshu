@@ -1,0 +1,6 @@
+
+
+
+获取几条动态 ： $.getJSON('/com/search_all_dynamic.php', {limit:'0,3'}, function(json)
+
+所有动态 ：./zsdynamic.php

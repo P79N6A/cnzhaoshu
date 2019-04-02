@@ -1,0 +1,11 @@
+<?php 
+
+include 'db.php';
+
+$db = new db();
+$serial_number = $_GET['serial_number'];
+
+$sql = 'delete from orders where serial_number =?';
+$result = $db->prepare_exec($sql,array($serial_number));
+echo $result;
+unset($db);

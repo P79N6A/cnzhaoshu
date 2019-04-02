@@ -1,0 +1,109 @@
+<?php 
+
+require 'db2.php';
+require '../PHPExcel/PHPExcel.php';
+
+$db = new db();
+$sheet=0;
+$file = $_FILES['file'];
+$userid = $_POST['userid'];
+
+function get_total_millisecond(){  
+    $date = date('ymdHis',time());;
+    $time = explode (" ", microtime () );   
+    $time = 1000 + (int)($time [0] * 1000);
+    $rand = rand(1001,9999);
+    return ($date . $time . $rand); 
+}
+
+$excelname = get_total_millisecond();
+$filePath='../lmzm_excel/'.$excelname.'.xls';
+move_uploaded_file($file['tmp_name'],$filePath);
+
+if(empty($filePath) or !file_exists($filePath)){
+    echo false;
+    die;
+}
+$PHPReader = new PHPExcel_Reader_Excel2007();        //建立reader对象
+if(!$PHPReader->canRead($filePath)){
+        $PHPReader = new PHPExcel_Reader_Excel5();
+        if(!$PHPReader->canRead($filePath)){
+                echo 'no Excel';
+                return ;
+        }
+}
+$PHPExcel = $PHPReader->load($filePath);        //建立excel对象
+$currentSheet = $PHPExcel->getSheet($sheet);        //**读取excel文件中的指定工作表*/
+$allColumn = $currentSheet->getHighestColumn();        //**取得最大的列号*/
+$allRow = $currentSheet->getHighestRow();        //**取得一共有多少行*/
+$data = array();
+for($rowIndex=1;$rowIndex<=$allRow;$rowIndex++){        //循环读取每个单元格的内容。注意行从1开始，列从A开始
+        for($colIndex='A';$colIndex<='J';$colIndex++){
+                $addr = $colIndex.$rowIndex;
+                $cell = $currentSheet->getCell($addr)->getValue();
+                if($cell instanceof PHPExcel_RichText){ //富文本转换字符串
+                        $cell = $cell->__toString();
+                }
+                $data[$rowIndex][$colIndex] = $cell;
+        }
+}
+
+$companyname = $data[3]['C'];
+$companyarea = $data[3]['I'];
+$companyusername = $data[4]['C'];
+$companyphone = $data[4]['I'];
+$sql = 'insert into lmzm_user(userid,company_name,area,user_name,phone,excel) values(?,?,?,?,?,?)';
+$lmzm_userid = $db->prepare_insert($sql,array($userid,$companyname,$companyarea,$companyusername,$companyphone,$excelname));
+
+$order = ['B','C','D','E','F','G','H','I','J'];
+$attribute = ['tree_name','trunk_diameter','ground_diameter','crown','plant_height','branch_point_height','ball','count','price'];
+
+$datas = array();
+$n = 0;
+for ($i=7; $i <= count($data); $i++) { 
+    $onedata = $data[$i];
+    foreach ($onedata as $key => $value) {
+        if($value){
+            for ($j=0; $j < count($order); $j++) { 
+                if($key == $order[$j]){
+                    $datas[$n][$attribute[$j]] = $value;
+                }
+            }
+        }
+    }
+    ++$n; 
+}
+
+$date = array();
+for ($i=0; $i < count($datas); $i++) { 
+    if($datas[$i]){
+        array_push($date, $datas[$i]);
+    }
+}
+$datas = $date;
+
+if($datas){
+    for ($i=0; $i < count($datas); $i++) { 
+        $keydatas = array();
+        $nkeydatas = array();
+        $valuedatas = array();
+        foreach ($datas[$i] as $key => $value) {
+            if($key != 'price'){
+                array_push($keydatas, $key);
+                array_push($nkeydatas, '?');
+                array_push($valuedatas, $value);
+            }else{
+                array_push($keydatas, $key);
+                array_push($nkeydatas, '?');
+                array_push($valuedatas, $value*100);
+            }
+        }
+        array_push($keydatas, 'lmzm_user_id');
+        array_push($nkeydatas, '?');
+        array_push($valuedatas, $lmzm_userid);
+        $sql = 'insert into lmzm_tree('.join(',',$keydatas).') values('.join(',',$nkeydatas).')';
+        $result = $db->prepare_insert($sql,$valuedatas);
+    }
+}
+unset($db);
+echo $result;

@@ -1,0 +1,161 @@
+<template>
+  <div>
+    <div style="padding-bottom: 10px">
+      <div>
+        <Input v-model="shop_name" placeholder="店铺名称" clearable style="width: 170px;margin-right: 10px"/>
+          <Select v-model="member_level" @on-change="getManageList()" style="width:100px" placeholder="店铺等级">
+            <Option :value="0">普通会员</Option>
+            <Option :value="2">店铺旗舰店</Option>
+            <Option :value="1">店铺认证店</Option>
+          </Select>
+        <DatePicker type="daterange" split-panels placeholder="认证时间"  @on-change="getManageList()" style="width: 200px; margin-left: 10px"></DatePicker>
+        <Button @click="getManageList()" style="margin-left: 20px" type="primary">
+          <Icon type="search"/>
+          搜索
+        </Button>
+
+      </div>
+    </div>
+    <Table border :columns="columns" :data="bidList" @on-row-click="linkInfo"
+           :class=""></Table>
+    <div style="padding: 20px 0;text-align: center;background: #fff">
+      <Page :total="totol_num" :page-size="10" :current="p" @on-change="changePage" show-elevator/>
+    </div>
+
+  </div>
+</template>
+<script>
+    import {getBidList,changeProjectStatus} from '@/api/data'
+    import {getManagementList} from '@/api/management'
+    import {getRemoveagsNav} from '@/libs/util'
+    import {mapMutations} from 'vuex'
+    import {remainingTime} from "@/libs/tools"
+    import QRcode from 'qrcodejs2'
+
+    export default {
+        data () {
+            return {
+                shop_name:[],
+                member_level:1,
+                totol_num: 1,
+                columns: [
+                    {
+                        title: '店铺名称',
+                        key: 'name',
+                        render: (h, params) => {
+                            return h('div', [
+                                h('Icon', {
+                                    props: {
+                                        type: 'person'
+                                    }
+                                }),
+                                h('strong', params.index + 1)
+                            ])
+                        }
+                    },
+                    {
+                        title: '注册时间',
+                        key: 'name',
+                        render: (h, params) => {
+                            return h('div', [
+                                h('Icon', {
+                                    props: {
+                                        type: 'person'
+                                    }
+                                }),
+                                h('strong', params.row.project_info.project_name)
+                            ])
+                        }
+                    },
+                    {
+                        title: '认证时间',
+                        key: 'jindu',
+                        render: (h, params) => {
+                            return h('div', [
+                                h('Icon', {
+                                    props: {
+                                        type: 'person'
+                                    }
+                                }),
+                                h('strong', params.row.project_info.project_progress+"%")
+                            ])
+                        }
+                    },
+                    {
+                        title: '到期时间',
+                        key: 'shijian',
+                        render: (h, params) => {
+                            return h('div', [
+                                h('Icon', {
+                                    props: {
+                                        type: 'person'
+                                    }
+                                }),
+                                h('strong', remainingTime(params.row.project_info.Up_time))
+                            ])
+                        }
+                    },
+                    {
+                        title: '认证修改',
+                        key: 'address',
+                        render: (h, params) => {
+                            return h('div', [
+                                h('Icon', {
+                                    props: {
+                                        type: 'person'
+                                    }
+                                }),
+                                h('strong', params.row.project_info.hcity+params.row.project_info.hproper)
+                            ])
+                        }
+                    }
+                ],
+                bidList: [],
+                p: 1
+            }
+        },
+        methods: {
+            ...mapMutations([
+                'setBreadCrumb',
+                'setTagNavList',
+                'addTag',
+                'setLocal',
+                'removeTag',
+            ]),
+            linkInfo (row, index) {
+                this.$router.push({
+                    name: 'projectInfo',
+                    params: {
+                        projectInfo: row
+                    }
+                })
+            },
+            getManageList() {
+                let prames = {
+                    p: this.p,
+                    shop_name: this.shop_name,
+                    member_level: this.member_level,
+                }
+                getManagementList(prames).then(res => {
+                    console.log(res);
+                    let storeList = res.data.data;
+                    this.storeList = storeList
+                    let totle = res.data.msg
+                    this.totle = totle
+                })
+            },
+            changePage (p) {
+                this.p = p
+                this.getManageList()
+            },
+        },
+        mounted () {
+            this.getManageList()
+            /*this.removeTag("projectList");*/
+            document.getElementsByClassName('content-wrapper')[0].addEventListener('scroll', this.handleScroll)
+        },
+        beforeDestroy () {
+            document.getElementsByClassName('content-wrapper')[0].removeEventListener('scroll', this.handleScroll)
+        }
+    }
+</script>

@@ -1,0 +1,46 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Mrwang
+ * Date: 2018/10/10
+ * Time: 16:31
+ */
+include "../com/db.php";
+$db=new db();
+$partya_company_name=isset($_POST['partya_company_name'])?$_POST['partya_company_name']:"";
+$project_name=isset($_POST['project_name'])?$_POST['project_name']:"";
+$tel=isset($_POST['tel'])?$_POST['tel']:"";
+$p=isset($_POST['p'])?$_POST['p']:"1";
+$page_num=20;
+$start=($p-1)*$p;
+$where="status = 1 ";
+$join="";
+if(!empty($partya_company_name)){
+    $where.= " and partya_company_name='".$partya_company_name."'";
+}
+if(!empty($project_name)){
+    $where.=" and project_name = '".$project_name."'";
+}
+if(!empty($tel)){
+    $join= " join contract_info ";
+    $where.=" and contract_info.tel='".$tel."'";
+}
+
+$contract_info_sql="select * from order_project $join where  $where limit $start,$page_num ";
+//var_dump($contract_info_sql);die;
+$contract_info=$db->query($contract_info_sql);
+//var_dump($contract_info);die;
+$count_contract_info=count($contract_info);
+//var_dump($count_contract_info);die;
+for($i=0;$i<$count_contract_info;$i++){
+    $partya_info_sql="select * from contract_info where company_name='".$contract_info[$i]['partya_company_name']."'";
+    $contract_info['partya_info']=$db->query($partya_info_sql)[0];
+//    var_dump($count_contract_info);die;
+    $partyb_info_sql="select * from contract_info where company_name='".$contract_info[$i]['partyb_company_name']."'";
+    $contract_info['partyb_info']=$db->query($partyb_info_sql)[0];
+}
+$data=[];
+foreach($contract_info as $k=>$v){
+    $data[]=$v;
+}
+echo json_encode($data);

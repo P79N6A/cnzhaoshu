@@ -1,0 +1,44 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Mrwang
+ * Date: 2018/9/5
+ * Time: 9:17
+ */
+//调取投标页面接口
+include "../com/db.php";
+//include "../com/basic.php";
+//var_dump($_POST);die;
+$db=new db();
+//$tree_id=4;
+$tree_id=$_POST['tree_id'];
+$user=json_decode($_COOKIE['user2'],true);
+$userid=$user['userid'];
+//$userid=isset($user)?$user:"6";
+
+$tree_name=isset($_POST['tree_name'])?$_POST['tree_name']:"";
+
+$db=new db();
+
+$sqlr="select province,city,district,imgpath,price,`count` from tree where userid='".$userid."' and name ='".$tree_name."'";
+//var_dump($sqlr);die;
+$des=$db->query($sqlr)[0];
+//var_dump($des);die;
+$count_des=count($des);
+//var_dump($count_des);die;
+if($count_des>1){
+    $res['province']=implode(" ",$des);
+}
+else{
+    $res['province']=$des;
+}
+//var_dump($des);die;
+
+$sqlo="select * from tender_order where tender_user_id ='".$userid."' and tender_tree_id = '".$tree_id."'";
+$res['tender_info']= $db->query($sqlo)[0];
+$content=[
+    'status'=>0,
+    'data'=>$res,
+    'nursery'=>$des
+];
+echo json_encode($content);

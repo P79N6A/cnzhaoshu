@@ -1,0 +1,20 @@
+<?php
+// 查询 等级字典
+// if ( empty($_SERVER['HTTP_REFERER']) || strtolower($_SERVER['SERVER_NAME'])!='cnzhaoshu.com') exit; 
+
+require 'db.php';
+
+$name = $_REQUEST['name'];	
+
+$sql = 'select * from dictionary_grade';
+$name && $sql .= ' where name like \'%?%\'';
+$sql .= ' order by CONVERT(name USING gbk)';
+
+$db = new db();
+// $result = $db->query($sql);
+$result = $db->prepare_query($sql, array($name));
+unset($db);
+
+echo json_encode($result);
+
+?>
